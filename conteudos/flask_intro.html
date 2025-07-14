@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprenda Python Passo a Passo - Introdução ao Flask</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../estilo.css">
+</head>
+<body id="top">
+
+    <div class="main-header">
+        <img src="logo.png" alt="../Logo Aprenda Python" class="logo-header">
+        <h1>Bem-vindo ao Mundo Python!</h1>
+    </div>
+    <div class="container">
+
+        <p>Comece sua jornada na programação com Python, uma linguagem poderosa e fácil de aprender.</p>
+
+         <nav class="main-menu">
+            <h2>Conteúdos:</h2>
+            <ul>
+                <li><a href="../index.html">Página Inicial</a></li>
+                <li><a href="flask_database.html">→ Próxima Aula: Flask + Banco de Dados</a></li>
+               
+    
+            </ul>
+        </nav>
+        <h1>Introdução ao Desenvolvimento Web com Flask</h1>
+
+        <p>Você já aprendeu a criar scripts Python que realizam tarefas úteis, como coletar dados de APIs ou páginas web. Mas e se você quiser criar uma **interface para seus usuários**, onde eles possam interagir com seu código através de um navegador web? É aí que entra o **desenvolvimento web**.</p>
+        <p>O desenvolvimento web é dividido em duas partes principais:</p>
+        <ul>
+            <li><strong>Frontend:</strong> Tudo o que o usuário vê e interage no navegador (HTML, CSS, JavaScript).</li>
+            <li><strong>Backend:</strong> O servidor, o banco de dados e a lógica de negócio por trás da aplicação. É aqui que seu código Python entra.</li>
+        </ul>
+        <p>Para construir a parte do backend de uma aplicação web com Python, usamos **Frameworks Web**. Um framework é um conjunto de ferramentas, bibliotecas e convenções que simplificam o processo de desenvolvimento, lidando com tarefas comuns como roteamento de URLs, tratamento de requisições HTTP e renderização de páginas.</p>
+        <p>Existem vários frameworks web Python, como Django e Pyramid. Nesta seção, vamos nos concentrar no **Flask**, um **microframework** popular e excelente para começar a aprender desenvolvimento web. Ele é leve, flexível e permite que você comece a criar aplicações rapidamente, sem muita complexidade inicial.</p>
+
+        <hr>
+
+        <h2>1. O que é Flask?</h2>
+        <p>Flask é um framework web minimalista e flexível para Python. A palavra "micro" em microframework significa que ele não inclui ferramentas como um ORM (Object-Relational Mapper) para bancos de dados ou bibliotecas para formulários e autenticação por padrão. Em vez disso, ele oferece os recursos essenciais e permite que o desenvolvedor escolha as extensões e bibliotecas que melhor se adequam ao seu projeto.</p>
+        <p>Isso o torna uma ótima escolha para:</p>
+        <ul>
+            <li>Construir APIs RESTful.</li>
+            <li>Desenvolver protótipos rápidos.</li>
+            <li>Criar aplicações pequenas a médias que precisam de muita personalização.</li>
+            <li>Aprender os fundamentos do desenvolvimento web sem sobrecarga.</li>
+        </ul>
+        <p>Seus principais componentes incluem um servidor de desenvolvimento embutido, um roteador (para mapear URLs para funções Python) e um sistema de templates (Jinja2) para gerar HTML dinamicamente.</p>
+
+        <hr>
+
+        <h2>2. Instalando o Flask</h2>
+        <p>Como o Flask é uma biblioteca de terceiros, você precisará instalá-lo usando <code>pip</code>. Lembre-se de sempre fazer isso dentro de um <a href="ambientes_virtuais.html">ambiente virtual</a> para o seu projeto Flask!</p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('installFlask')">Copiar</button>
+            <pre id="installFlask">
+# Ative seu ambiente virtual primeiro!
+pip install Flask
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>3. Sua Primeira Aplicação Flask: "Hello, World!"</h2>
+        <p>Vamos criar nosso primeiro aplicativo Flask. Ele será simples: uma página que exibe "Olá, Mundo!" e outra página "Sobre".</p>
+        <p>Crie um arquivo chamado <code>app.py</code> na raiz do seu projeto e cole o código abaixo:</p>
+
+        <div class="code-block">
+            <h3>Arquivo: <code>app.py</code></h3>
+            <button class="copy-button" onclick="copyCode('helloWorldFlask')">Copiar</button>
+            <pre id="helloWorldFlask">
+# app.py
+from flask import Flask
+
+# Cria uma instância da aplicação Flask.
+# __name__ é uma variável especial do Python que contém o nome do módulo atual.
+# Flask a usa para determinar a raiz da aplicação.
+app = Flask(__name__)
+
+# Define uma rota (route) para a URL raiz ('/') da sua aplicação.
+# Quando um usuário acessa essa URL, a função 'hello_world' será executada.
+@app.route('/')
+def hello_world():
+    # Retorna uma string HTML que será exibida no navegador.
+    return '&lt;h1&gt;Olá, Mundo com Flask!&lt;/h1&gt;'
+
+# Define outra rota para a URL '/sobre'.
+@app.route('/sobre')
+def about():
+    return '&lt;p&gt;Esta é uma página simples sobre o Flask.&lt;/p&gt;'
+
+# Este bloco verifica se o script está sendo executado diretamente (e não importado).
+# É o ponto de entrada para rodar a aplicação Flask.
+if __name__ == '__main__':
+    # app.run() inicia o servidor de desenvolvimento do Flask.
+    # debug=True: Ativa o modo de depuração. Isso recarrega o servidor automaticamente
+    # a cada alteração no código e fornece informações de erro detalhadas no navegador.
+    # Use 'debug=False' em produção!
+    app.run(debug=True)
+            </pre>
+        </div>
+
+        <h3>Como Rodar sua Aplicação:</h3>
+        <ol>
+            <li>Salve o código acima como <code>app.py</code> em uma pasta.</li>
+            <li>Abra seu terminal ou prompt de comando.</li>
+            <li>Navegue até a pasta onde você salvou <code>app.py</code>.</li>
+            <li>Certifique-se de que seu ambiente virtual esteja ativado (onde você instalou o Flask).</li>
+            <li>Execute o script:
+                <div class="code-block">
+                    <pre>python app.py</pre>
+                </div>
+            </li>
+            <li>Você verá uma saída no terminal indicando que o servidor está rodando, geralmente em <code>http://127.0.0.1:5000/</code>.</li>
+            <li>Abra seu navegador e acesse:
+                <ul>
+                    <li><code>http://127.0.0.1:5000/</code> para ver "Olá, Mundo com Flask!".</li>
+                    <li><code>http://127.0.0.1:5000/sobre</code> para ver a página "Sobre".</li>
+                </ul>
+            </li>
+        </ol>
+        <div class="terminal-output">
+            <pre>
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: XXX-XXX-XXX
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>4. Rotas Dinâmicas e Variáveis na URL</h2>
+        <p>Você pode tornar suas URLs mais dinâmicas, capturando partes delas como variáveis que serão passadas para sua função de view. Isso é útil para exibir informações específicas com base na URL (ex: perfil de um usuário, detalhes de um produto).</p>
+        <p>Você pode definir o tipo da variável na rota (ex: <code>&lt;int:id&gt;</code> para um número inteiro, <code>&lt;string:nome&gt;</code> para texto). Se o tipo não for especificado, ele assume `string` por padrão.</p>
+
+        <div class="code-block">
+            <h3>Exemplo 4.1: Rotas com Variáveis (Adicione ao seu <code>app.py</code>)</h3>
+            <button class="copy-button" onclick="copyCode('dynamicRoutesFlask')">Copiar</button>
+            <pre id="dynamicRoutesFlask">
+# app.py
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello_world():
+    return '&lt;h1&gt;Olá, Mundo com Flask!&lt;/h1&gt;'
+
+@app.route('/sobre')
+def about():
+    return '&lt;p&gt;Esta é uma página simples sobre o Flask.&lt;/p&gt;'
+
+# Rota dinâmica para saudar um nome
+@app.route('/saudacao/&lt;nome&gt;')
+def saudacao(nome):
+    return f'&lt;h1&gt;Olá, {nome.capitalize()}!&lt;/h1&gt;'
+
+# Rota dinâmica para calcular a soma de dois números inteiros
+@app.route('/calcula/&lt;int:num1&gt;/&lt;int:num2&gt;')
+def calcula_soma(num1, num2):
+    soma = num1 + num2
+    return f'&lt;h1&gt;A soma de {num1} e {num2} é: {soma}&lt;/h1&gt;'
+
+if __name__ == '__main__':
+    app.run(debug=True)
+            </pre>
+        </div>
+        <p>Reinicie o `app.py` no terminal e acesse no navegador:</p>
+        <ul>
+            <li><code>http://127.0.0.1:5000/saudacao/daniel</code></li>
+            <li><code>http://127.0.0.1:5000/calcula/10/5</code></li>
+        </ul>
+
+        <hr>
+
+        <h2>5. Renderizando Templates (HTML Externo)</h2>
+        <p>Retornar strings HTML diretamente das funções de view é bom para exemplos simples, mas não é prático para páginas complexas. É por isso que frameworks web usam **templates**. Templates são arquivos (geralmente HTML) que contêm marcadores de posição para dados dinâmicos e lógica de controle.</p>
+        <p>O Flask usa o motor de templates **Jinja2**. Você pode passar variáveis do seu código Python para o template, e o Jinja2 as preencherá dinamicamente.</p>
+
+        <h3>Estrutura de Pastas para Templates:</h3>
+        <p>Por padrão, o Flask procura por templates em uma pasta chamada <code>templates</code> na raiz do seu projeto. Crie essa pasta:</p>
+        <pre>
+seu_projeto_flask/
+├── app.py
+└── templates/
+    ├── index.html
+    └── sobre.html
+        </pre>
+
+        <h3>Crie os Arquivos de Template:</h3>
+        <p><strong>Arquivo: `templates/index.html`</strong></p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('indexHtmlTemplate')">Copiar</button>
+            <pre id="indexHtmlTemplate">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;{{ titulo }}&lt;/title&gt; &lt;!-- Variável Python injetada aqui --&gt;
+    &lt;!-- Link para o arquivo CSS estático (ver próxima seção) --&gt;
+    &lt;link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Bem-vindo à {{ titulo }}!&lt;/h1&gt;
+    &lt;p&gt;Este é um parágrafo da página renderizado por um template.&lt;/p&gt;
+    &lt;p&gt;A mensagem do servidor é: &lt;strong&gt;{{ mensagem }}&lt;/strong&gt;&lt;/p&gt;
+    &lt;p&gt;Seu nome (se houver): &lt;strong&gt;{{ nome_usuario if nome_usuario else 'Visitante' }}&lt;/strong&gt;&lt;/p&gt;
+    
+    &lt;ul&gt;
+        &lt;li&gt;&lt;a href="/sobre"&gt;Sobre nós&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="/contato"&gt;Página de Contato&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="/saudacao/Visitante"&gt;Saudar Visitante&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;!-- Exibir mensagens flash (se houver) --&gt;
+    &lt;div class="flash-messages"&gt;
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                &lt;ul&gt;
+                {% for category, message in messages %}
+                    &lt;li class="{{ category }}"&gt;{{ message }}&lt;/li&gt;
+                {% endfor %}
+                &lt;/ul&gt;
+            {% endif %}
+        {% endwith %}
+    &lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+        </div>
+
+        <p><strong>Arquivo: `templates/sobre.html`</strong></p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('sobreHtmlTemplate')">Copiar</button>
+            <pre id="sobreHtmlTemplate">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Sobre Nós&lt;/title&gt;
+    &lt;link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Sobre Nosso Projeto Flask&lt;/h1&gt;
+    &lt;p&gt;Este é um projeto simples para demonstrar as capacidades básicas do Flask.&lt;/p&gt;
+    &lt;p&gt;Estamos aprendendo sobre rotas, templates e como servir conteúdo dinâmico.&lt;/p&gt;
+    &lt;p&gt;&lt;a href="/"&gt;Voltar para a Página Inicial&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+        </div>
+
+        <h3>Modifique seu <code>app.py</code> para Usar Templates:</h3>
+        <p>Importe <code>render_template</code> e altere as funções de view:</p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('appPyTemplates')">Copiar</button>
+            <pre id="appPyTemplates">
+# app.py
+from flask import Flask, render_template # Importe render_template
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    # render_template busca o arquivo na pasta 'templates'
+    # Você pode passar quantas variáveis nomeadas quiser para o template
+    return render_template('index.html', 
+                           titulo='Minha Aplicação Web', 
+                           mensagem='Dados do backend injetados aqui!', 
+                           nome_usuario='Aprendiz de Flask')
+
+@app.route('/sobre')
+def about_template():
+    return render_template('sobre.html') # Pode passar variáveis aqui também, se precisar
+
+# ... (Mantenha as rotas /saudacao/&lt;nome&gt; e /calcula/&lt;int:num1&gt;/&lt;int:num2&gt; do exemplo anterior) ...
+
+if __name__ == '__main__':
+    app.run(debug=True)
+            </pre>
+        </div>
+        <p>Reinicie o servidor e acesse <code>http://127.0.0.1:5000/</code>. Você verá o conteúdo do `index.html` com as variáveis Python preenchidas. O Jinja2 usa <code>{{ variavel }}</code> para exibir variáveis e <code>{% control %}</code> para lógica (como loops ou condicionais).</p>
+
+        <hr>
+
+        <h2>6. Servindo Arquivos Estáticos (CSS, JS, Imagens)</h2>
+        <p>Aplicativos web geralmente precisam de arquivos estáticos como folhas de estilo CSS, scripts JavaScript e imagens. Por padrão, o Flask procura por esses arquivos em uma pasta chamada <code>static</code> na raiz do seu projeto.</p>
+
+        <h3>Estrutura de Pastas para Estáticos:</h3>
+        <p>Crie a pasta <code>static</code> e subpastas para organizar seus arquivos:</p>
+        <pre>
+seu_projeto_flask/
+├── app.py
+├── templates/
+│   ├── index.html
+│   └── sobre.html
+└── static/
+    └── css/
+        └── style.css
+        </pre>
+
+        <h3>Crie o Arquivo CSS:</h3>
+        <p><strong>Arquivo: `static/css/style.css`</strong></p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('styleCss')">Copiar</button>
+            <pre id="styleCss">
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #e9ecef;
+    margin: 20px;
+    color: #343a40;
+    line-height: 1.6;
+}
+h1 {
+    color: #007bff;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+}
+p {
+    margin-bottom: 15px;
+}
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+li {
+    margin-bottom: 5px;
+}
+.flash-messages {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+}
+.flash-messages ul {
+    list-style-type: none;
+    padding: 0;
+}
+.flash-messages li {
+    padding: 8px 12px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+/* Adicione mais estilos conforme desejar */
+            </pre>
+        </div>
+        <p>No seu arquivo HTML (`index.html` e `sobre.html`), você usa a função <code>url_for()</code> do Flask para gerar o caminho correto para os arquivos estáticos:</p>
+        <div class="code-block">
+            <pre>
+&lt;link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"&gt;
+            </pre>
+        </div>
+        <p>Reinicie o servidor e a página será exibida com os estilos aplicados.</p>
+
+        <hr>
+
+        <h2>7. Recebendo Dados de Formulários (GET e POST)</h2>
+        <p>A interação mais comum em aplicações web é através de formulários. O Flask facilita a captura de dados enviados por eles.</p>
+        <p>Para lidar com formulários, você usará o objeto `request` do Flask, que contém todos os dados da requisição HTTP (método, argumentos de URL, dados de formulário, etc.).</p>
+
+        <div class="code-block">
+            <h3>Arquivo: `templates/formulario.html`</h3>
+            <button class="copy-button" onclick="copyCode('formularioHtmlTemplate')">Copiar</button>
+            <pre id="formularioHtmlTemplate">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Formulário de Contato&lt;/title&gt;
+    &lt;link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Envie sua Mensagem&lt;/h1&gt;
+    &lt;form action="/enviar_mensagem" method="POST"&gt;
+        &lt;label for="nome"&gt;Nome:&lt;/label&gt;&lt;br&gt;
+        &lt;input type="text" id="nome" name="nome" required&gt;&lt;br&gt;&lt;br&gt;
+        
+        &lt;label for="email"&gt;Email:&lt;/label&gt;&lt;br&gt;
+        &lt;input type="email" id="email" name="email" required&gt;&lt;br&gt;&lt;br&gt;
+        
+        &lt;label for="mensagem"&gt;Mensagem:&lt;/label&gt;&lt;br&gt;
+        &lt;textarea id="mensagem" name="mensagem" rows="5" cols="30" required&gt;&lt;/textarea&gt;&lt;br&gt;&lt;br&gt;
+        
+        &lt;input type="submit" value="Enviar Mensagem"&gt;
+    &lt;/form&gt;
+    &lt;p&gt;&lt;a href="/"&gt;Voltar para a Home&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h3>Modifique seu <code>app.py</code> para Lidar com Formulários:</h3>
+            <button class="copy-button" onclick="copyCode('appPyForms')">Copiar</button>
+            <pre id="appPyForms">
+# app.py
+from flask import Flask, render_template, request, redirect, url_for, flash
+
+app = Flask(__name__)
+# A secret_key é necessária para usar flash messages (mensagens temporárias)
+# Em produção, use uma chave forte e a mantenha secreta!
+app.secret_key = 'sua_chave_secreta_aqui_para_flash_messages_muito_segura' 
+
+@app.route('/')
+def home():
+    # Mensagens flash são automaticamente injetadas nos templates através de get_flashed_messages()
+    return render_template('index.html', 
+                           titulo='Minha Aplicação Web', 
+                           mensagem='Dados do backend injetados aqui!', 
+                           nome_usuario='Aprendiz de Flask')
+
+@app.route('/sobre')
+def about_template():
+    return render_template('sobre.html')
+
+# ... (Mantenha as rotas /saudacao/&lt;nome&gt; e /calcula/&lt;int:num1&gt;/&lt;int:num2&gt; do exemplo anterior) ...
+
+# Rota para exibir o formulário de contato (método GET padrão)
+@app.route('/contato')
+def contato_form():
+    return render_template('formulario.html')
+
+# Rota para processar os dados do formulário (apenas aceita método POST)
+@app.route('/enviar_mensagem', methods=['POST'])
+def enviar_mensagem():
+    # Verifica se a requisição foi feita com o método POST
+    if request.method == 'POST':
+        # request.form é um dicionário contendo os dados do formulário enviados via POST
+        nome = request.form['nome']
+        email = request.form['email']
+        mensagem = request.form['mensagem']
+        
+        print(f"--- Mensagem Recebida via Formulário ---")
+        print(f"Nome: {nome}")
+        print(f"Email: {email}")
+        print(f"Mensagem: {mensagem}")
+        print(f"----------------------------------------")
+
+        # Exibe uma mensagem temporária para o usuário
+        flash(f'Obrigado, {nome}! Sua mensagem foi enviada com sucesso.', 'success')
+        
+        # Redireciona o usuário para a página inicial após o envio
+        # url_for('home') gera a URL para a função 'home'
+        return redirect(url_for('home'))
+    
+    # Se a requisição não for POST (ex: alguém tentar acessar /enviar_mensagem via GET),
+    # retorna um erro 405 (Método Não Permitido)
+    return "Método não permitido", 405
+
+if __name__ == '__main__':
+    app.run(debug=True)
+            </pre>
+        </div>
+        <p>Reinicie o `app.py`. Acesse <code>http://127.0.0.1:5000/contato</code>, preencha o formulário e envie. Você verá a mensagem no seu terminal e será redirecionado para a home com uma mensagem de sucesso.</p>
+        <p>Observe que usamos `app.secret_key` e `flash()`/`get_flashed_messages()`. As mensagens flash são uma forma de passar mensagens temporárias do backend para o frontend, úteis para feedback ao usuário (sucesso, erro, aviso).</p>
+
+        <hr>
+
+        <h2>8. Boas Práticas e Próximos Passos</h2>
+        <ul>
+            <li><strong>Modo Debug:</strong> Sempre desative <code>debug=True</code> em ambientes de produção. Ele expõe informações sensíveis e pode levar a vulnerabilidades.</li>
+            <li><strong>Estrutura de Projeto:</strong> Para projetos maiores, organize seu Flask em pacotes e módulos, em vez de um único `app.py`. Isso é chamado de "estruturação de blueprints".</li>
+            <li><strong>Extensões Flask:</strong> O ecossistema Flask é rico em extensões que adicionam funcionalidades (ex: Flask-SQLAlchemy para banco de dados, Flask-Login para autenticação, Flask-WTF para formulários mais seguros).</li>
+            <li><strong>Jinja2:</strong> Explore mais o Jinja2! Ele permite loops (`{% for item in lista %}`), condicionais (`{% if condicao %}`), herança de templates (`{% extends 'base.html' %}`), e muito mais para criar HTML dinâmico.</li>
+            <li><strong>Outros Frameworks:</strong> O Django é um framework "batteries-included" (com tudo embutido) mais robusto, ideal para aplicações grandes e complexas. Após dominar o Flask, pode ser uma próxima etapa interessante.</li>
+        </ul>
+
+        <hr>
+
+        <h2>Exercícios</h2>
+
+        <div class="exercise">
+            <h3>Exercício 1: Criar um Contador de Cliques Simples</h3>
+            <p>Crie uma aplicação Flask com uma página que exiba um número. Cada vez que o usuário recarrega a página ou clica em um botão "Incrementar", o número deve aumentar em 1. O contador deve ser mantido na memória do servidor enquanto a aplicação estiver rodando.</p>
+            <p><strong>Dicas:</strong></p>
+            <ul>
+                <li>Declare uma variável global (ex: `contador = 0`) no seu <code>app.py</code> (fora de qualquer função de rota).</li>
+                <li>Na sua função de rota, incremente essa variável.</li>
+                <li>Passe a variável `contador` para o seu template HTML.</li>
+                <li>No HTML, crie um botão que seja um link para a mesma URL da página, o que fará com que a página seja recarregada e a função de rota seja executada novamente.</li>
+            </ul>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerFlask1')">Copiar</button>
+                <pre id="exerFlask1">
+# Exemplo de app.py para o Exercício 1
+from flask import Flask, render_template
+
+app = Flask(__name__)
+
+# Variável global para o contador
+contador_cliques = 0
+
+@app.route('/contador')
+def pagina_contador():
+    global contador_cliques # Declare que você quer usar a variável global
+    contador_cliques += 1 # Incrementa o contador
+    return render_template('contador.html', contador=contador_cliques)
+
+# if __name__ == '__main__':
+#     app.run(debug=True)
+
+# Lembre-se de criar o arquivo templates/contador.html:
+# &lt;!DOCTYPE html&gt;
+# &lt;html lang="pt-br"&gt;
+# &lt;head&gt;
+#     &lt;meta charset="UTF-8"&gt;
+#     &lt;title&gt;Contador de Cliques&lt;/title&gt;
+#     &lt;link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"&gt;
+# &lt;/head&gt;
+# &lt;body&gt;
+#     &lt;h1&gt;Contador de Cliques&lt;/h1&gt;
+#     &lt;p&gt;Você clicou &lt;strong&gt;{{ contador }}&lt;/strong&gt; vezes.&lt;/p&gt;
+#     &lt;p&gt;&lt;a href="/contador"&gt;&lt;button&gt;Clique para Incrementar!&lt;/button&gt;&lt;/a&gt;&lt;/p&gt;
+#     &lt;p&gt;&lt;a href="/"&gt;Voltar para a Home&lt;/a&gt;&lt;/p&gt;
+# &lt;/body&gt;
+# &lt;/html&gt;
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 2: Lista de Tarefas (To-Do List) Básica</h3>
+            <p>Crie uma aplicação Flask com as seguintes funcionalidades:</p>
+            <ul>
+                <li>Uma página principal que exiba uma lista de tarefas (To-Do List).</li>
+                <li>Um formulário na mesma página para adicionar novas tarefas à lista.</li>
+                <li>As tarefas devem ser armazenadas em uma lista Python na memória do servidor (serão perdidas ao reiniciar o servidor).</li>
+            </ul>
+            <p><strong>Dicas:</strong></p>
+            <ul>
+                <li>Use uma lista Python global (ex: `tarefas = []`).</li>
+                <li>A rota principal (`/`) deve lidar com requisições GET (para exibir a lista e o formulário) e POST (para adicionar a nova tarefa).</li>
+                <li>No formulário HTML, use `method="POST"` e um campo de texto para a tarefa.</li>
+                <li>Após adicionar uma tarefa, use `redirect(url_for('nome_da_rota_principal'))` para evitar que a tarefa seja adicionada novamente se o usuário recarregar a página.</li>
+            </ul>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerFlask2')">Copiar</button>
+                <pre id="exerFlask2">
+# Exemplo de app.py para o Exercício 2
+from flask import Flask, render_template, request, redirect, url_for
+
+app = Flask(__name__)
+app.secret_key = 'chave_secreta_para_todo_list'
+
+# Lista global para armazenar as tarefas (na memória)
+tarefas = []
+
+@app.route('/todo', methods=['GET', 'POST'])
+def todo_list():
+    if request.method == 'POST':
+        nova_tarefa = request.form.get('tarefa')
+        if nova_tarefa:
+            tarefas.append(nova_tarefa)
+        return redirect(url_for('todo_list')) # Redireciona para evitar re-submissão
+    
+    return render_template('todo.html', tarefas=tarefas)
+
+# if __name__ == '__main__':
+#     app.run(debug=True)
+
+# Lembre-se de criar o arquivo templates/todo.html:
+# &lt;!DOCTYPE html&gt;
+# &lt;html lang="pt-br"&gt;
+# &lt;head&gt;
+#     &lt;meta charset="UTF-8"&gt;
+#     &lt;title&gt;Minha Lista de Tarefas&lt;/title&gt;
+#     &lt;link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"&gt;
+# &lt;/head&gt;
+# &lt;body&gt;
+#     &lt;h1&gt;Minha Lista de Tarefas&lt;/h1&gt;
+#     
+#     &lt;form action="/todo" method="POST"&gt;
+#         &lt;input type="text" name="tarefa" placeholder="Nova tarefa" required&gt;
+#         &lt;button type="submit"&gt;Adicionar Tarefa&lt;/button&gt;
+#     &lt;/form&gt;
+#     
+#     &lt;h2&gt;Tarefas:&lt;/h2&gt;
+#     &lt;ul&gt;
+#         {% if tarefas %}
+#             {% for tarefa in tarefas %}
+#                 &lt;li&gt;{{ tarefa }}&lt;/li&gt;
+#             {% endfor %}
+#         {% else %}
+#             &lt;li&gt;Nenhuma tarefa adicionada ainda.&lt;/li&gt;
+#         {% endif %}
+#     &lt;/ul&gt;
+#     &lt;p&gt;&lt;a href="/"&gt;Voltar para a Home&lt;/a&gt;&lt;/p&gt;
+# &lt;/body&gt;
+# &lt;/html&gt;
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>Conclusão</h2>
+        <p>O Flask é uma ferramenta fantástica para entrar no mundo do desenvolvimento web com Python. Sua simplicidade e flexibilidade permitem que você crie aplicações desde as mais básicas até as mais complexas, com total controle sobre as bibliotecas e extensões que você deseja usar.</p>
+        <p>Você aprendeu os conceitos fundamentais: como iniciar uma aplicação, definir rotas, usar URLs dinâmicas, renderizar templates HTML e lidar com formulários. Com essa base, você está pronto para explorar ainda mais e construir suas próprias aplicações interativas.</p>
+        <p>No próximo conteúdo, vamos dar um passo adiante e aprender como **integrar seu aplicativo Flask com um banco de dados SQLite**, permitindo que você salve e recupere dados de forma persistente, criando aplicações ainda mais poderosas.</p>
+
+        </div> <a href="#top" class="back-to-top" title="Voltar ao topo da página">↑</a>
+
+   <footer class="footer">
+  <div class="footer-content">
+    <div class="brand-info">
+      <p>&copy; 2025 <strong>Aprendendo Python</strong> — Todos os direitos reservados.</p>
+      <p>Desenvolvido por: <a href="https://jespedsys.com.br" target="_blank">JesPedSYS</a></p>
+    </div>
+
+    <div class="social-links">
+      <a href="https://github.com/jespedsys" target="_blank" title="GitHub">
+        <img src="../github.png" alt="GitHub">
+      </a>
+      <a href="https://www.linkedin.com/in/jesielpedroza" target="_blank" title="LinkedIn">
+        <img src="../linkedin.png" alt="LinkedIn">
+      </a>
+      <a href="https://twitter.com/jespedsys" target="_blank" title="Twitter/X">
+        <img src="../twitter.png" alt="Twitter/X">
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

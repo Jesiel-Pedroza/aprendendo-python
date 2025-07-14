@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprenda Python Passo a Passo - Flask: Formulários com Flask-WTF</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../estilo.css">
+</head>
+<body id="top">
+
+    <div class="main-header">
+        <img src="../logo.png" alt="Logo Aprenda Python" class="logo-header">
+        <h1>Bem-vindo ao Mundo Python!</h1>
+    </div>
+    <div class="container">
+
+        <p>Comece sua jornada na programação com Python, uma linguagem poderosa e fácil de aprender.</p>
+
+        <nav class="main-menu">
+            <h2>Conteúdos:</h2>
+            <ul>
+                <li><a href="../index.html">Página Inicial</a></li>
+                <li><a href="flask_auth.html">→ Próxima Aula: Autenticação</a></li>
+
+             
+            </ul>
+        </nav>
+        <h1>Flask: Formulários Web com Flask-WTF</h1>
+
+        <p>Até agora, lidamos com formulários HTML de forma "manual", acessando os dados via `request.form`. Embora funcione, essa abordagem pode se tornar repetitiva e suscetível a erros, especialmente quando precisamos de validação complexa ou proteção contra ataques comuns como o CSRF (Cross-Site Request Forgery).</p>
+        <p>A extensão **Flask-WTF** é uma wrapper para a biblioteca WTForms, que simplifica a criação, validação e renderização de formulários em aplicações Flask, oferecendo:</p>
+        <ul>
+            <li><strong>Definição de formulários Python:</strong> Campos e validadores são definidos em classes Python.</li>
+            <li><strong>Validação de dados:</strong> Ferramentas poderosas para validar a entrada do usuário no lado do servidor.</li>
+            <li><strong>Proteção CSRF:</strong> Geração e validação automática de tokens CSRF.</li>
+            <li><strong>Renderização simplificada:</strong> Ajuda a renderizar os formulários em templates Jinja2.</li>
+        </ul>
+
+        <hr>
+
+        <h2>1. Instalando Flask-WTF</h2>
+        <p>Primeiro, instale a extensão no seu ambiente virtual:</p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('installFlaskWTF')">Copiar</button>
+            <pre id="installFlaskWTF">
+pip install Flask-WTF
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>2. Configuração Básica de Flask-WTF</h2>
+        <p>O Flask-WTF depende da `SECRET_KEY` da sua aplicação Flask para gerar e validar tokens CSRF. Você já deve ter configurado isso no seu `app.py` no capítulo anterior.</p>
+        <p>A `SECRET_KEY` é crucial para a segurança de sessões e agora para a proteção CSRF. Certifique-se de que ela seja uma string longa e complexa, e que nunca seja exposta publicamente.</p>
+        <div class="code-block">
+            <h3>Arquivo: <code>app.py</code> (Verificando a SECRET_KEY)</h3>
+            <button class="copy-button" onclick="copyCode('secretKeyConfig')">Copiar</button>
+            <pre id="secretKeyConfig">
+# app.py (certifique-se de ter esta linha)
+app.secret_key = 'uma_chave_secreta_super_segura_e_longa_aqui_para_a_producao' 
+# Use uma chave real, gerada aleatoriamente para produção!
+# Exemplo para gerar uma chave aleatória no console Python:
+# import secrets
+# secrets.token_hex(32)
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>3. Definindo Formulários com Flask-WTF</h2>
+        <p>É uma boa prática separar a definição dos seus formulários em um arquivo Python próprio, como `forms.py`. Cada formulário será uma classe que herda de `FlaskForm`.</p>
+        <p>Dentro da classe, você define os campos do formulário usando tipos de campo do WTForms (como `StringField`, `PasswordField`, `SubmitField`, `TextAreaField`, `BooleanField`) e anexa validadores para cada campo.</p>
+
+        <div class="code-block">
+            <h3>Arquivo: <code>forms.py</code> (Exemplos de Formulários)</h3>
+            <button class="copy-button" onclick="copyCode('formsPyContent')">Copiar</button>
+            <pre id="formsPyContent">
+# forms.py
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+
+# Importa o modelo Usuario do seu app.py para validações customizadas
+# Certifique-se de que app.py esteja no sys.path ou ajuste o import conforme sua estrutura
+from app import Usuario 
+
+# Formulário de Registro de Usuário
+class RegistrationForm(FlaskForm):
+    username = StringField('Nome de Usuário', 
+                           validators=[DataRequired(), Length(min=2, max=20)])
+    email = StringField('Email',
+                        validators=[DataRequired(), Email()])
+    password = PasswordField('Senha', 
+                             validators=[DataRequired()])
+    confirm_password = PasswordField('Confirmar Senha',
+                                     validators=[DataRequired(), EqualTo('password', message='As senhas devem ser iguais.')])
+    submit = SubmitField('Registrar')
+
+    # Validador customizado: verifica se o nome de usuário já existe
+    def validate_username(self, username):
+        user = Usuario.query.filter_by(username=username.data).first()
+        if user:
+            raise ValidationError('Este nome de usuário já está em uso. Por favor, escolha outro.')
+
+    # Validador customizado: verifica se o email já existe
+    def validate_email(self, email):
+        user = Usuario.query.filter_by(email=email.data).first()
+        if user:
+            raise ValidationError('Este email já está cadastrado. Por favor, use outro.')
+
+# Formulário de Login de Usuário
+class LoginForm(FlaskForm):
+    username = StringField('Nome de Usuário', validators=[DataRequired()])
+    password = PasswordField('Senha', validators=[DataRequired()])
+    remember = BooleanField('Lembrar-me') # Checkbox para "lembrar" o usuário
+    submit = SubmitField('Login')
+
+# Formulário para Criar/Editar Posts
+class PostForm(FlaskForm):
+    title = StringField('Título', validators=[DataRequired(), Length(min=5, max=100)])
+    content = TextAreaField('Conteúdo', validators=[DataRequired()])
+    submit = SubmitField('Publicar Post') # Ou 'Atualizar Post' dependendo do contexto
+            </pre>
+        </div>
+        <p><strong>Observações:</strong></p>
+        <ul>
+            <li>`DataRequired()`: Garante que o campo não seja vazio.</li>
+            <li>`Length(min=X, max=Y)`: Define um comprimento mínimo e máximo para o campo.</li>
+            <li>`Email()`: Valida se o formato do texto é um email válido.</li>
+            <li>`EqualTo('outro_campo')`: Compara o valor deste campo com outro campo (útil para confirmar senha).</li>
+            <li>`ValidationError`: Usado em validadores customizados para levantar erros.</li>
+            <li>`validate_username(self, username)` e `validate_email(self, email)`: São validadores customizados que WTForms detecta automaticamente se seguirem o padrão `validate_<field_name>`.</li>
+        </ul>
+
+        <hr>
+
+        <h2>4. Usando Formulários no Flask (em `app.py`)</h2>
+        <p>No seu arquivo `app.py`, você importará as classes de formulário e as instanciará dentro das suas rotas. O Flask-WTF simplifica bastante a lógica de validação.</p>
+
+        <div class="code-block">
+            <h3>Arquivo: <code>app.py</code> (Refatorando Rotas com Flask-WTF)</h3>
+            <button class="copy-button" onclick="copyCode('appPyForms')">Copiar</button>
+            <pre id="appPyForms">
+# app.py (atualize seu app.py existente)
+
+from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
+
+# *** IMPORTANTE: Importe os formulários que você definiu no seu novo arquivo forms.py ***
+from forms import RegistrationForm, LoginForm, PostForm 
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = 'uma_chave_secreta_super_segura_e_longa_aqui_para_a_producao' 
+
+db = SQLAlchemy(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+login_manager.login_message_category = 'info'
+login_manager.login_message = 'Por favor, faça login para acessar esta página.'
+
+# --- Modelos (Usuario e Post - sem mudanças significativas se já atualizados para Flask-Login) ---
+class Usuario(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False, nullable=False)
+    posts = db.relationship('Post', backref='autor', lazy=True)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+    def __repr__(self):
+        return f'&lt;Usuario {self.username}&gt;'
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    titulo = db.Column(db.String(100), nullable=False)
+    conteudo = db.Column(db.Text, nullable=False)
+    data_criacao = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+
+    def __repr__(self):
+        return f'&lt;Post {self.titulo}&gt;'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return Usuario.query.get(int(user_id))
+
+# --- Rotas (AGORA USANDO FLASK-WTF) ---
+
+@app.route('/')
+@app.route('/home')
+def home():
+    posts = Post.query.order_by(Post.data_criacao.desc()).all()
+    return render_template('index.html', posts=posts)
+
+# Listar todos os posts
+@app.route('/posts')
+def listar_posts():
+    posts = Post.query.order_by(Post.data_criacao.desc()).all()
+    return render_template('posts.html', posts=posts)
+
+# Visualizar um post específico
+@app.route('/post/&lt;int:post_id&gt;')
+def ver_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    return render_template('ver_post.html', post=post)
+
+# --- Rota de Registro (REFATORADA) ---
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    
+    form = RegistrationForm() # Instancia o formulário de registro
+    
+    if form.validate_on_submit(): # Verifica se é POST e se a validação passou
+        username = form.username.data
+        email = form.email.data
+        password = form.password.data # WTForms já validou que as senhas coincidem
+        
+        novo_usuario = Usuario(username=username, email=email)
+        novo_usuario.set_password(password)
+        try:
+            db.session.add(novo_usuario)
+            db.session.commit()
+            flash('Sua conta foi criada com sucesso! Agora você pode fazer login.', 'success')
+            return redirect(url_for('login'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Ocorreu um erro ao registrar sua conta: {e}', 'danger')
+    
+    # Para requisições GET ou POST com falha de validação, renderiza o formulário
+    return render_template('register.html', form=form) 
+
+# --- Rota de Login (REFATORADA) ---
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    
+    form = LoginForm() # Instancia o formulário de login
+
+    if form.validate_on_submit(): # Verifica se é POST e se a validação passou
+        username = form.username.data
+        password = form.password.data
+        remember = form.remember.data 
+        
+        usuario = Usuario.query.filter_by(username=username).first()
+        if usuario and usuario.check_password(password):
+            login_user(usuario, remember=remember)
+            flash(f'Bem-vindo de volta, {usuario.username}!', 'success')
+            next_page = request.args.get('next') 
+            return redirect(next_page or url_for('home'))
+        else:
+            # Não use os erros do formulário aqui, pois a validação de credenciais
+            # é lógica de negócio, não de campo.
+            flash('Login falhou. Verifique seu nome de usuário e senha.', 'danger')
+            
+    return render_template('login.html', form=form) 
+
+# --- Rota de Logout ---
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('Você foi desconectado com sucesso.', 'info')
+    return redirect(url_for('home'))
+
+# --- Rota de Adicionar Post (REFATORADA) ---
+@app.route('/adicionar_post', methods=['GET', 'POST'])
+@login_required 
+def adicionar_post():
+    form = PostForm() # Instancia o formulário de post
+    
+    if form.validate_on_submit():
+        title = form.title.data
+        content = form.content.data
+        
+        novo_post = Post(titulo=title, conteudo=content, user_id=current_user.id)
+        try:
+            db.session.add(novo_post)
+            db.session.commit()
+            flash('Post adicionado com sucesso!', 'success')
+            return redirect(url_for('listar_posts'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao adicionar post: {e}', 'danger')
+    
+    return render_template('adicionar_post.html', form=form)
+
+# --- Rota para listar usuários ---
+@app.route('/usuarios')
+def listar_usuarios():
+    usuarios = Usuario.query.all()
+    return render_template('usuarios.html', usuarios=usuarios)
+
+# --- Rota para ver usuário individual ---
+@app.route('/usuario/&lt;int:user_id&gt;')
+def ver_usuario(user_id):
+    usuario = Usuario.query.get_or_404(user_id)
+    return render_template('ver_usuario.html', usuario=usuario)
+
+# --- Exemplo de rota de admin ---
+@app.route('/admin_panel')
+@login_required
+def admin_panel():
+    if not current_user.is_admin:
+        flash('Você não tem permissão para acessar esta página.', 'danger')
+        return redirect(url_for('home'))
+    return render_template('admin_panel.html')
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all() 
+    app.run(debug=True)
+            </pre>
+        </div>
+        <p>Note como a lógica `if request.method == 'POST'` e a validação de formulário são combinadas em `if form.validate_on_submit():`. Se o método for POST e todos os validadores passarem, este bloco será executado. Caso contrário (GET ou POST com validação falha), o template será renderizado novamente com o formulário, contendo quaisquer erros de validação.</p>
+
+        <hr>
+
+        <h2>5. Renderizando Formulários em Templates Jinja2</h2>
+        <p>A renderização de formulários com Flask-WTF é muito mais limpa. Você passa a instância do formulário para o template e pode renderizar cada campo individualmente, com suas labels e até mesmo exibir erros de validação.</p>
+        <p><strong>Importante:</strong> Sempre inclua `{{ form.csrf_token }}` dentro da tag `<form>` para proteção CSRF!</p>
+
+        <div class="code-block">
+            <h3>Arquivo: <code>templates/register.html</code> (Atualizado com Flask-WTF)</h3>
+            <button class="copy-button" onclick="copyCode('registerHtmlWtf')">Copiar</button>
+            <pre id="registerHtmlWtf">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Registrar Nova Conta&lt;/title&gt;
+    &lt;link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Registrar Nova Conta&lt;/h1&gt;
+    &lt;!-- Exibe as mensagens flash --&gt;
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            &lt;ul class="flashes"&gt;
+            {% for category, message in messages %}
+                &lt;li class="{{ category }}"&gt;{{ message }}&lt;/li&gt;
+            {% endfor %}
+            &lt;/ul&gt;
+        {% endif %}
+    {% endwith %}
+
+    &lt;form method="POST"&gt;
+        {{ form.csrf_token }} &lt;!-- Campo obrigatório para proteção CSRF --&gt;
+        &lt;p&gt;
+            {{ form.username.label }}&lt;br&gt;
+            {{ form.username(size=32) }} &lt;!-- Renderiza o input, pode passar atributos HTML --&gt;
+            {% for error in form.username.errors %} &lt;!-- Exibe erros de validação --&gt;
+                &lt;span style="color: red;"&gt;[{{ error }}]&lt;/span&gt;
+            {% endfor %}
+        &lt;/p&gt;
+        &lt;p&gt;
+            {{ form.email.label }}&lt;br&gt;
+            {{ form.email(size=32) }}
+            {% for error in form.email.errors %}
+                &lt;span style="color: red;"&gt;[{{ error }}]&lt;/span&gt;
+            {% endfor %}
+        &lt;/p&gt;
+        &lt;p&gt;
+            {{ form.password.label }}&lt;br&gt;
+            {{ form.password(size=32) }}
+            {% for error in form.password.errors %}
+                &lt;span style="color: red;"&gt;[{{ error }}]&lt;/span&gt;
+            {% endfor %}
+        &lt;/p&gt;
+        &lt;p&gt;
+            {{ form.confirm_password.label }}&lt;br&gt;
+            {{ form.confirm_password(size=32) }}
+            {% for error in form.confirm_password.errors %}
+                &lt;span style="color: red;"&gt;[{{ error }}]&lt;/span&gt;
+            {% endfor %}
+        &lt;/p&gt;
+        &lt;p&gt;{{ form.submit() }}&lt;/p&gt; &lt;!-- Renderiza o botão submit --&gt;
+    &lt;/form&gt;
+    &lt;p&gt;Já tem uma conta? &lt;a href="{{ url_for('login') }}"&gt;Faça Login aqui&lt;/a&gt;.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h3>Arquivo: <code>templates/login.html</code> (Atualizado com Flask-WTF)</h3>
+            <button class="copy-button" onclick="copyCode('loginHtmlWtf')">Copiar</button>
+            <pre id="loginHtmlWtf">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Login&lt;/title&gt;
+    &lt;link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Login&lt;/h1&gt;
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            &lt;ul class="flashes"&gt;
+            {% for category, message in messages %}
+                &lt;li class="{{ category }}"&gt;{{ message }}&lt;/li&gt;
+            {% endfor %}
+            &lt;/ul&gt;
+        {% endif %}
+    {% endwith %}
+
+    &lt;form method="POST"&gt;
+        {{ form.csrf_token }}
+        &lt;p&gt;
+            {{ form.username.label }}&lt;br&gt;
+            {{ form.username(size=32) }}
+            {% for error in form.username.errors %}
+                &lt;span style="color: red;"&gt;[{{ error }}]&lt;/span&gt;
+            {% endfor %}
+        &lt;/p&gt;
+        &lt;p&gt;
+            {{ form.password.label }}&lt;br&gt;
+            {{ form.password(size=32) }}
+            {% for error in form.password.errors %}
+                &lt;span style="color: red;"&gt;[{{ error }}]&lt;/span&gt;
+            {% endfor %}
+        &lt;/p&gt;
+        &lt;p&gt;
+            {{ form.remember() }} {{ form.remember.label }} &lt;!-- Renderiza o checkbox e sua label --&gt;
+        &lt;/p&gt;
+        &lt;p&gt;{{ form.submit() }}&lt;/p&gt;
+    &lt;/form&gt;
+    &lt;p&gt;Não tem uma conta? &lt;a href="{{ url_for('register') }}"&gt;Registre-se aqui&lt;/a&gt;.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h3>Arquivo: <code>templates/adicionar_post.html</code> (Atualizado com Flask-WTF)</h3>
+            <button class="copy-button" onclick="copyCode('adicionarPostHtmlWtf')">Copiar</button>
+            <pre id="adicionarPostHtmlWtf">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Criar Novo Post&lt;/title&gt;
+    &lt;link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Criar Novo Post&lt;/h1&gt;
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            &lt;ul class="flashes"&gt;
+            {% for category, message in messages %}
+                &lt;li class="{{ category }}"&gt;{{ message }}&lt;/li&gt;
+            {% endfor %}
+            &lt;/ul&gt;
+        {% endif %}
+    {% endwith %}
+
+    &lt;form method="POST"&gt;
+        {{ form.csrf_token }}
+        &lt;p&gt;
+            {{ form.title.label }}&lt;br&gt;
+            {{ form.title(size=64) }} &lt;!-- Pode passar atributos diretamente --&gt;
+            {% for error in form.title.errors %}
+                &lt;span style="color: red;"&gt;[{{ error }}]&lt;/span&gt;
+            {% endfor %}
+        &lt;/p&gt;
+        &lt;p&gt;
+            {{ form.content.label }}&lt;br&gt;
+            {{ form.content(rows=10, cols=80) }} &lt;!-- Exemplo para TextArea --&gt;
+            {% for error in form.content.errors %}
+                &lt;span style="color: red;"&gt;[{{ error }}]&lt;/span&gt;
+            {% endfor %}
+        &lt;/p&gt;
+        &lt;p&gt;{{ form.submit() }}&lt;/p&gt;
+    &lt;/form&gt;
+    &lt;p&gt;&lt;a href="{{ url_for('listar_posts') }}"&gt;Voltar para os Posts&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>6. Vantagens do Flask-WTF</h2>
+        <p>Ao adotar Flask-WTF, sua aplicação se beneficia de várias maneiras:</p>
+        <ul>
+            <li><strong>Validação Unificada:</strong> A lógica de validação é encapsulada na classe do formulário, tornando seu `app.py` mais limpo e focado na lógica de negócio.</li>
+            <li><strong>Proteção CSRF Automática:</strong> O Flask-WTF lida com a geração e validação do token CSRF, protegendo sua aplicação contra um tipo comum de ataque web com apenas uma linha de código (`{{ form.csrf_token }}`).</li>
+            <li><strong>Reuso de Código:</strong> Você pode usar a mesma classe de formulário para criar e editar recursos, simplesmente pré-populando o formulário com dados existentes (usando `form = MyForm(obj=data_object)`).</li>
+            <li><strong>Manutenção Simplificada:</strong> Adicionar, remover ou modificar campos e validadores torna-se muito mais fácil e organizado.</li>
+            <li><strong>Renderização Flexível:</strong> Embora Flask-WTF forneça renderização básica, você tem controle total sobre como os campos são exibidos no HTML, permitindo personalização completa de estilos.</li>
+        </ul>
+
+        <hr>
+
+        <h2>Exercícios</h2>
+
+        <div class="exercise">
+            <h3>Exercício 1: Refatorar Formulários Existentes</h3>
+            <p>Siga os passos para migrar seus formulários existentes para Flask-WTF:</p>
+            <ol>
+                <li>Crie um novo arquivo chamado `forms.py` na mesma pasta do seu `app.py`.</li>
+                <li>Copie o código das classes `RegistrationForm`, `LoginForm` e `PostForm` (do exemplo na seção 3) para o seu `forms.py`.</li>
+                <li>Atualize seu `app.py` para importar essas classes de `forms.py` e adapte as rotas `/register`, `/login` e `/adicionar_post` para usá-las, instanciando o formulário e usando `form.validate_on_submit()` e `form.campo.data`.</li>
+                <li>Modifique os templates `templates/register.html`, `templates/login.html` e `templates/adicionar_post.html` para renderizar os campos usando a sintaxe Flask-WTF (`{{ form.campo.label }}`, `{{ form.campo() }}`, `{% for error in form.campo.errors %}`). Não esqueça de `{{ form.csrf_token }}`.</li>
+                <li><strong>Teste:</strong> Inicie sua aplicação, tente registrar um usuário com senhas que não coincidem, email já existente ou nome de usuário muito curto. Tente logar com credenciais inválidas. Tente adicionar um post com título ou conteúdo vazio. Observe as mensagens de erro automáticas e as mensagens flash.</li>
+            </ol>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 2 (Opcional): Formulário de Edição de Usuário/Post</h3>
+            <p>Expanda o uso de Flask-WTF para edição de dados:</p>
+            <ol>
+                <li>No seu `forms.py`, crie uma nova classe `EditProfileForm` para editar o nome de usuário e email do `Usuario` (você pode reusar `StringField` e `Email` com `DataRequired`). Adicione um validador customizado para verificar se o novo username/email já existe, mas permitindo que o usuário mantenha o seu próprio.</li>
+                <li>Crie uma nova classe `EditPostForm` para editar posts, similar ao `PostForm`.</li>
+                <li>Adapte as rotas `/editar_usuario/<int:user_id>` e `/editar_post/<int:post_id>` para usar esses novos formulários. Ao instanciar o formulário para edição (no método GET), passe o objeto do banco de dados para pré-preencher o formulário: `form = EditProfileForm(obj=usuario)`.</li>
+                <li>Crie ou atualize os templates `templates/editar_usuario.html` e `templates/editar_post.html` para renderizar esses formulários Flask-WTF.</li>
+            </ol>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 3 (Opcional): Customizando Estilos dos Formulários</h3>
+            <p>Os formulários renderizados pelo Flask-WTF são HTML básico. Use CSS para torná-los mais atraentes:</p>
+            <ol>
+                <li>No seu arquivo `static/css/style.css`, adicione estilos para elementos como `input[type="text"]`, `input[type="password"]`, `textarea`, `label`, `input[type="submit"]`.</li>
+                <li>Crie classes CSS para mensagens de erro (ex: `.error-message`) e aplique-as aos `&lt;span style="color: red;"&gt;` que exibem os erros do formulário.</li>
+                <li>Considere usar uma biblioteca CSS (como Bootstrap ou Tailwind CSS) para estilizá-los de forma mais rápida e profissional.</li>
+            </ol>
+        </div>
+
+        <hr>
+
+        <h2>Conclusão</h2>
+        <p>O Flask-WTF é um componente indispensável para qualquer aplicação Flask que lida com formulários. Ele não apenas simplifica a lógica de validação e renderização, mas também adiciona uma camada vital de segurança com a proteção CSRF automática. Ao utilizar Flask-WTF, seu código se torna mais limpo, mais fácil de manter e mais robusto.</p>
+        <p>Agora que você domina a persistência de dados, autenticação e formulários, sua aplicação Flask está se tornando cada vez mais completa e profissional. No próximo conteúdo, podemos explorar as APIs RESTful com Flask-RESTful ou Flask-Marshmallow, que permitem construir serviços de dados para outras aplicações.</p>
+
+        </div> <a href="#top" class="back-to-top" title="Voltar ao topo da página">↑</a>
+
+     <footer class="footer">
+  <div class="footer-content">
+    <div class="brand-info">
+      <p>&copy; 2025 <strong>Aprendendo Python</strong> — Todos os direitos reservados.</p>
+      <p>Desenvolvido por: <a href="https://jespedsys.com.br" target="_blank">JesPedSYS</a></p>
+    </div>
+
+    <div class="social-links">
+      <a href="https://github.com/jespedsys" target="_blank" title="GitHub">
+        <img src="../github.png" alt="GitHub">
+      </a>
+      <a href="https://www.linkedin.com/in/jesielpedroza" target="_blank" title="LinkedIn">
+        <img src="../linkedin.png" alt="LinkedIn">
+      </a>
+      <a href="https://twitter.com/jespedsys" target="_blank" title="Twitter/X">
+        <img src="../twitter.png" alt="Twitter/X">
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

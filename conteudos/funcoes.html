@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprenda Python Passo a Passo - Funções</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../estilo.css">
+</head>
+<body id="top">
+
+    <div class="main-header">
+        <img src="../logo.png" alt="Logo Aprenda Python" class="logo-header">
+        <h1>Bem-vindo ao Mundo Python!</h1>
+    </div>
+    <div class="container">
+
+        <p>Comece sua jornada na programação com Python, uma linguagem poderosa e fácil de aprender.</p>
+
+     
+    <nav class="main-menu">
+            <h2>Conteúdos:</h2>
+            <ul>
+                <li><a href="../index.html">Página Inicial</a></li>
+                <li><a href="modulos_pacotes.html">→ Próxima Aula: Modulos e Pacotes</a></li>
+                
+                </ul>
+        </nav>
+        <h1>Funções: Organizando e Reutilizando seu Código</h1>
+
+        <p>Até agora, escrevemos nossos programas em uma sequência contínua de instruções. No entanto, à medida que os programas crescem e se tornam mais complexos, essa abordagem se torna ineficiente e difícil de gerenciar.</p>
+        <p>As **funções** são blocos de código nomeados e reutilizáveis que realizam uma tarefa específica. Elas são a espinha dorsal de um código bem organizado e eficiente em Python (e em qualquer linguagem de programação).</p>
+        <p><strong>Por que usar funções?</strong></p>
+        <ul>
+            <li><strong>Reutilização de Código:</strong> Evitam a repetição (princípio DRY - Don't Repeat Yourself). Escreva uma vez, use quantas vezes precisar.</li>
+            <li><strong>Organização e Legibilidade:</strong> Dividem o código em partes lógicas, tornando-o mais fácil de ler e entender.</li>
+            <li><strong>Manutenção Simplificada:</strong> Se uma lógica precisa ser alterada, você a modifica em apenas um lugar (na função).</li>
+            <li><strong>Modularidade:</strong> Permitem quebrar problemas grandes em problemas menores e mais gerenciáveis.</li>
+        </ul>
+        <p>Python já possui muitas funções "built-in" (pré-definidas) que usamos, como <code>print()</code>, <code>input()</code> e <code>len()</code>. Agora, vamos aprender a criar as nossas próprias!</p>
+
+        <hr>
+
+        <h2>1. Definindo Funções (<code>def</code>)</h2>
+        <p>Para criar uma função em Python, usamos a palavra-chave <code>def</code>, seguida pelo nome da função, parênteses <code>()</code> para os parâmetros e dois pontos <code>:</code>. O corpo da função deve ser **indentado**.</p>
+
+        <div class="code-block">
+            <h3>Sintaxe Básica de Definição de Função:</h3>
+            <button class="copy-button" onclick="copyCode('funcSintaxe')">Copiar</button>
+            <pre id="funcSintaxe">
+def nome_da_funcao(parametro1, parametro2, ...):
+    """
+    Docstring: Uma breve descrição do que a função faz.
+    Isso é muito importante para documentar seu código!
+    """
+    # Bloco de código da função
+    # Este código será executado quando a função for chamada.
+    # Lembre-se da INDENTAÇÃO!
+    # Opcional: return valor
+            </pre>
+        </div>
+        <ul>
+            <li><code>def</code>: Indica o início da definição de uma função.</li>
+            <li><code>nome_da_funcao</code>: Deve ser um nome descritivo, em letras minúsculas e usando sublinhados (<code>_</code>) para separar palavras (convenção Python - "snake_case").</li>
+            <li><code>(parametro1, parametro2, ...)</code>: São as entradas (variáveis) que a função pode receber. Podem ser zero ou mais parâmetros.</li>
+            <li><code>:</code>: Marca o fim da linha da definição e o início do corpo da função.</li>
+            <li>**Indentação:** Todo o código dentro da função deve estar indentado (geralmente com 4 espaços).</li>
+            <li><code>"""Docstring"""</code>: Uma string de múltiplas linhas para documentar a função. É uma boa prática para explicar o propósito da função, seus parâmetros e o que ela retorna.</li>
+        </ul>
+
+        <div class="code-block">
+            <h3>Exemplo 1: Função Sem Parâmetros e Sem Retorno</h3>
+            <p>Uma função simples que apenas imprime uma mensagem.</p>
+            <button class="copy-button" onclick="copyCode('funcExemplo1')">Copiar</button>
+            <pre id="funcExemplo1">
+# Definindo a função
+def saudar():
+    print("Olá! Bem-vindo ao mundo das funções em Python!")
+    print("Espero que você goste de organizar seu código.")
+
+# Chamando a função (executando-a)
+saudar()
+saudar() # Podemos chamar a função quantas vezes quisermos!
+            </pre>
+        </div>
+        <p>Para que o código dentro da função seja executado, você precisa **chamar a função** usando seu nome seguido de parênteses (<code>saudar()</code>).</p>
+
+        <div class="code-block">
+            <h3>Exemplo 2: Função com um Parâmetro</h3>
+            <p>Uma função que recebe um nome e imprime uma saudação personalizada.</p>
+            <button class="copy-button" onclick="copyCode('funcExemplo2')">Copiar</button>
+            <pre id="funcExemplo2">
+# Definindo a função com um parâmetro 'nome'
+def saudacao_personalizada(nome):
+    print(f"Olá, {nome}! Que bom te ver por aqui.")
+    print("Este é um exemplo de função com parâmetro.")
+
+# Chamando a função e passando argumentos
+saudacao_personalizada("Alice")
+saudacao_personalizada("Bob")
+saudacao_personalizada("Maria")
+            </pre>
+        </div>
+        <p>Quando você chama <code>saudacao_personalizada("Alice")</code>, a string <code>"Alice"</code> é passada para o parâmetro <code>nome</code> dentro da função.</p>
+
+        <hr>
+
+        <h2>2. Parâmetros e Argumentos</h2>
+        <p>É importante entender a diferença entre parâmetros e argumentos:</p>
+        <ul>
+            <li>**Parâmetro:** É o nome da variável que está listada entre os parênteses na **definição da função** (ex: <code>nome</code> em <code>def saudacao(nome):</code>).</li>
+            <li>**Argumento:** É o valor real que você passa para a função quando a **chama** (ex: <code>"Alice"</code> em <code>saudacao("Alice")</code>).</li>
+        </ul>
+
+        <h3>2.1. Argumentos Posicionais</h3>
+        <p>São os argumentos passados na ordem em que os parâmetros são definidos na função. A posição importa.</p>
+        <div class="code-block">
+            <h3>Exemplo de Argumentos Posicionais:</h3>
+            <button class="copy-button" onclick="copyCode('argPosicionais')">Copiar</button>
+            <pre id="argPosicionais">
+def exibir_informacoes(nome, idade, cidade):
+    print(f"Nome: {nome}")
+    print(f"Idade: {idade} anos")
+    print(f"Cidade: {cidade}")
+
+# A ordem dos argumentos importa!
+exibir_informacoes("João", 30, "São Paulo")
+# Se a ordem fosse diferente, a saída estaria errada:
+# exibir_informacoes(30, "São Paulo", "João") # Isso resultaria em erro ou lógica incorreta
+            </pre>
+        </div>
+
+        <h3>2.2. Argumentos Nomeados (Keyword Arguments)</h3>
+        <p>Você pode passar argumentos especificando o nome do parâmetro, usando <code>parametro=valor</code>. Isso torna o código mais legível e a ordem dos argumentos não importa.</p>
+        <div class="code-block">
+            <h3>Exemplo de Argumentos Nomeados:</h3>
+            <button class="copy-button" onclick="copyCode('argNomeados')">Copiar</button>
+            <pre id="argNomeados">
+def exibir_informacoes(nome, idade, cidade):
+    print(f"Nome: {nome}")
+    print(f"Idade: {idade} anos")
+    print(f"Cidade: {cidade}")
+
+# A ordem dos argumentos nomeados não importa
+exibir_informacoes(nome="Ana", idade=22, cidade="Curitiba")
+exibir_informacoes(cidade="Belo Horizonte", nome="Pedro", idade=45)
+            </pre>
+        </div>
+
+        <h3>2.3. Parâmetros com Valor Padrão (Default Parameters)</h3>
+        <p>Você pode definir um valor padrão para um parâmetro na definição da função. Se o argumento não for passado na chamada da função, o valor padrão será usado.</p>
+        <div class="code-block">
+            <h3>Exemplo de Parâmetros Padrão:</h3>
+            <button class="copy-button" onclick="copyCode('argPadrao')">Copiar</button>
+            <pre id="argPadrao">
+def cumprimentar(nome="Visitante", saudacao="Olá"):
+    print(f"{saudacao}, {nome}!")
+
+# Chamando a função sem argumentos (usa os valores padrão)
+cumprimentar() # Saída: Olá, Visitante!
+
+# Chamando com um argumento (o primeiro parâmetro é sobrescrito)
+cumprimentar("Mundo") # Saída: Olá, Mundo!
+
+# Chamando com ambos os argumentos (todos os padrões são sobrescritos)
+cumprimentar("Gabriela", "Bom dia") # Saída: Bom dia, Gabriela!
+
+# Usando argumentos nomeados para sobrescrever um valor padrão específico
+cumprimentar(saudacao="E aí", nome="Zé") # Saída: E aí, Zé!
+            </pre>
+        </div>
+
+        <div class="note">
+            <p><strong>Regra Importante para Parâmetros Padrão:</strong></p>
+            <p>Parâmetros com valor padrão devem vir **DEPOIS** dos parâmetros sem valor padrão na definição da função.</p>
+            <p>Exemplo incorreto: <code>def minha_funcao(padrao="a", obrigatório):</code> (irá gerar um erro).</p>
+            <p>Exemplo correto: <code>def minha_funcao(obrigatório, padrao="a"):</code></p>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 2.1: Calculadora de Soma por Função</h3>
+            <p>Crie uma função chamada <code>somar_numeros</code> que recebe dois números como parâmetros e imprime a soma deles.</p>
+            <ol>
+                <li>Chame a função com diferentes pares de números.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerFunc1')">Copiar</button>
+                <pre id="exerFunc1">
+# Exercício 2.1
+def somar_numeros(num1, num2):
+    soma = num1 + num2
+    print(f"A soma de {num1} e {num2} é: {soma}")
+
+somar_numeros(10, 5)
+somar_numeros(7, 3)
+somar_numeros(-2, 8)
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 2.2: Mensagem Personalizada com Padrão</h3>
+            <p>Crie uma função chamada <code>enviar_mensagem</code> que recebe um <code>destinatario</code> e uma <code>mensagem</code>. A <code>mensagem</code> deve ter um valor padrão de "Olá! Como você está?". Imprima a mensagem formatada.</p>
+            <ol>
+                <li>Chame a função apenas com o destinatário.</li>
+                <li>Chame a função com o destinatário e uma mensagem personalizada.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerFunc2')">Copiar</button>
+                <pre id="exerFunc2">
+# Exercício 2.2
+def enviar_mensagem(destinatario, mensagem="Olá! Como você está?"):
+    print(f"Para {destinatario}: {mensagem}")
+
+enviar_mensagem("Carlos")
+enviar_mensagem("Sofia", "Tenho ótimas notícias para você!")
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>3. Retornando Valores (<code>return</code>)</h2>
+        <p>Muitas vezes, uma função precisa calcular algo e enviar o resultado de volta para o local onde foi chamada. Usamos a palavra-chave **<code>return</code>** para isso.</p>
+        <p>Quando <code>return</code> é executado, a função termina imediatamente e o valor após <code>return</code> é enviado de volta.</p>
+
+        <div class="code-block">
+            <h3>Exemplo 1: Função que Retorna um Valor Único</h3>
+            <button class="copy-button" onclick="copyCode('funcReturn1')">Copiar</button>
+            <pre id="funcReturn1">
+def calcular_dobro(numero):
+    dobro = numero * 2
+    return dobro # A função retorna o valor de 'dobro'
+
+# A função retorna um valor que pode ser armazenado em uma variável
+resultado = calcular_dobro(7)
+print(f"O dobro de 7 é: {resultado}") # Saída: O dobro de 7 é: 14
+
+# Ou usado diretamente
+print(f"O dobro de 15 é: {calcular_dobro(15)}") # Saída: O dobro de 15 é: 30
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h3>Exemplo 2: Função que Retorna Múltiplos Valores</h3>
+            <p>Em Python, uma função pode retornar múltiplos valores, que são automaticamente empacotados em uma **tupla**.</p>
+            <button class="copy-button" onclick="copyCode('funcReturnMultiple')">Copiar</button>
+            <pre id="funcReturnMultiple">
+def operacoes_matematicas(a, b):
+    soma = a + b
+    subtracao = a - b
+    multiplicacao = a * b
+    divisao = a / b
+    return soma, subtracao, multiplicacao, divisao # Retorna 4 valores (como uma tupla)
+
+# Podemos "desempacotar" os valores retornados em variáveis separadas
+s, sub, mult, div = operacoes_matematicas(10, 2)
+
+print(f"Soma: {s}")       # Saída: Soma: 12
+print(f"Subtração: {sub}") # Saída: Subtração: 8
+print(f"Multiplicação: {mult}") # Saída: Multiplicação: 20
+print(f"Divisão: {div}")    # Saída: Divisão: 5.0
+            </pre>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 3.1: Calculadora de Área de Retângulo</h3>
+            <p>Crie uma função chamada <code>calcular_area_retangulo</code> que recebe <code>largura</code> e <code>altura</code> como parâmetros. A função deve calcular a área e **retorná-la**.</p>
+            <ol>
+                <li>Chame a função e imprima o valor da área retornada.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerFunc3')">Copiar</button>
+                <pre id="exerFunc3">
+# Exercício 3.1
+def calcular_area_retangulo(largura, altura):
+    area = largura * altura
+    return area
+
+area1 = calcular_area_retangulo(5, 10)
+print(f"A área do primeiro retângulo é: {area1}")
+
+area2 = calcular_area_retangulo(7.5, 3)
+print(f"A área do segundo retângulo é: {area2}")
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 3.2: Verificar Par ou Ímpar</h3>
+            <p>Crie uma função chamada <code>eh_par</code> que recebe um número inteiro. A função deve **retornar** <code>True</code> se o número for par, e <code>False</code> se for ímpar.</p>
+            <ol>
+                <li>Teste a função com números pares e ímpares e imprima os resultados.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerFunc4')">Copiar</button>
+                <pre id="exerFunc4">
+# Exercício 3.2
+def eh_par(numero):
+    if numero % 2 == 0:
+        return True
+    else:
+        return False
+
+print(f"O número 4 é par? {eh_par(4)}")   # Saída: True
+print(f"O número 7 é par? {eh_par(7)}")   # Saída: False
+print(f"O número 0 é par? {eh_par(0)}")   # Saída: True
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 3.3: Maior e Menor de uma Lista</h3>
+            <p>Crie uma função chamada <code>encontrar_extremos</code> que recebe uma lista de números. A função deve **retornar** o maior e o menor número da lista.</p>
+            <ol>
+                <li>Teste a função com uma lista de números e imprima os valores retornados.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerFunc5')">Copiar</button>
+                <pre id="exerFunc5">
+# Exercício 3.3
+def encontrar_extremos(lista_numeros):
+    if not lista_numeros: # Verifica se a lista não está vazia
+        return None, None # Retorna None se a lista for vazia
+
+    maior = max(lista_numeros) # Função built-in para encontrar o maior
+    menor = min(lista_numeros) # Função built-in para encontrar o menor
+    return maior, menor
+
+minha_lista = [15, 2, 80, 7, 33, 1]
+maior_num, menor_num = encontrar_extremos(minha_lista)
+
+print(f"Na lista {minha_lista}:")
+print(f"O maior número é: {maior_num}")
+print(f"O menor número é: {menor_num}")
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>4. Escopo de Variáveis (Local vs. Global)</h2>
+        <p>O **escopo** de uma variável define onde ela pode ser acessada dentro do seu programa. Em Python, existem basicamente dois tipos de escopo que você precisa conhecer:</p>
+        <ul>
+            <li>
+                <p><strong>Variável Local:</strong> Uma variável definida **dentro de uma função**. Ela só pode ser acessada de dentro daquela função. Quando a função termina sua execução, as variáveis locais são destruídas.</p>
+                <div class="code-block">
+                    <h3>Exemplo de Variável Local:</h3>
+                    <button class="copy-button" onclick="copyCode('escopoLocal')">Copiar</button>
+                    <pre id="escopoLocal">
+def minha_funcao_local():
+    x = 10 # 'x' é uma variável LOCAL
+    print(f"Dentro da função, x vale: {x}")
+
+minha_funcao_local()
+# print(x) # Se você descomentar esta linha, terá um erro!
+            # Erro: NameError: name 'x' is not defined
+print("Fora da função, 'x' não existe no escopo global.")
+                    </pre>
+                </div>
+            </li>
+            <li>
+                <p><strong>Variável Global:</strong> Uma variável definida **fora de qualquer função** (no nível principal do script). Ela pode ser acessada de qualquer lugar do programa, incluindo dentro de funções.</p>
+                <p>Para **modificar** uma variável global dentro de uma função, você precisa usar a palavra-chave <code>global</code>. Isso deve ser feito com cautela, pois pode tornar o código mais difícil de entender e depurar.</p>
+                <div class="code-block">
+                    <h3>Exemplo de Variável Global:</h3>
+                    <button class="copy-button" onclick="copyCode('escopoGlobal')">Copiar</button>
+                    <pre id="escopoGlobal">
+mensagem_global = "Estou no escopo global!" # Variável GLOBAL
+
+def minha_funcao_global():
+    print(f"Dentro da função (acessando global): {mensagem_global}")
+
+def modificar_global():
+    global mensagem_global # Declara que estamos modificando a variável global
+    mensagem_global = "Fui modificada dentro da função!"
+    print(f"Dentro da função (modificada): {mensagem_global}")
+
+minha_funcao_global() # Saída: Estou no escopo global!
+print(f"Fora da função (antes de modificar): {mensagem_global}") # Saída: Estou no escopo global!
+
+modificar_global()
+print(f"Fora da função (depois de modificar): {mensagem_global}") # Saída: Fui modificada dentro da função!
+                    </pre>
+                </div>
+            </li>
+        </ul>
+        <div class="note">
+            <p><strong>Boas Práticas de Escopo:</strong></p>
+            <p>Geralmente, é uma boa prática **evitar modificar variáveis globais diretamente dentro de funções**. Prefira passar os dados para a função como **parâmetros** e retornar os resultados usando **<code>return</code>**. Isso torna suas funções mais independentes, mais fáceis de testar e o código mais claro.</p>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 4.1: Entendendo o Escopo de Contador</h3>
+            <p>Analise o código abaixo e preveja a saída. Explique por que a variável <code>contador</code> dentro da função não afeta a variável <code>contador</code> global sem usar <code>global</code>.</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerEscopo')">Copiar</button>
+                <pre id="exerEscopo">
+# Exercício 4.1
+contador = 0 # Variável global
+
+def incrementar_contador():
+    contador = 1 # Isso cria uma NOVA variável LOCAL 'contador'
+    print(f"Dentro da função, contador local: {contador}")
+
+print(f"Antes da função, contador global: {contador}")
+incrementar_contador()
+print(f"Depois da função, contador global: {contador}")
+
+# Se quiséssemos modificar a global:
+# def incrementar_contador_global():
+#    global contador
+#    contador += 1
+#    print(f"Dentro da função (modificando global): {contador}")
+
+# print("\n--- Testando modificação global ---")
+# print(f"Antes da função global, contador global: {contador}")
+# incrementar_contador_global()
+# print(f"Depois da função global, contador global: {contador}")
+                </pre>
+            </div>
+            <p><strong>Explicação Esperada:</strong> O <code>contador</code> dentro de <code>incrementar_contador()</code> é uma variável local diferente da global. A modificação de `contador` dentro da função não afeta o `contador` global, a menos que a palavra-chave `global` seja usada explicitamente. A saída será 0, 1, 0.</p>
+        </div>
+
+        <hr>
+
+        <h2>5. Docstrings e Ajuda</h2>
+        <p>Documentar seu código com **Docstrings** é uma prática essencial para tornar suas funções compreensíveis para você e para outros desenvolvedores no futuro.</p>
+        <p>Uma docstring é uma string (geralmente de múltiplas linhas) que vem logo após a linha <code>def</code> da função.</p>
+        <p>Você pode acessar a docstring de uma função usando <code>help()</code> ou o atributo <code>.__doc__</code>.</p>
+
+        <div class="code-block">
+            <h3>Exemplo de Docstring e <code>help()</code>:</h3>
+            <button class="copy-button" onclick="copyCode('docstringHelp')">Copiar</button>
+            <pre id="docstringHelp">
+def calcular_circunferencia(raio):
+    """
+    Calcula a circunferência de um círculo.
+
+    Args:
+        raio (float): O raio do círculo.
+
+    Returns:
+        float: A circunferência calculada.
+    """
+    pi = 3.14159
+    circunferencia = 2 * pi * raio
+    return circunferencia
+
+# Chamando a função help() para ver a docstring
+help(calcular_circunferencia)
+
+print("\n--- Acessando diretamente o atributo __doc__ ---")
+print(calcular_circunferencia.__doc__)
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>Conclusão</h2>
+        <p>As funções são ferramentas poderosas que transformam seu código de uma sequência linear para uma coleção de blocos organizados e reutilizáveis. Elas são a base para construir programas Python mais robustos, legíveis e fáceis de manter.</p>
+        <p>Invista tempo em praticar a criação de funções, o uso de parâmetros, o retorno de valores e o entendimento do escopo. Essa é uma habilidade fundamental para qualquer programador.</p>
+        <p>No próximo módulo, exploraremos como organizar seus arquivos Python em **Módulos e Pacotes**, permitindo que você use e compartilhe seu código de forma ainda mais eficaz.</p>
+
+        </div> <a href="#top" class="back-to-top" title="Voltar ao topo da página">↑</a>
+
+   <footer class="footer">
+  <div class="footer-content">
+    <div class="brand-info">
+      <p>&copy; 2025 <strong>Aprendendo Python</strong> — Todos os direitos reservados.</p>
+      <p>Desenvolvido por: <a href="https://jespedsys.com.br" target="_blank">JesPedSYS</a></p>
+    </div>
+
+    <div class="social-links">
+      <a href="https://github.com/jespedsys" target="_blank" title="GitHub">
+        <img src="../github.png" alt="GitHub">
+      </a>
+      <a href="https://www.linkedin.com/in/jesielpedroza" target="_blank" title="LinkedIn">
+        <img src="../linkedin.png" alt="LinkedIn">
+      </a>
+      <a href="https://twitter.com/jespedsys" target="_blank" title="Twitter/X">
+        <img src="../twitter.png" alt="Twitter/X">
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

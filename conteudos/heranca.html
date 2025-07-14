@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprenda Python Passo a Passo - Herança em POO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../estilo.css">
+</head>
+<body id="top">
+
+    <div class="main-header">
+        <img src="../logo.png" alt="Logo Aprenda Python" class="logo-header">
+        <h1>Bem-vindo ao Mundo Python!</h1>
+    </div>
+    <div class="container">
+
+        <p>Comece sua jornada na programação com Python, uma linguagem poderosa e fácil de aprender.</p>
+  <nav class="main-menu">
+            <h2>Conteúdos:</h2>
+            <ul>
+                <li><a href="../index.html">Página Inicial</a></li>
+                <li><a href="polimorfismo.html">→ Próxima Aula: Polimorfismo </a></li>
+                
+                </ul>
+        </nav>
+        <h1>Herança: Reutilizando Código e Criando Hierarquias de Classes</h1>
+
+        <p>No módulo anterior, mergulhamos nos fundamentos da Programação Orientada a Objetos (POO), entendendo o que são Classes, Objetos, Atributos e Métodos. Agora, vamos explorar outro pilar fundamental da POO: a **Herança**.</p>
+        <p>A herança é um mecanismo poderoso que permite criar uma nova classe baseada em uma classe já existente. Isso evita a duplicação de código e promove uma organização mais lógica e hierárquica das suas classes, tornando seu código mais fácil de manter e expandir.</p>
+        <p>Imagine que você precisa modelar diferentes tipos de veículos: carros, motos, caminhões. Todos eles compartilham características comuns (marca, modelo, velocidade) e comportamentos comuns (acelerar, frear). Sem herança, você teria que repetir essas características e comportamentos em cada classe de veículo. Com herança, você define o que é comum em uma **superclasse** e permite que as classes específicas (subclasses) herdem e estendam essa funcionalidade.</p>
+        <p>Na herança, usamos os termos:</p>
+        <ul>
+            <li>**Superclasse (ou Classe Pai, Base Class):** A classe da qual outras classes herdam.</li>
+            <li>**Subclasse (ou Classe Filha, Classe Derivada):** A classe que herda atributos e métodos da superclasse.</li>
+        </ul>
+
+        <hr>
+
+        <h2>1. O Conceito de Herança</h2>
+        <p>Pense na herança como na biologia: um filho herda características de seus pais. Na POO, uma subclasse herda atributos (dados) e métodos (comportamentos) de sua superclasse. A subclasse pode então adicionar seus próprios atributos e métodos, ou até mesmo modificar os que herda.</p>
+
+        <h3>Benefícios da Herança:</h3>
+        <ul>
+            <li><strong>Reutilização de Código:</strong> Você escreve o código comum uma vez na superclasse e o reutiliza em todas as subclasses. Isso reduz a quantidade de código e a chance de erros.</li>
+            <li><strong>Extensibilidade:</strong> É fácil adicionar novas funcionalidades a um sistema existente criando novas subclasses sem modificar as classes já funcionais.</li>
+            <li><strong>Organização e Modularidade:</strong> A herança cria uma estrutura lógica de "é um(a)" entre as classes, tornando o design do programa mais claro e compreensível. Ex: Um `Cachorro` **é um** `Animal`, um `Carro` **é um** `Veiculo`.</li>
+            <li><strong>Manutenibilidade:</strong> Alterações em funcionalidades comuns podem ser feitas na superclasse, beneficiando todas as subclasses automaticamente.</li>
+        </ul>
+        <div class="note">
+            <p><strong>Relação "É um(a)":</strong></p>
+            <p>A herança modela uma relação "É um(a)". Se um objeto X "é um(a)" tipo de objeto Y, então X pode herdar de Y. Por exemplo:</p>
+            <ul>
+                <li>Um `Cachorro` **é um** `Animal`.</li>
+                <li>Um `Gerente` **é um** `Funcionario`.</li>
+                <li>Um `Carro` **é um** `Veiculo`.</li>
+            </ul>
+        </div>
+
+        <hr>
+
+        <h2>2. Sintaxe da Herança em Python</h2>
+        <p>Para criar uma subclasse que herda de uma superclasse em Python, você simplesmente coloca o nome da superclasse entre parênteses após o nome da subclasse na sua declaração.</p>
+
+        <h3>Sintaxe:</h3>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('inheritanceSyntax')">Copiar</button>
+            <pre id="inheritanceSyntax">
+class Superclasse:
+    # Atributos e métodos da superclasse
+    pass
+
+class Subclasse(Superclasse): # Subclasse herda de Superclasse
+    # Atributos e métodos específicos da subclasse
+    pass
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h3>Exemplo 1: <code>Animal</code> (Superclasse) e <code>Cachorro</code> (Subclasse)</h3>
+            <button class="copy-button" onclick="copyCode('animalDogExample')">Copiar</button>
+            <pre id="animalDogExample">
+class Animal:
+    def __init__(self, nome):
+        self.nome = nome
+        print(f"Um animal chamado {self.nome} foi criado.")
+
+    def fazer_som(self):
+        print("Algum som genérico...")
+
+class Cachorro(Animal): # Cachorro herda de Animal
+    def __init__(self, nome, raca):
+        super().__init__(nome) # Chama o construtor da classe Animal
+        self.raca = raca
+        print(f"Um cachorro da raça {self.raca} chamado {self.nome} foi criado.")
+
+    def latir(self):
+        print("Au au!")
+
+# Criando instâncias
+animal_generico = Animal("Bicho")
+animal_generico.fazer_som()
+
+print("-" * 20)
+
+meu_cachorro = Cachorro("Buddy", "Golden Retriever")
+meu_cachorro.fazer_som() # Cachorro herda fazer_som() de Animal
+meu_cachorro.latir()    # Cachorro tem seu próprio método
+print(f"Meu cachorro se chama {meu_cachorro.nome} e é da raça {meu_cachorro.raca}.")
+            </pre>
+        </div>
+        <p>No exemplo acima, a classe `Cachorro` automaticamente tem o atributo `nome` e o método `fazer_som()` porque herda de `Animal`. No entanto, ela também tem um atributo `raca` e um método `latir()` que são específicos de cachorros.</p>
+
+        <hr>
+
+        <h2>3. O Método <code>super().__init__()</code> (Chamando o Construtor da Superclasse)</h2>
+        <p>Quando uma subclasse tem seu próprio método <code>__init__</code> (construtor), é fundamental que ela chame o construtor da superclasse. Isso garante que todos os atributos definidos na superclasse sejam inicializados corretamente no objeto da subclasse.</p>
+        <p>A função <code>super()</code> retorna um objeto proxy que permite chamar métodos da superclasse. Ao chamar <code>super().__init__(...)</code>, você está efetivamente executando o código de inicialização da classe pai.</p>
+
+        <div class="code-block">
+            <h3>Exemplo 2: Usando <code>super().__init__()</code></h3>
+            <button class="copy-button" onclick="copyCode('superInitExample')">Copiar</button>
+            <pre id="superInitExample">
+class Animal:
+    def __init__(self, nome, idade):
+        self.nome = nome
+        self.idade = idade
+        print(f"Construtor de Animal: {nome}, {idade} anos.")
+
+    def exibir_info(self):
+        print(f"Nome: {self.nome}, Idade: {self.idade} anos.")
+
+class Gato(Animal):
+    def __init__(self, nome, idade, cor_pelo):
+        # Chamando o construtor da superclasse Animal
+        super().__init__(nome, idade) 
+        self.cor_pelo = cor_pelo # Atributo específico de Gato
+        print(f"Construtor de Gato: {nome}, {idade} anos, {cor_pelo}.")
+
+    def miar(self):
+        print("Miau!")
+
+# Criando um objeto Gato
+meu_gato = Gato("Félix", 3, "Laranja")
+
+# Acessando atributos herdados e específicos
+meu_gato.exibir_info()
+print(f"Cor do pelo do {meu_gato.nome}: {meu_gato.cor_pelo}")
+
+# Chamando métodos herdados e específicos
+meu_gato.fazer_som() # do Animal
+meu_gato.miar()      # do Gato
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>4. Sobrescrita de Métodos (Method Overriding)</h2>
+        <p>**Sobrescrita de métodos** significa que uma subclasse pode ter sua própria implementação de um método que já existe na superclasse. Quando o método é chamado por um objeto da subclasse, a versão da subclasse é executada em vez da versão da superclasse.</p>
+        <p>Isso é útil quando a funcionalidade padrão da superclasse não é adequada para a subclasse e precisa ser especializada.</p>
+
+        <div class="code-block">
+            <h3>Exemplo 3: Sobrescrevendo <code>fazer_som()</code></h3>
+            <button class="copy-button" onclick="copyCode('methodOverriding')">Copiar</button>
+            <pre id="methodOverriding">
+class Animal:
+    def __init__(self, nome):
+        self.nome = nome
+
+    def fazer_som(self):
+        print(f"{self.nome} faz um som genérico.")
+
+class Pato(Animal):
+    def __init__(self, nome):
+        super().__init__(nome)
+
+    # Sobrescrevendo o método fazer_som()
+    def fazer_som(self): 
+        print(f"{self.nome} faz Quack! Quack!")
+
+class Cachorro(Animal): # Reutilizando a classe Cachorro
+    def __init__(self, nome):
+        super().__init__(nome)
+
+    # Sobrescrevendo o método fazer_som()
+    def fazer_som(self):
+        print(f"{self.nome} faz Au! Au!")
+
+# Testando
+animal = Animal("Bicho")
+animal.fazer_som() # "Bicho faz um som genérico."
+
+pato = Pato("Donald")
+pato.fazer_som() # "Donald faz Quack! Quack!"
+
+cachorro = Cachorro("Pluto")
+cachorro.fazer_som() # "Pluto faz Au! Au!"
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>5. Adicionando Novos Atributos e Métodos na Subclasse</h2>
+        <p>Uma subclasse não está limitada aos atributos e métodos que herda. Ela pode definir seus próprios atributos e métodos que são específicos para ela, estendendo a funcionalidade da superclasse.</p>
+
+        <div class="code-block">
+            <h3>Exemplo 4: Novos Atributos e Métodos em <code>Moto</code></h3>
+            <button class="copy-button" onclick="copyCode('newAttrsMethods')">Copiar</button>
+            <pre id="newAttrsMethods">
+class Veiculo:
+    def __init__(self, marca, modelo, ano):
+        self.marca = marca
+        self.modelo = modelo
+        self.ano = ano
+        self.velocidade = 0
+
+    def acelerar(self, incremento):
+        self.velocidade += incremento
+        print(f"{self.modelo} acelerou para {self.velocidade} km/h.")
+
+    def frear(self, decremento):
+        self.velocidade -= decremento
+        if self.velocidade < 0:
+            self.velocidade = 0
+        print(f"{self.modelo} freou para {self.velocidade} km/h.")
+
+class Moto(Veiculo):
+    def __init__(self, marca, modelo, ano, cilindradas):
+        super().__init__(marca, modelo, ano)
+        self.cilindradas = cilindradas # Novo atributo
+        self.empinada = False # Novo atributo
+
+    def empinar(self): # Novo método
+        self.empinada = True
+        print(f"{self.modelo} está empinando! Potência de {self.cilindradas}cc.")
+
+    # Opcional: sobrescrever um método existente
+    def acelerar(self, incremento):
+        super().acelerar(incremento * 1.2) # Acelerando mais rápido que um veículo comum
+        print("Woohoo! A moto voa!")
+
+# Testando
+minha_moto = Moto("Honda", "CBR500R", 2024, 500)
+
+print(f"Minha moto: {minha_moto.marca} {minha_moto.modelo} ({minha_moto.ano}, {minha_moto.cilindradas}cc)")
+
+minha_moto.acelerar(30) # Chama o método 'acelerar' sobrescrito da Moto
+minha_moto.empinar()
+minha_moto.frear(10)
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>6. Herança Múltipla (Breve Menção)</h2>
+        <p>Python é uma das poucas linguagens orientadas a objetos que suporta **herança múltipla**, o que significa que uma classe pode herdar de mais de uma superclasse.</p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('multipleInheritance')">Copiar</button>
+            <pre id="multipleInheritance">
+class Nadador:
+    def nadar(self):
+        print("Nadando na água.")
+
+class Andador:
+    def andar(self):
+        print("Andando em terra firme.")
+
+class Sapo(Nadador, Andador): # Sapo herda de Nadador E Andador
+    def __init__(self, nome):
+        self.nome = nome
+        print(f"Sapo {self.nome} criado.")
+
+    def coaxar(self):
+        print("Coaxar!")
+
+# Criando um sapo
+kermit = Sapo("Kermit")
+kermit.andar()
+kermit.nadar()
+kermit.coaxar()
+            </pre>
+        </div>
+        <div class="note">
+            <p>Apesar de poderosa, a herança múltipla pode introduzir complexidade (como o famoso "problema do diamante" na resolução de métodos). Em muitos casos, a **composição** (onde um objeto contém outro objeto) é uma alternativa mais simples e flexível para reutilização de código do que a herança múltipla.</p>
+        </div>
+
+        <hr>
+
+        <h2>Exercícios</h2>
+
+        <div class="exercise">
+            <h3>Exercício 1: Classe <code>Veiculo</code> e <code>Carro</code></h3>
+            <p>Crie uma superclasse <code>Veiculo</code> com os seguintes atributos no construtor (<code>__init__</code>): <code>marca</code>, <code>modelo</code>, <code>ano</code>.</p>
+            <p>Adicione um método <code>ligar()</code> que imprime: "O [modelo] [marca] está ligado."</p>
+            <p>Crie uma subclasse <code>Carro</code> que herde de <code>Veiculo</code>. O <code>Carro</code> deve ter um atributo adicional <code>portas</code>.</p>
+            <p>No construtor de <code>Carro</code>, certifique-se de chamar o construtor da superclasse e inicializar <code>portas</code>.</p>
+            <p>Crie uma instância de <code>Carro</code> e teste seus atributos e o método <code>ligar()</code>.</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerInheritance1')">Copiar</button>
+                <pre id="exerInheritance1">
+# Exercício 1
+class Veiculo:
+    def __init__(self, marca, modelo, ano):
+        self.marca = marca
+        self.modelo = modelo
+        self.ano = ano
+        print(f"Veículo {self.modelo} ({self.marca}, {self.ano}) criado.")
+
+    def ligar(self):
+        print(f"O {self.modelo} {self.marca} está ligado.")
+
+class Carro(Veiculo): # Carro herda de Veiculo
+    def __init__(self, marca, modelo, ano, portas):
+        super().__init__(marca, modelo, ano) # Chama o construtor de Veiculo
+        self.portas = portas # Atributo específico de Carro
+        print(f"Carro com {self.portas} portas foi criado.")
+
+# Criando uma instância de Carro
+meu_carro = Carro("Chevrolet", "Onix", 2021, 4)
+
+# Testando atributos
+print(f"Meu carro é um {meu_carro.marca} {meu_carro.modelo} de {meu_carro.ano} com {meu_carro.portas} portas.")
+
+# Testando o método herdado
+meu_carro.ligar()
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 2: Classe <code>Funcionario</code> e <code>Gerente</code></h3>
+            <p>Crie uma superclasse <code>Funcionario</code> com os atributos <code>nome</code> e <code>salario</code>.</p>
+            <p>Adicione um método <code>calcular_bonus()</code> que retorna 10% do salário.</p>
+            <p>Crie uma subclasse <code>Gerente</code> que herde de <code>Funcionario</code>.</p>
+            <p>O <code>Gerente</code> deve ter um atributo adicional <code>departamento</code>.</p>
+            <p>Sobrescreva o método <code>calcular_bonus()</code> na classe <code>Gerente</code> para que ele retorne 20% do salário mais R$ 1000,00.</p>
+            <p>Crie instâncias de <code>Funcionario</code> e <code>Gerente</code> e imprima seus bônus.</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerInheritance2')">Copiar</button>
+                <pre id="exerInheritance2">
+# Exercício 2
+class Funcionario:
+    def __init__(self, nome, salario):
+        self.nome = nome
+        self.salario = salario
+        print(f"Funcionário {self.nome} (Salário: R${self.salario:.2f}) criado.")
+
+    def calcular_bonus(self):
+        return self.salario * 0.10 # 10% do salário
+
+class Gerente(Funcionario): # Gerente herda de Funcionario
+    def __init__(self, nome, salario, departamento):
+        super().__init__(nome, salario) # Chama o construtor de Funcionario
+        self.departamento = departamento # Atributo específico de Gerente
+        print(f"Gerente do departamento de {self.departamento} criado.")
+
+    # Sobrescrita do método calcular_bonus()
+    def calcular_bonus(self):
+        bonus_base = super().calcular_bonus() # Opcional: pode usar o bonus base
+        return self.salario * 0.20 + 1000 # 20% do salário + R$ 1000
+
+# Criando instâncias
+funcionario1 = Funcionario("Paula", 3000)
+gerente1 = Gerente("Roberto", 8000, "Vendas")
+
+# Calculando e imprimindo bônus
+print(f"Bônus de {funcionario1.nome}: R${funcionario1.calcular_bonus():.2f}")
+print(f"Bônus de {gerente1.nome} ({gerente1.departamento}): R${gerente1.calcular_bonus():.2f}")
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>Conclusão</h2>
+        <p>A herança é um dos pilares mais importantes da Programação Orientada a Objetos, permitindo que você construa hierarquias de classes que promovem a **reutilização de código**, a **organização** e a **extensibilidade** de seus programas.</p>
+        <p>Ao dominar o uso de superclasses, subclasses, o construtor <code>super().__init__()</code> e a sobrescrita de métodos, você estará apto a criar designs de software mais eficientes e elegantes.</p>
+        <p>No próximo módulo, exploraremos outro conceito fundamental da POO: o **Polimorfismo**, que trabalha em conjunto com a herança para tornar seus programas ainda mais flexíveis.</p>
+
+        </div> <a href="#top" class="back-to-top" title="Voltar ao topo da página">↑</a>
+
+   <footer class="footer">
+  <div class="footer-content">
+    <div class="brand-info">
+      <p>&copy; 2025 <strong>Aprendendo Python</strong> — Todos os direitos reservados.</p>
+      <p>Desenvolvido por: <a href="https://jespedsys.com.br" target="_blank">JesPedSYS</a></p>
+    </div>
+
+    <div class="social-links">
+      <a href="https://github.com/jespedsys" target="_blank" title="GitHub">
+        <img src="../github.png" alt="GitHub">
+      </a>
+      <a href="https://www.linkedin.com/in/jesielpedroza" target="_blank" title="LinkedIn">
+        <img src="../linkedin.png" alt="LinkedIn">
+      </a>
+      <a href="https://twitter.com/jespedsys" target="_blank" title="Twitter/X">
+        <img src="../twitter.png" alt="Twitter/X">
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

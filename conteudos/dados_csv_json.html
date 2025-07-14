@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprenda Python Passo a Passo - Tratamento de Dados: CSV e JSON</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../estilo.css">
+</head>
+<body id="top">
+
+    <div class="main-header">
+        <img src="../logo.png" alt="Logo Aprenda Python" class="logo-header">
+        <h1>Bem-vindo ao Mundo Python!</h1>
+    </div>
+    <div class="container">
+
+        <p>Comece sua jornada na programação com Python, uma linguagem poderosa e fácil de aprender.</p>
+
+         <nav class="main-menu">
+            <h2>Conteúdos:</h2>
+            <ul>
+                <li><a href="../index.html">Página Inicial</a></li>
+                <li><a href="bancos_dados.html">→ Próxima Aula: Banco de Dados</a></li>
+                
+                </ul>
+        </nav>
+        <h1>Tratamento de Dados: Trabalhando com Arquivos CSV e JSON</h1>
+
+        <p>Em projetos de programação do mundo real, raramente seus programas operarão apenas com dados gerados internamente. É muito comum a necessidade de ler dados de fontes externas e, da mesma forma, salvar resultados para uso futuro ou para outras aplicações. Dois dos formatos de arquivo mais comuns e versáteis para troca e armazenamento de dados são **CSV (Comma Separated Values)** e **JSON (JavaScript Object Notation)**.</p>
+        <p>Dominar a leitura e escrita nesses formatos é uma habilidade essencial, pois eles são amplamente utilizados em:</p>
+        <ul>
+            <li>**APIs Web:** A maioria das APIs RESTful usa JSON para enviar e receber dados.</li>
+            <li>**Planilhas:** CSV é o formato padrão para exportar e importar dados de planilhas.</li>
+            <li>**Bancos de Dados:** Frequentemente, dados são exportados ou importados de bancos de dados em CSV ou JSON.</li>
+            <li>**Configurações:** Muitos aplicativos usam JSON para armazenar configurações.</li>
+            <li>**Data Science e Análise:** CSV é um formato comum para datasets.</li>
+        </ul>
+
+        <hr>
+
+        <h2>1. O que é CSV (Comma Separated Values)?</h2>
+        <p>CSV é um formato de arquivo de texto simples usado para armazenar dados tabulares (dados em tabelas ou planilhas). Cada linha do arquivo representa um registro de dados, e os valores dentro de cada registro são separados por um caractere delimitador, que geralmente é uma vírgula (daí o nome "Comma Separated Values").</p>
+        <p>Suas principais características incluem:</p>
+        <ul>
+            <li>**Simplicidade:** Fácil de entender e criar manualmente.</li>
+            <li>**Dados Tabulares:** Ideal para representar dados em formato de tabela.</li>
+            <li>**Não Hierárquico:** Não suporta estruturas de dados aninhadas ou complexas.</li>
+            <li>**Extensão:** Os arquivos CSV geralmente têm a extensão <code>.csv</code>.</li>
+        </ul>
+
+        <h3>Exemplo de um arquivo <code>pessoas.csv</code>:</h3>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('csvExample')">Copiar</button>
+            <pre id="csvExample">
+Nome,Idade,Cidade
+Alice,30,São Paulo
+Bob,25,Rio de Janeiro
+Charlie,35,Belo Horizonte
+            </pre>
+        </div>
+        <p>Na primeira linha, temos o cabeçalho (nomes das colunas), e nas linhas seguintes, os registros de dados.</p>
+
+        <hr>
+
+        <h2>2. Manipulando Arquivos CSV em Python</h2>
+        <p>Python possui um módulo embutido chamado <code>csv</code>, que oferece funcionalidades robustas para ler e escrever arquivos CSV, tratando corretamente casos complexos como vírgulas dentro de campos, aspas, etc. É altamente recomendável usar este módulo em vez de tentar manipular strings manualmente.</p>
+
+        <h3>2.1. Lendo Arquivos CSV</h3>
+        <p>O módulo <code>csv</code> oferece duas maneiras principais de ler dados:</p>
+        <ul>
+            <li><strong><code>csv.reader</code>:</strong> Lê o arquivo linha por linha, retornando cada linha como uma **lista de strings**.</li>
+            <li><strong><code>csv.DictReader</code>:</strong> Lê o arquivo linha por linha, retornando cada linha como um **dicionário**, onde as chaves são os nomes das colunas (do cabeçalho). Isso é geralmente mais conveniente.</li>
+        </ul>
+
+        <div class="code-block">
+            <h3>Exemplo 2.1.1: Lendo CSV com <code>csv.reader</code></h3>
+            <button class="copy-button" onclick="copyCode('csvReader')">Copiar</button>
+            <pre id="csvReader">
+import csv
+
+# Suponha que você tem um arquivo 'pessoas.csv' com o conteúdo do exemplo anterior.
+# Se não tiver, crie-o na mesma pasta do seu script Python.
+
+print("--- Lendo CSV com csv.reader ---")
+with open('pessoas.csv', 'r', encoding='utf-8') as arquivo_csv:
+    leitor_csv = csv.reader(arquivo_csv)
+
+    # Opcional: Ler a primeira linha como cabeçalho
+    cabecalho = next(leitor_csv)
+    print(f"Cabeçalho: {cabecalho}")
+
+    # Iterar sobre as linhas de dados restantes
+    for linha in leitor_csv:
+        print(linha) # Ex: ['Alice', '30', 'São Paulo']
+        # Você pode acessar por índice:
+        # print(f"Nome: {linha[0]}, Idade: {linha[1]}, Cidade: {linha[2]}")
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h3>Exemplo 2.1.2: Lendo CSV com <code>csv.DictReader</code> (Recomendado)</h3>
+            <button class="copy-button" onclick="copyCode('csvDictReader')">Copiar</button>
+            <pre id="csvDictReader">
+import csv
+
+print("\n--- Lendo CSV com csv.DictReader ---")
+with open('pessoas.csv', 'r', encoding='utf-8') as arquivo_csv:
+    leitor_dit = csv.DictReader(arquivo_csv)
+    # O DictReader automaticamente usa a primeira linha como chaves do dicionário
+
+    for linha in leitor_dit:
+        print(linha) # Ex: {'Nome': 'Alice', 'Idade': '30', 'Cidade': 'São Paulo'}
+        # Acesse os dados pelos nomes das colunas
+        print(f"Nome: {linha['Nome']}, Idade: {linha['Idade']}")
+            </pre>
+        </div>
+
+        <div class="note">
+            <p><strong>Dica de Boa Prática:</strong> Use <code>with open(...)</code> para garantir que o arquivo seja automaticamente fechado, mesmo que ocorram erros.</p>
+            <p>O parâmetro <code>encoding='utf-8'</code> é crucial para lidar com caracteres especiais (acentos, cedilhas, etc.) corretamente.</p>
+        </div>
+
+        <h3>2.2. Escrevendo Arquivos CSV</h3>
+        <p>Similar à leitura, você pode escrever dados em CSV usando <code>csv.writer</code> ou <code>csv.DictWriter</code>.</p>
+        <p><strong>Importante:</strong> Ao abrir um arquivo para escrita CSV, sempre use <code>newline=''</code> no <code>open()</code> para evitar que linhas em branco extras sejam adicionadas entre os registros.</p>
+
+        <div class="code-block">
+            <h3>Exemplo 2.2.1: Escrevendo CSV com <code>csv.writer</code></h3>
+            <button class="copy-button" onclick="copyCode('csvWriter')">Copiar</button>
+            <pre id="csvWriter">
+import csv
+
+print("\n--- Escrevendo CSV com csv.writer ---")
+dados_produtos = [
+    ['Produto', 'Preco', 'Estoque'], # Cabeçalho
+    ['Maçã Gala', 2.50, 100],
+    ['Banana Prata', 3.00, 150],
+    ['Laranja Pera', 1.80, 200]
+]
+
+with open('produtos.csv', 'w', newline='', encoding='utf-8') as arquivo_csv:
+    escritor_csv = csv.writer(arquivo_csv)
+    escritor_csv.writerows(dados_produtos) # Escreve todas as linhas de uma vez
+
+print("Arquivo 'produtos.csv' criado com sucesso!")
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h3>Exemplo 2.2.2: Escrevendo CSV com <code>csv.DictWriter</code> (Recomendado para dados nomeados)</h3>
+            <button class="copy-button" onclick="copyCode('csvDictWriter')">Copiar</button>
+            <pre id="csvDictWriter">
+import csv
+
+print("\n--- Escrevendo CSV com csv.DictWriter ---")
+# Definir o cabeçalho (nomes das colunas)
+cabecalho_novas_pessoas = ['Nome', 'Idade', 'Cidade', 'Profissao']
+
+# Dados como lista de dicionários
+novas_pessoas_dados = [
+    {'Nome': 'Daniel', 'Idade': 40, 'Cidade': 'Curitiba', 'Profissao': 'Desenvolvedor'},
+    {'Nome': 'Julia', 'Idade': 28, 'Cidade': 'Porto Alegre', 'Profissao': 'Designer'},
+    {'Nome': 'Mariana', 'Idade': 33, 'Cidade': 'Recife', 'Profissao': 'Médica'}
+]
+
+with open('novas_pessoas.csv', 'w', newline='', encoding='utf-8') as arquivo_csv:
+    escritor_dict = csv.DictWriter(arquivo_csv, fieldnames=cabecalho_novas_pessoas)
+    escritor_dict.writeheader() # Escreve a primeira linha (cabeçalho)
+    escritor_dict.writerows(novas_pessoas_dados) # Escreve as linhas de dados
+
+print("Arquivo 'novas_pessoas.csv' criado com sucesso!")
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>3. O que é JSON (JavaScript Object Notation)?</h2>
+        <p>JSON é um formato leve de troca de dados. Ele é fácil para humanos lerem e escreverem, e fácil para máquinas analisarem e gerarem. JSON é construído sobre duas estruturas:</p>
+        <ol>
+            <li>**Coleção de pares nome/valor:** Em Python, isso se traduz em um **dicionário** (<code>{}</code>).</li>
+            <li>**Lista ordenada de valores:** Em Python, isso se traduz em uma **lista** (<code>[]</code>).</li>
+        </ol>
+        <p>JSON é amplamente utilizado em APIs web para enviar e receber dados entre um servidor e um cliente.</p>
+
+        <h3>Exemplo de um arquivo <code>dados.json</code>:</h3>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('jsonExample')">Copiar</button>
+            <pre id="jsonExample">
+{
+    "nome": "João Silva",
+    "idade": 30,
+    "cidades_visitadas": ["São Paulo", "Rio de Janeiro", "Brasília"],
+    "ativo": true,
+    "contato": {
+        "email": "joao@example.com",
+        "telefone": "11987654321"
+    }
+}
+            </pre>
+        </div>
+        <p>Observe a estrutura hierárquica e como ela se assemelha a dicionários e listas aninhadas em Python.</p>
+        <p>Tipos de dados suportados no JSON que têm correspondência direta em Python:</p>
+        <ul>
+            <li>`string` (Python `str`)</li>
+            <li>`number` (Python `int`, `float`)</li>
+            <li>`boolean` (Python `True`, `False`)</li>
+            <li>`null` (Python `None`)</li>
+            <li>`object` (Python `dict`)</li>
+            <li>`array` (Python `list`)</li>
+        </ul>
+
+        <hr>
+
+        <h2>4. Manipulando Arquivos JSON em Python</h2>
+        <p>O módulo embutido <code>json</code> do Python permite converter facilmente objetos Python (dicionários, listas, etc.) para strings JSON e vice-versa.</p>
+
+        <h3>4.1. Lendo Arquivos JSON</h3>
+        <ul>
+            <li><strong><code>json.load(arquivo)</code>:</strong> Carrega dados JSON diretamente de um objeto arquivo (aberto).</li>
+            <li><strong><code>json.loads(string_json)</code>:</strong> Carrega dados JSON de uma string que contém o formato JSON.</li>
+        </ul>
+
+        <div class="code-block">
+            <h3>Exemplo 4.1.1: Lendo JSON de um Arquivo</h3>
+            <button class="copy-button" onclick="copyCode('jsonLoadFile')">Copiar</button>
+            <pre id="jsonLoadFile">
+import json
+
+# Suponha que você tem um arquivo 'dados.json' com o conteúdo do exemplo anterior.
+# Se não tiver, crie-o na mesma pasta do seu script Python.
+
+print("\n--- Lendo JSON de um Arquivo ---")
+try:
+    with open('dados.json', 'r', encoding='utf-8') as arquivo_json:
+        dados = json.load(arquivo_json)
+        print(f"Nome: {dados['nome']}")
+        print(f"Idade: {dados['idade']}")
+        print(f"Cidades Visitadas: {', '.join(dados['cidades_visitadas'])}")
+        print(f"Email de Contato: {dados['contato']['email']}")
+except FileNotFoundError:
+    print("Erro: 'dados.json' não encontrado. Por favor, crie o arquivo.")
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h3>Exemplo 4.1.2: Lendo JSON de uma String</h3>
+            <button class="copy-button" onclick="copyCode('jsonLoadsString')">Copiar</button>
+            <pre id="jsonLoadsString">
+import json
+
+print("\n--- Lendo JSON de uma String ---")
+json_string_exemplo = '''
+{
+    "produto": "Teclado Mecânico",
+    "preco": 350.00,
+    "disponivel": true,
+    "avaliacoes": [4, 5, 4, 3]
+}
+'''
+dados_da_string = json.loads(json_string_exemplo)
+
+print(f"Produto: {dados_da_string['produto']}")
+print(f"Preço: R${dados_da_string['preco']:.2f}")
+print(f"Disponível: {dados_da_string['disponivel']}")
+print(f"Média das Avaliações: {sum(dados_da_string['avaliacoes']) / len(dados_da_string['avaliacoes']):.1f}")
+            </pre>
+        </div>
+
+        <h3>4.2. Escrevendo Arquivos JSON</h3>
+        <ul>
+            <li><strong><code>json.dump(obj, arquivo)</code>:</strong> Converte um objeto Python (<code>obj</code>) para uma string JSON e a escreve em um objeto arquivo.</li>
+            <li><strong><code>json.dumps(obj)</code>:</strong> Converte um objeto Python (<code>obj</code>) para uma string JSON e a retorna.</li>
+        </ul>
+
+        <div class="code-block">
+            <h3>Exemplo 4.2.1: Escrevendo JSON para um Arquivo</h3>
+            <button class="copy-button" onclick="copyCode('jsonDumpFile')">Copiar</button>
+            <pre id="jsonDumpFile">
+import json
+
+print("\n--- Escrevendo JSON para um Arquivo ---")
+dados_para_salvar = {
+    "livro": "Python para Cientistas de Dados",
+    "autor": "Ada Lovelace",
+    "ano_publicacao": 2023,
+    "genero": "Programação",
+    "recursos": ["notebooks", "exercicios", "dataset_exemplo"],
+    "disponivel_ebook": True
+}
+
+with open('livro_info.json', 'w', encoding='utf-8') as arquivo_json:
+    # 'indent=4' para formatar o JSON de forma legível (com 4 espaços de indentação)
+    # 'ensure_ascii=False' para permitir caracteres Unicode (acentos, ç)
+    json.dump(dados_para_salvar, arquivo_json, indent=4, ensure_ascii=False)
+
+print("Dados do livro salvos em 'livro_info.json'.")
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h3>Exemplo 4.2.2: Convertendo Python para String JSON</h3>
+            <button class="copy-button" onclick="copyCode('jsonDumpsString')">Copiar</button>
+            <pre id="jsonDumpsString">
+import json
+
+print("\n--- Convertendo Python para String JSON ---")
+configuracoes = {
+    "tema": "dark",
+    "notificacoes_ativadas": True,
+    "idioma": "pt-br",
+    "preferencias_usuario": {
+        "tamanho_fonte": 14,
+        "salvar_automatico": False
+    }
+}
+
+# Converte o dicionário Python para uma string JSON formatada
+json_string_formatada = json.dumps(configuracoes, indent=2, ensure_ascii=False)
+
+print("String JSON gerada:")
+print(json_string_formatada)
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>Exercícios</h2>
+
+        <div class="exercise">
+            <h3>Exercício 1: Ler e Processar CSV de Notas</h3>
+            <p>1. Crie um arquivo chamado <code>notas.csv</code> (na mesma pasta do seu script) com o seguinte conteúdo:</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('notasCsvContent')">Copiar</button>
+                <pre id="notasCsvContent">
+Aluno,Nota1,Nota2
+Maria,8.5,9.0
+Pedro,7.0,6.5
+Ana,9.5,8.0
+João,6.0,7.0
+                </pre>
+            </div>
+            <p>2. Escreva um script Python que use <code>csv.DictReader</code> para ler este arquivo.</p>
+            <p>3. Para cada aluno, calcule a média das duas notas.</p>
+            <p>4. Imprima o nome do aluno e sua média final, formatando a média com uma casa decimal.</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerCSV')">Copiar</button>
+                <pre id="exerCSV">
+# Exercício 1: Ler e Processar CSV de Notas
+import csv
+
+try:
+    with open('notas.csv', 'r', encoding='utf-8') as arquivo_notas:
+        leitor_notas = csv.DictReader(arquivo_notas)
+        print("\n--- Médias dos Alunos ---")
+        for linha in leitor_notas:
+            aluno = linha['Aluno']
+            nota1 = float(linha['Nota1'])
+            nota2 = float(linha['Nota2'])
+            media = (nota1 + nota2) / 2
+            print(f"Aluno: {aluno}, Média: {media:.1f}")
+except FileNotFoundError:
+    print("Erro: O arquivo 'notas.csv' não foi encontrado. Por favor, crie-o.")
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 2: Criar e Salvar JSON de Configurações</h3>
+            <p>1. Crie um dicionário Python que represente as configurações de um aplicativo fictício. Inclua chaves como <code>"tema"</code> (string), <code>"notificacoes_push"</code> (booleano), <code>"idioma_padrao"</code> (string), e uma lista de <code>"ultimos_acessos"</code> (lista de strings).</p>
+            <p>2. Salve este dicionário em um arquivo chamado <code>config.json</code>.</p>
+            <p>3. Certifique-se de que o JSON seja salvo de forma legível (com indentação).</p>
+            <p>4. Em seguida, abra e leia o arquivo <code>config.json</code> de volta para um dicionário Python.</p>
+            <p>5. Imprima o valor da chave <code>"idioma_padrao"</code> para verificar se a leitura foi bem-sucedida.</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerJSON')">Copiar</button>
+                <pre id="exerJSON">
+# Exercício 2: Criar e Salvar JSON de Configurações
+import json
+
+# 1. Criar o dicionário de configurações
+config_app = {
+    "tema": "dark_mode",
+    "notificacoes_push": True,
+    "idioma_padrao": "pt_BR",
+    "ultimos_acessos": ["dashboard", "perfil", "configuracoes"]
+}
+
+# 2. Salvar o dicionário em config.json
+try:
+    with open('config.json', 'w', encoding='utf-8') as arquivo_config:
+        json.dump(config_app, arquivo_config, indent=4, ensure_ascii=False)
+    print("\nArquivo 'config.json' criado e salvo com sucesso.")
+except Exception as e:
+    print(f"Erro ao salvar 'config.json': {e}")
+
+# 4. Abrir e ler o arquivo config.json de volta
+print("\n--- Lendo configurações de 'config.json' ---")
+try:
+    with open('config.json', 'r', encoding='utf-8') as arquivo_config_leitura:
+        config_lida = json.load(arquivo_config_leitura)
+        # 5. Imprimir o valor do idioma_padrao
+        print(f"Idioma Padrão lido do arquivo: {config_lida['idioma_padrao']}")
+        print(f"Notificações Push: {config_lida['notificacoes_push']}")
+except FileNotFoundError:
+    print("Erro: O arquivo 'config.json' não foi encontrado.")
+except json.JSONDecodeError:
+    print("Erro: O arquivo 'config.json' não é um JSON válido.")
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>Conclusão</h2>
+        <p>A habilidade de trabalhar com arquivos CSV e JSON é indispensável para qualquer desenvolvedor Python. Esses formatos são a espinha dorsal da troca de dados em muitas aplicações modernas, desde a manipulação de planilhas simples até a integração com serviços web complexos.</p>
+        <p>Os módulos <code>csv</code> e <code>json</code> do Python oferecem ferramentas eficientes e fáceis de usar para realizar essas tarefas, permitindo que você se concentre na lógica do seu programa em vez dos detalhes de parsing de arquivos.</p>
+        <p>No próximo conteúdo, vamos dar um passo adiante na persistência de dados e explorar a **Integração com Bancos de Dados**, usando o SQLite como exemplo, que é um banco de dados leve e ideal para iniciantes.</p>
+
+        </div> <a href="#top" class="back-to-top" title="Voltar ao topo da página">↑</a>
+
+      <footer class="footer">
+  <div class="footer-content">
+    <div class="brand-info">
+      <p>&copy; 2025 <strong>Aprendendo Python</strong> — Todos os direitos reservados.</p>
+      <p>Desenvolvido por: <a href="https://jespedsys.com.br" target="_blank">JesPedSYS</a></p>
+    </div>
+
+    <div class="social-links">
+      <a href="https://github.com/jespedsys" target="_blank" title="GitHub">
+        <img src="../github.png" alt="GitHub">
+      </a>
+      <a href="https://www.linkedin.com/in/jesielpedroza" target="_blank" title="LinkedIn">
+        <img src="../linkedin.png" alt="LinkedIn">
+      </a>
+      <a href="https://twitter.com/jespedsys" target="_blank" title="Twitter/X">
+        <img src="../twitter.png" alt="Twitter/X">
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprenda Python Passo a Passo - Estruturas de Dados</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../estilo.css">
+</head>
+<body id="top">
+
+    <div class="main-header">
+        <img src="../logo.png" alt="Logo Aprenda Python" class="logo-header">
+        <h1>Bem-vindo ao Mundo Python!</h1>
+    </div>
+    <div class="container">
+
+        <p>Comece sua jornada na programação com Python, uma linguagem poderosa e fácil de aprender.</p>
+
+      
+      <nav class="main-menu">
+            <h2>Conteúdos:</h2>
+            <ul>
+                <li><a href="../index.html">Página Inicial</a></li>
+                <li><a href="funcoes.html">→ Próxima Aula: Funções</a></li>
+                
+                </ul>
+        </nav>
+        <h1>Estruturas de Dados: Organizadores de Informação</h1>
+
+        <p>Até agora, aprendemos a armazenar valores em variáveis individuais e a controlar o fluxo do nosso programa. No entanto, muitas vezes precisamos lidar com **múltiplos valores relacionados** ou grandes volumes de dados. É aqui que entram as **estruturas de dados** (ou coleções).</p>
+        <p>Estruturas de dados são maneiras eficientes de organizar, armazenar e manipular informações. Python oferece diversas estruturas de dados embutidas, cada uma com suas características e usos ideais.</p>
+        <p>Nesta lição, vamos explorar as coleções mais fundamentais em Python: **Listas, Tuplas, Dicionários e Conjuntos**.</p>
+
+        <hr>
+
+        <h2>1. Listas (<code>list</code>)</h2>
+        <p>As **listas** são as coleções mais versáteis e usadas em Python. Elas são:</p>
+        <ul>
+            <li>**Ordenadas:** Os itens mantêm a ordem em que foram inseridos.</li>
+            <li>**Mutáveis:** Você pode adicionar, remover ou modificar itens após a criação.</li>
+            <li>**Indexadas:** Cada item tem um índice numérico (começando em 0).</li>
+            <li>Podem conter itens de **diferentes tipos** de dados.</li>
+        </ul>
+        <p>Listas são definidas usando **colchetes `[]`**.</p>
+
+        <div class="code-block">
+            <h3>Sintaxe Básica e Criação de Listas:</h3>
+            <button class="copy-button" onclick="copyCode('listSintaxeCriação')">Copiar</button>
+            <pre id="listSintaxeCriação">
+# Lista vazia
+lista_vazia = []
+
+# Lista de números inteiros
+numeros = [1, 2, 3, 4, 5]
+
+# Lista de strings
+frutas = ["maçã", "banana", "laranja", "uva"]
+
+# Lista mista (contém diferentes tipos de dados)
+dados_pessoais = ["Alice", 30, True, 1.75]
+
+print(f"Lista de números: {numeros}")
+print(f"Lista de frutas: {frutas}")
+print(f"Lista mista: {dados_pessoais}")
+            </pre>
+        </div>
+
+        <h3>1.1. Acesso a Elementos (Indexação e Fatiamento)</h3>
+        <p>Você pode acessar itens em uma lista usando seu índice (posição). O primeiro item tem índice <code>0</code>.</p>
+        <p>Índices negativos começam a contar do final da lista (<code>-1</code> é o último item).</p>
+        <p>**Fatiamento (Slicing)** permite pegar uma sub-lista.</p>
+
+        <div class="code-block">
+            <h3>Exemplos de Acesso e Fatiamento:</h3>
+            <button class="copy-button" onclick="copyCode('listAcessoFatiamento')">Copiar</button>
+            <pre id="listAcessoFatiamento">
+frutas = ["maçã", "banana", "laranja", "uva", "morango"]
+
+# Acessando por índice
+primeira_fruta = frutas[0]  # "maçã"
+segunda_fruta = frutas[1]   # "banana"
+ultima_fruta = frutas[-1]   # "morango"
+penultima_fruta = frutas[-2] # "uva"
+
+print(f"Primeira fruta: {primeira_fruta}")
+print(f"Última fruta: {ultima_fruta}")
+
+# Fatiamento (slice): [inicio:fim_exclusivo]
+primeiras_duas = frutas[0:2] # ["maçã", "banana"]
+do_segundo_em_diante = frutas[1:] # ["banana", "laranja", "uva", "morango"]
+ate_o_terceiro = frutas[:3] # ["maçã", "banana", "laranja"]
+copia_completa = frutas[:] # Cria uma cópia da lista
+            </pre>
+        </div>
+
+        <h3>1.2. Modificando, Adicionando e Removendo Elementos</h3>
+        <p>Como listas são mutáveis, você pode alterar seu conteúdo.</p>
+
+        <div class="code-block">
+            <h3>Exemplos de Modificação, Adição e Remoção:</h3>
+            <button class="copy-button" onclick="copyCode('listModificacao')">Copiar</button>
+            <pre id="listModificacao">
+minha_lista = ["pão", "leite", "ovos"]
+
+# Modificar um elemento
+minha_lista[0] = "café" # ["café", "leite", "ovos"]
+print(f"Lista após modificação: {minha_lista}")
+
+# Adicionar elementos:
+# append(): adiciona no final
+minha_lista.append("frutas") # ["café", "leite", "ovos", "frutas"]
+print(f"Lista após append: {minha_lista}")
+
+# insert(): adiciona em uma posição específica
+minha_lista.insert(1, "queijo") # ["café", "queijo", "leite", "ovos", "frutas"]
+print(f"Lista após insert: {minha_lista}")
+
+# Remover elementos:
+# del: remove pelo índice
+del minha_lista[0] # Remove "café" -> ["queijo", "leite", "ovos", "frutas"]
+print(f"Lista após del: {minha_lista}")
+
+# remove(): remove pela primeira ocorrência do valor
+minha_lista.remove("ovos") # ["queijo", "leite", "frutas"]
+print(f"Lista após remove: {minha_lista}")
+
+# pop(): remove e retorna o item pelo índice (ou o último se nenhum for dado)
+item_removido = minha_lista.pop(0) # Remove "queijo" e o retorna
+print(f"Item removido com pop: {item_removido}")
+print(f"Lista após pop: {minha_lista}")
+            </pre>
+        </div>
+
+        <h3>1.3. Outras Operações Úteis com Listas</h3>
+
+        <div class="code-block">
+            <h3>Exemplos de Outras Operações:</h3>
+            <button class="copy-button" onclick="copyCode('listOutrasOperacoes')">Copiar</button>
+            <pre id="listOutrasOperacoes">
+numeros = [5, 1, 8, 2, 9]
+
+# Tamanho da lista
+tamanho = len(numeros) # 5
+print(f"Tamanho da lista: {tamanho}")
+
+# Verificar se um item existe na lista
+existe_2 = 2 in numeros  # True
+existe_7 = 7 in numeros  # False
+print(f"O número 2 está na lista? {existe_2}")
+print(f"O número 7 está na lista? {existe_7}")
+
+# Ordenar a lista (altera a própria lista)
+numeros.sort() # [1, 2, 5, 8, 9]
+print(f"Lista ordenada: {numeros}")
+
+# Reverter a ordem da lista (altera a própria lista)
+numeros.reverse() # [9, 8, 5, 2, 1]
+print(f"Lista invertida: {numeros}")
+
+# Limpar todos os elementos da lista
+minha_lista = ["a", "b", "c"]
+minha_lista.clear() # []
+print(f"Lista após clear: {minha_lista}")
+            </pre>
+        </div>
+
+        <h3>1.4. Iterando sobre Listas com `for` (relembrando)</h3>
+        <p>Loops <code>for</code> são perfeitos para percorrer todos os itens de uma lista.</p>
+
+        <div class="code-block">
+            <h3>Exemplo de Iteração de Lista:</h3>
+            <button class="copy-button" onclick="copyCode('listIteracao')">Copiar</button>
+            <pre id="listIteracao">
+disciplinas = ["Matemática", "Português", "História", "Ciências"]
+
+print("Minhas disciplinas favoritas:")
+for disciplina in disciplinas:
+    print(f"- {disciplina}")
+            </pre>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 1.1: Crie e Acesse Cores</h3>
+            <p>Crie uma lista com suas três cores favoritas. Em seguida, imprima a segunda cor da lista.</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerList1')">Copiar</button>
+                <pre id="exerList1">
+# Exercício 1.1
+cores_favoritas = ["azul", "verde", "roxo"]
+print(f"Minha segunda cor favorita é: {cores_favoritas[1]}")
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 1.2: Modifique e Adicione Tarefas</h3>
+            <p>Crie uma lista de tarefas do dia: <code>["Comprar pão", "Estudar Python", "Fazer exercícios"]</code>.</p>
+            <ol>
+                <li>Mude "Comprar pão" para "Comprar leite".</li>
+                <li>Adicione "Lavar louça" ao final da lista.</li>
+                <li>Imprima a lista atualizada.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerList2')">Copiar</button>
+                <pre id="exerList2">
+# Exercício 1.2
+tarefas = ["Comprar pão", "Estudar Python", "Fazer exercícios"]
+
+tarefas[0] = "Comprar leite"
+tarefas.append("Lavar louça")
+
+print(f"Tarefas atualizadas: {tarefas}")
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 1.3: Remova um Animal e Verifique o Tamanho</h3>
+            <p>Comece com a lista de animais: <code>["cachorro", "gato", "pássaro", "peixe"]</code>.</p>
+            <ol>
+                <li>Remova o animal "pássaro".</li>
+                <li>Imprima a lista após a remoção.</li>
+                <li>Imprima o número de itens restantes na lista.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerList3')">Copiar</button>
+                <pre id="exerList3">
+# Exercício 1.3
+animais = ["cachorro", "gato", "pássaro", "peixe"]
+
+animais.remove("pássaro")
+print(f"Lista de animais após remoção: {animais}")
+print(f"Número de animais restantes: {len(animais)}")
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 1.4: Iterando na Lista de Produtos</h3>
+            <p>Dada a lista de produtos: <code>produtos = ["Camisa", "Calça", "Tênis", "Meia"]</code>.</p>
+            <ol>
+                <li>Use um loop <code>for</code> para imprimir cada produto, um por linha, precedido por "Produto: ".</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerList4')">Copiar</button>
+                <pre id="exerList4">
+# Exercício 1.4
+produtos = ["Camisa", "Calça", "Tênis", "Meia"]
+
+for produto in produtos:
+    print(f"Produto: {produto}")
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>2. Tuplas (<code>tuple</code>)</h2>
+        <p>As **tuplas** são muito parecidas com as listas, com uma diferença crucial: elas são **imutáveis**. Isso significa que, uma vez criadas, você não pode adicionar, remover ou modificar seus elementos.</p>
+        <p>Tuplas são definidas usando **parênteses `()`**.</p>
+        <p>São ideais para coleções de itens que devem permanecer constantes, como coordenadas de um ponto (x, y) ou informações fixas de configuração.</p>
+
+        <div class="code-block">
+            <h3>Sintaxe Básica e Criação de Tuplas:</h3>
+            <button class="copy-button" onclick="copyCode('tupleSintaxeCriação')">Copiar</button>
+            <pre id="tupleSintaxeCriação">
+# Tupla vazia
+tupla_vazia = ()
+
+# Tupla de coordenadas
+coordenadas = (10.5, 20.3)
+
+# Tupla de cores RGB
+cor_vermelho = (255, 0, 0)
+
+# Tupla mista
+info_evento = ("Conferência Python", 2025, "São Paulo")
+
+print(f"Coordenadas: {coordenadas}")
+print(f"Info do Evento: {info_evento}")
+            </pre>
+        </div>
+
+        <h3>2.1. Acesso a Elementos e Fatiamento (similar às Listas)</h3>
+        <p>Assim como nas listas, você acessa elementos por índice e pode usar fatiamento.</p>
+
+        <div class="code-block">
+            <h3>Exemplos de Acesso e Fatiamento em Tuplas:</h3>
+            <button class="copy-button" onclick="copyCode('tupleAcessoFatiamento')">Copiar</button>
+            <pre id="tupleAcessoFatiamento">
+dias_semana = ("Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo")
+
+primeiro_dia = dias_semana[0] # "Segunda"
+ultimo_dia = dias_semana[-1]  # "Domingo"
+
+print(f"Primeiro dia da semana: {primeiro_dia}")
+print(f"Último dia da semana: {ultimo_dia}")
+
+dias_uteis = dias_semana[0:5] # ("Segunda", "Terça", "Quarta", "Quinta", "Sexta")
+print(f"Dias úteis: {dias_uteis}")
+
+tamanho = len(dias_semana)
+print(f"Número de dias na tupla: {tamanho}")
+            </pre>
+        </div>
+
+        <div class="note">
+            <p><strong>Diferença Chave: Imutabilidade</strong></p>
+            <p>A principal diferença é que você **não pode** usar métodos como <code>append()</code>, <code>insert()</code>, <code>remove()</code> ou simplesmente atribuir um novo valor a um índice como <code>minha_tupla[0] = "novo_valor"</code> em tuplas. Isso resultará em um erro.</p>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 2.1: Criar e Acessar uma Tupla</h3>
+            <p>Crie uma tupla com os meses do ano de um trimestre (ex: "Janeiro", "Fevereiro", "Março"). Imprima o mês do meio.</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerTuple1')">Copiar</button>
+                <pre id="exerTuple1">
+# Exercício 2.1
+trimestre = ("Janeiro", "Fevereiro", "Março")
+print(f"O mês do meio do trimestre é: {trimestre[1]}")
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 2.2: Tentativa de Modificação (Compreendendo o Erro)</h3>
+            <p>Crie a tupla <code>ponto = (5, 8)</code>. Tente mudar o primeiro valor para <code>10</code> (<code>ponto[0] = 10</code>) e observe o tipo de erro que Python retorna. Explique o porquê.</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerTuple2')">Copiar</button>
+                <pre id="exerTuple2">
+# Exercício 2.2
+ponto = (5, 8)
+
+# Descomente a linha abaixo para ver o erro:
+# ponto[0] = 10
+
+# print(ponto) # Esta linha não será executada se a anterior causar um erro
+
+print("Ao tentar atribuir um novo valor a um elemento de uma tupla (ex: ponto[0] = 10),")
+print("Python retorna um 'TypeError' porque tuplas são imutáveis e seus elementos não podem ser alterados após a criação.")
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>3. Dicionários (<code>dict</code>)</h2>
+        <p>Os **dicionários** são coleções de pares **chave-valor**. Em vez de usar um índice numérico, você acessa os valores usando uma **chave** (que pode ser uma string, um número, ou uma tupla, desde que seja imutável).</p>
+        <p>Dicionários são:</p>
+        <ul>
+            <li>**Não ordenados** (em versões mais antigas do Python), mas a partir do Python 3.7+ eles mantêm a ordem de inserção dos itens.</li>
+            <li>**Mutáveis:** Você pode adicionar, remover ou modificar pares chave-valor.</li>
+            <li>Cada **chave deve ser única**.</li>
+        </ul>
+        <p>Dicionários são definidos usando **chaves `{}`**, com pares chave e valor separados por dois pontos (`:`).</p>
+
+        <div class="code-block">
+            <h3>Sintaxe Básica e Criação de Dicionários:</h3>
+            <button class="copy-button" onclick="copyCode('dictSintaxeCriação')">Copiar</button>
+            <pre id="dictSintaxeCriação">
+# Dicionário vazio
+dicionario_vazio = {}
+
+# Dicionário de informações de uma pessoa
+pessoa = {
+    "nome": "Mariana",
+    "idade": 28,
+    "cidade": "Rio de Janeiro",
+    "email": "mariana@email.com"
+}
+
+# Dicionário de preços de produtos
+precos = {
+    "maçã": 2.50,
+    "banana": 1.80,
+    "laranja": 3.00
+}
+
+print(f"Informações da pessoa: {pessoa}")
+print(f"Preços dos produtos: {precos}")
+            </pre>
+        </div>
+
+        <h3>3.1. Acesso, Adição e Modificação de Itens</h3>
+
+        <div class="code-block">
+            <h3>Exemplos de Operações com Dicionários:</h3>
+            <button class="copy-button" onclick="copyCode('dictOperacoes')">Copiar</button>
+            <pre id="dictOperacoes">
+aluno = {
+    "nome": "Carlos",
+    "matricula": "2023001",
+    "curso": "Engenharia"
+}
+
+# Acessar um valor usando a chave
+nome_aluno = aluno["nome"] # "Carlos"
+print(f"Nome do aluno: {nome_aluno}")
+
+# Modificar um valor existente
+aluno["curso"] = "Ciência da Computação"
+print(f"Curso atualizado: {aluno['curso']}")
+print(f"Dicionário após modificação: {aluno}")
+
+# Adicionar um novo par chave-valor
+aluno["media"] = 8.5
+print(f"Dicionário após adição: {aluno}")
+
+# Remover um item
+del aluno["matricula"] # Remove a chave "matricula" e seu valor
+print(f"Dicionário após del: {aluno}")
+
+# pop(): remove e retorna o valor para a chave especificada
+curso_removido = aluno.pop("curso")
+print(f"Curso removido com pop: {curso_removido}")
+print(f"Dicionário após pop: {aluno}")
+
+# Verificar se uma chave existe
+if "nome" in aluno:
+    print("A chave 'nome' existe no dicionário.")
+
+if "endereco" not in aluno:
+    print("A chave 'endereco' NÃO existe no dicionário.")
+            </pre>
+        </div>
+
+        <h3>3.2. Métodos <code>keys()</code>, <code>values()</code> e <code>items()</code></h3>
+        <p>Esses métodos são muito úteis para obter partes específicas do dicionário ou para iterar sobre ele.</p>
+
+        <div class="code-block">
+            <h3>Exemplos de <code>keys()</code>, <code>values()</code>, <code>items()</code>:</h3>
+            <button class="copy-button" onclick="copyCode('dictKeysValuesItems')">Copiar</button>
+            <pre id="dictKeysValuesItems">
+produto = {
+    "nome": "Laptop Gamer",
+    "marca": "TechPro",
+    "preco": 5500.00,
+    "estoque": 15
+}
+
+# Obter todas as chaves
+chaves = produto.keys()
+print(f"Chaves do dicionário: {list(chaves)}") # Convertendo para lista para visualização
+
+# Obter todos os valores
+valores = produto.values()
+print(f"Valores do dicionário: {list(valores)}")
+
+# Obter todos os itens (pares chave-valor como tuplas)
+itens = produto.items()
+print(f"Itens do dicionário: {list(itens)}")
+            </pre>
+        </div>
+
+        <h3>3.3. Iterando sobre Dicionários</h3>
+        <p>Você pode iterar sobre as chaves, valores ou pares chave-valor de um dicionário usando loops <code>for</code>.</p>
+
+        <div class="code-block">
+            <h3>Exemplo de Iteração de Dicionário:</h3>
+            <button class="copy-button" onclick="copyCode('dictIteracao')">Copiar</button>
+            <pre id="dictIteracao">
+usuario = {
+    "username": "dev_python",
+    "status": "online",
+    "last_login": "2025-07-11"
+}
+
+print("Informações do Usuário:")
+# Iterar sobre as chaves (padrão)
+for chave in usuario:
+    print(f"Chave: {chave}, Valor: {usuario[chave]}")
+
+print("-" * 20)
+
+# Iterar sobre os itens (pares chave-valor)
+for chave, valor in usuario.items():
+    print(f"{chave.capitalize()}: {valor}")
+            </pre>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 3.1: Criar e Acessar Dicionário de Livro</h3>
+            <p>Crie um dicionário para representar um livro com as chaves "título", "autor" e "ano_publicacao". Atribua valores a elas. Em seguida, imprima o autor do livro.</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerDict1')">Copiar</button>
+                <pre id="exerDict1">
+# Exercício 3.1
+livro = {
+    "titulo": "O Guia do Mochileiro das Galáxias",
+    "autor": "Douglas Adams",
+    "ano_publicacao": 1979
+}
+
+print(f"O autor do livro é: {livro['autor']}")
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 3.2: Adicionar e Modificar Dados de Carro</h3>
+            <p>Comece com um dicionário de carro: <code>carro = {"marca": "Toyota", "modelo": "Corolla", "ano": 2020}</code>.</p>
+            <ol>
+                <li>Adicione uma nova chave "cor" com o valor "Prata".</li>
+                <li>Modifique o valor da chave "ano" para 2022.</li>
+                <li>Imprima o dicionário completo após as modificações.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerDict2')">Copiar</button>
+                <pre id="exerDict2">
+# Exercício 3.2
+carro = {"marca": "Toyota", "modelo": "Corolla", "ano": 2020}
+
+carro["cor"] = "Prata"
+carro["ano"] = 2022
+
+print(f"Dicionário do carro atualizado: {carro}")
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 3.3: Percorrer Dicionário de Status de Pedido</h3>
+            <p>Dada a lista de status de um pedido: <code>status_pedido = {"id": 12345, "produto": "Teclado Mecânico", "status": "Em processamento", "valor": 350.00}</code>.</p>
+            <ol>
+                <li>Use um loop <code>for</code> para imprimir cada chave e seu respectivo valor no formato "Chave: Valor".</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerDict3')">Copiar</button>
+                <pre id="exerDict3">
+# Exercício 3.3
+status_pedido = {
+    "id": 12345,
+    "produto": "Teclado Mecânico",
+    "status": "Em processamento",
+    "valor": 350.00
+}
+
+print("Detalhes do Pedido:")
+for chave, valor in status_pedido.items():
+    print(f"{chave.capitalize()}: {valor}")
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>4. Conjuntos (<code>set</code>)</h2>
+        <p>Os **conjuntos** são coleções **não ordenadas** de itens **únicos**. Eles são otimizados para operações de verificação de pertencimento e para remover duplicatas.</p>
+        <p>Conjuntos são definidos usando **chaves `{}`** (assim como dicionários, mas sem pares chave-valor) ou a função `set()`.</p>
+
+        <div class="code-block">
+            <h3>Sintaxe Básica e Criação de Conjuntos:</h3>
+            <button class="copy-button" onclick="copyCode('setSintaxeCriação')">Copiar</button>
+            <pre id="setSintaxeCriação">
+# Conjunto vazio (ATENÇÃO: {} cria um dicionário vazio. Use set() para um conjunto vazio)
+conjunto_vazio = set()
+
+# Conjunto de números (duplicatas são automaticamente removidas)
+numeros_repetidos = {1, 2, 3, 2, 1, 4} # Resulta em {1, 2, 3, 4}
+print(f"Conjunto de números: {numeros_repetidos}")
+
+# Criar um conjunto a partir de uma lista
+lista_com_duplicatas = ["a", "b", "c", "a", "d", "b"]
+letras_unicas = set(lista_com_duplicatas) # {'a', 'b', 'c', 'd'}
+print(f"Conjunto de letras únicas: {letras_unicas}")
+            </pre>
+        </div>
+
+        <h3>4.1. Adicionar e Remover Elementos</h3>
+
+        <div class="code-block">
+            <h3>Exemplos de Adição e Remoção em Conjuntos:</h3>
+            <button class="copy-button" onclick="copyCode('setAddRemove')">Copiar</button>
+            <pre id="setAddRemove">
+meu_conjunto = {"maçã", "banana", "uva"}
+
+# Adicionar um elemento
+meu_conjunto.add("laranja") # {"maçã", "banana", "uva", "laranja"}
+meu_conjunto.add("maçã")    # Não adiciona, pois "maçã" já existe
+print(f"Conjunto após adição: {meu_conjunto}")
+
+# Remover um elemento
+meu_conjunto.remove("banana") # {"maçã", "uva", "laranja"}
+print(f"Conjunto após remoção: {meu_conjunto}")
+
+# pop(): remove e retorna um item arbitrário (conjuntos não são ordenados)
+item_removido = meu_conjunto.pop()
+print(f"Item removido com pop: {item_removido}")
+print(f"Conjunto após pop: {meu_conjunto}")
+            </pre>
+        </div>
+
+        <h3>4.2. Operações de Conjuntos (Matemática)</h3>
+        <p>Conjuntos suportam operações como união, interseção e diferença.</p>
+
+        <div class="code-block">
+            <h3>Exemplos de Operações de Conjuntos:</h3>
+            <button class="copy-button" onclick="copyCode('setOperacoesMatematicas')">Copiar</button>
+            <pre id="setOperacoesMatematicas">
+A = {1, 2, 3, 4}
+B = {3, 4, 5, 6}
+
+# União (elementos em A OU em B, sem duplicatas)
+uniao = A.union(B) # {1, 2, 3, 4, 5, 6}
+print(f"União de A e B: {uniao}")
+
+# Interseção (elementos em A E em B)
+intersecao = A.intersection(B) # {3, 4}
+print(f"Interseção de A e B: {intersecao}")
+
+# Diferença (elementos em A MAS NÃO em B)
+diferenca = A.difference(B) # {1, 2}
+print(f"Diferença de A - B: {diferenca}")
+
+# Verificar subconjunto/superconjunto
+C = {1, 2}
+print(f"C é um subconjunto de A? {C.issubset(A)}") # True
+print(f"A é um superconjunto de B? {A.issuperset(B)}") # False
+            </pre>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 4.1: Remover Duplicatas de uma Lista</h3>
+            <p>Dada a lista <code>numeros_com_duplicatas = [1, 2, 2, 3, 4, 4, 5, 1]</code>.</p>
+            <ol>
+                <li>Converta essa lista para um conjunto para remover as duplicatas.</li>
+                <li>Converta o conjunto de volta para uma lista (se desejar manter a estrutura de lista, mas sem duplicatas).</li>
+                <li>Imprima a lista sem duplicatas.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerSet1')">Copiar</button>
+                <pre id="exerSet1">
+# Exercício 4.1
+numeros_com_duplicatas = [1, 2, 2, 3, 4, 4, 5, 1]
+
+# Convertendo para conjunto para remover duplicatas
+conjunto_unicos = set(numeros_com_duplicatas)
+
+# Convertendo de volta para lista (a ordem pode não ser a original)
+lista_sem_duplicatas = list(conjunto_unicos)
+
+print(f"Lista original com duplicatas: {numeros_com_duplicatas}")
+print(f"Lista sem duplicatas: {lista_sem_duplicatas}")
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 4.2: Interseção de Hobbies</h3>
+            <p>Dois amigos listaram seus hobbies:</p>
+            <ul>
+                <li><code>hobbies_amigo1 = {"leitura", "jogos", "caminhada", "cozinhar"}</code></li>
+                <li><code>hobbies_amigo2 = {"jogos", "natação", "leitura", "fotografia"}</code></li>
+            </ul>
+            <ol>
+                <li>Encontre e imprima os hobbies que ambos os amigos têm em comum.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerSet2')">Copiar</button>
+                <pre id="exerSet2">
+# Exercício 4.2
+hobbies_amigo1 = {"leitura", "jogos", "caminhada", "cozinhar"}
+hobbies_amigo2 = {"jogos", "natação", "leitura", "fotografia"}
+
+hobbies_em_comum = hobbies_amigo1.intersection(hobbies_amigo2)
+
+print(f"Hobbies em comum entre os dois amigos: {hobbies_em_comum}")
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>Conclusão</h2>
+        <p>As estruturas de dados são a espinha dorsal de quase todo programa Python. Escolher a estrutura correta (lista, tupla, dicionário ou conjunto) para o seu problema pode tornar seu código muito mais eficiente e fácil de gerenciar.</p>
+        <p>Dedique tempo para praticar a criação e manipulação dessas coleções, pois elas serão usadas constantemente em seus projetos Python.</p>
+        <p>No próximo passo, exploraremos como criar e usar **Funções**, blocos de código reutilizáveis que nos permitem organizar ainda mais nossos programas.</p>
+
+        </div> <a href="#top" class="back-to-top" title="Voltar ao topo da página">↑</a>
+
+   <footer class="footer">
+  <div class="footer-content">
+    <div class="brand-info">
+      <p>&copy; 2025 <strong>Aprendendo Python</strong> — Todos os direitos reservados.</p>
+      <p>Desenvolvido por: <a href="https://jespedsys.com.br" target="_blank">JesPedSYS</a></p>
+    </div>
+
+    <div class="social-links">
+      <a href="https://github.com/jespedsys" target="_blank" title="GitHub">
+        <img src="../github.png" alt="GitHub">
+      </a>
+      <a href="https://www.linkedin.com/in/jesielpedroza" target="_blank" title="LinkedIn">
+        <img src="../linkedin.png" alt="LinkedIn">
+      </a>
+      <a href="https://twitter.com/jespedsys" target="_blank" title="Twitter/X">
+        <img src="../twitter.png" alt="Twitter/X">
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

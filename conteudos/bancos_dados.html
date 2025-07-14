@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprenda Python Passo a Passo - Integração com Bancos de Dados (SQLite)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../estilo.css">
+</head>
+<body id="top">
+
+    <div class="main-header">
+        <img src="../logo.png" alt="Logo Aprenda Python" class="logo-header">
+        <h1>Bem-vindo ao Mundo Python!</h1>
+    </div>
+    <div class="container">
+
+        <p>Comece sua jornada na programação com Python, uma linguagem poderosa e fácil de aprender.</p>
+
+         <nav class="main-menu">
+            <h2>Conteúdos:</h2>
+            <ul>
+                <li><a href="../index.html">Página Inicial</a></li>
+                <li><a href="apis_web.html">→ Próxima Aula: Apis Web</a></li>
+                
+                </ul>
+        </nav>
+        <h1>Integração com Bancos de Dados: Armazenando Dados com SQLite</h1>
+
+        <p>Até agora, aprendemos a armazenar dados temporariamente em variáveis ou em arquivos simples (como texto puro, CSV e JSON). No entanto, para aplicações mais complexas que precisam de uma forma estruturada, eficiente e persistente de gerenciar grandes volumes de informações, utilizamos **Bancos de Dados**.</p>
+        <p>Um banco de dados é um sistema organizado para armazenar, gerenciar e recuperar dados. Ele oferece uma maneira poderosa de persistir informações, ou seja, de fazer com que os dados permaneçam disponíveis mesmo depois que seu programa for encerrado.</p>
+        <p>A linguagem padrão para interagir com a maioria dos bancos de dados relacionais é a **SQL (Structured Query Language)**. Python, com seus módulos dedicados, torna a interação com bancos de dados muito acessível.</p>
+        <p>Para começarmos, vamos focar no **SQLite**, que é uma excelente escolha para iniciantes por várias razões:</p>
+        <ul>
+            <li>**Leve e Embutido:** Não requer a instalação de um servidor de banco de dados separado. Todo o banco de dados é armazenado em um único arquivo no disco.</li>
+            <li>**Fácil de Usar:** Sua simplicidade o torna ideal para prototipagem, desenvolvimento de pequenas aplicações e aprendizado.</li>
+            <li>**Suporte Nativo em Python:** O módulo <code>sqlite3</code> já vem incluído na biblioteca padrão do Python, o que significa que você não precisa instalar nada extra para começar a usá-lo.</li>
+        </ul>
+
+        <hr>
+
+        <h2>1. O que é um Banco de Dados Relacional?</h2>
+        <p>Um banco de dados relacional organiza os dados em uma ou mais **tabelas** (também chamadas de "relações"). Cada tabela é composta por:</p>
+        <ul>
+            <li>**Colunas (Campos/Atributos):** Definem os tipos de dados que serão armazenados (ex: Nome, Idade, Email).</li>
+            <li>**Linhas (Registros/Tuplas):** Representam uma entrada única de dados na tabela (ex: uma pessoa específica, um produto).</li>
+        </ul>
+        <p>Cada linha em uma tabela é geralmente identificada por uma **Chave Primária**, que é uma coluna (ou conjunto de colunas) cujos valores são únicos para cada registro, garantindo que você possa identificar e acessar um registro específico de forma exclusiva.</p>
+        <p>Em sistemas mais complexos, as tabelas podem ser **relacionadas** umas com as outras usando chaves estrangeiras, permitindo modelar relações complexas entre os dados (ex: um cliente pode ter vários pedidos, e cada pedido está associado a um cliente).</p>
+
+        <hr>
+
+        <h2>2. Introdução ao SQLite</h2>
+        <p>Como mencionado, o SQLite é diferente de bancos de dados como MySQL, PostgreSQL ou SQL Server, que são sistemas cliente-servidor robustos, projetados para lidar com muitos usuários e grandes volumes de dados em rede. O SQLite é um banco de dados "serverless", o que significa que o motor do banco de dados é parte da sua aplicação e opera diretamente no arquivo do banco de dados.</p>
+        <p>Isso o torna excelente para:</p>
+        <ul>
+            <li>Aplicativos desktop pequenos.</li>
+            <li>Aplicativos móveis.</li>
+            <li>Armazenamento local de dados para aplicações web leves.</li>
+            <li>Prototipagem e desenvolvimento.</li>
+            <li>Aulas e exemplos (como este!).</li>
+        </ul>
+
+        <hr>
+
+        <h2>3. O Módulo <code>sqlite3</code> em Python</h2>
+        <p>O Python oferece um módulo padrão chamado <code>sqlite3</code>, que permite a você interagir com bancos de dados SQLite de forma simples e direta.</p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('importSqlite3')">Copiar</button>
+            <pre id="importSqlite3">
+import sqlite3
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>4. Conectando-se a um Banco de Dados SQLite</h2>
+        <p>Para começar a trabalhar com um banco de dados SQLite, o primeiro passo é estabelecer uma conexão. Se o arquivo do banco de dados não existir, o SQLite o criará automaticamente.</p>
+
+        <div class="code-block">
+            <h3>Exemplo 4.1: Abrindo uma Conexão</h3>
+            <button class="copy-button" onclick="copyCode('connectDB')">Copiar</button>
+            <pre id="connectDB">
+import sqlite3
+
+# Conecta-se ao banco de dados 'meu_banco.db'.
+# Se o arquivo não existir, ele será criado.
+conn = sqlite3.connect('meu_banco.db')
+
+# Um "cursor" é um objeto que permite executar comandos SQL e percorrer os resultados.
+cursor = conn.cursor()
+
+print("Conexão com o banco de dados 'meu_banco.db' estabelecida.")
+# Lembre-se de fechar a conexão no final! (Ver seção 10)
+            </pre>
+        </div>
+        <p>A função <code>sqlite3.connect()</code> retorna um objeto `Connection`. O método `conn.cursor()` cria um objeto `Cursor`, que é o que você usará para executar comandos SQL.</p>
+
+        <hr>
+
+        <h2>5. Criando Tabelas</h2>
+        <p>Uma vez conectado, você pode criar tabelas usando o comando SQL <code>CREATE TABLE</code>. Os comandos SQL são passados para o método <code>execute()</code> do objeto cursor.</p>
+        <p>É uma boa prática usar <code>CREATE TABLE IF NOT EXISTS</code> para evitar erros se a tabela já existir.</p>
+
+        <div class="code-block">
+            <h3>Exemplo 5.1: Criando a Tabela <code>usuarios</code></h3>
+            <button class="copy-button" onclick="copyCode('createTable')">Copiar</button>
+            <pre id="createTable">
+import sqlite3
+
+conn = sqlite3.connect('meu_banco.db')
+cursor = conn.cursor()
+
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS usuarios (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT NOT NULL,
+        email TEXT UNIQUE
+    )
+''')
+
+# Para salvar as alterações no banco de dados, você precisa "commitá-las".
+conn.commit()
+
+print("Tabela 'usuarios' criada ou já existente.")
+# conn.close() # Fechar a conexão ao final
+            </pre>
+        </div>
+        <p>Explicação dos termos SQL usados:</p>
+        <ul>
+            <li><code>id INTEGER PRIMARY KEY AUTOINCREMENT</code>: Define uma coluna `id` que é um número inteiro, é a chave primária da tabela (identificador único para cada registro) e é automaticamente incrementada a cada nova inserção.</li>
+            <li><code>nome TEXT NOT NULL</code>: Define uma coluna `nome` que armazena texto e não pode ser vazia (nula).</li>
+            <li><code>email TEXT UNIQUE</code>: Define uma coluna `email` que armazena texto e deve ter valores únicos (não pode haver dois usuários com o mesmo email).</li>
+        </ul>
+        <div class="note">
+            <p><strong>Tipos de Dados no SQLite:</strong></p>
+            <ul>
+                <li>`NULL`: O valor é nulo.</li>
+                <li>`INTEGER`: Valor inteiro (com sinal).</li>
+                <li>`REAL`: Valor de ponto flutuante.</li>
+                <li>`TEXT`: String de texto.</li>
+                <li>`BLOB`: Um "Binary Large OBject" (dados binários como imagens, arquivos compactados).</li>
+            </ul>
+        </div>
+        <div class="note">
+            <p><strong><code>conn.commit()</code>:</strong></p>
+            <p>Depois de executar comandos que modificam o banco de dados (como <code>CREATE TABLE</code>, <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>), você deve chamar <code>conn.commit()</code> para salvar as alterações permanentemente. Caso contrário, as alterações não serão gravadas no arquivo do banco de dados.</p>
+        </div>
+
+        <hr>
+
+        <h2>6. Inserindo Dados (CREATE)</h2>
+        <p>Para adicionar novos registros à sua tabela, você usa o comando SQL <code>INSERT INTO</code>. É crucial usar placeholders (<code>?</code>) para os valores que você está inserindo. Isso é uma prática de segurança fundamental para prevenir ataques de SQL Injection.</p>
+
+        <div class="code-block">
+            <h3>Exemplo 6.1: Inserindo um Único Registro</h3>
+            <button class="copy-button" onclick="copyCode('insertSingle')">Copiar</button>
+            <pre id="insertSingle">
+import sqlite3
+
+conn = sqlite3.connect('meu_banco.db')
+cursor = conn.cursor()
+
+# Inserindo um único usuário
+# Use '?' como placeholder para os valores
+try:
+    cursor.execute("INSERT INTO usuarios (nome, email) VALUES (?, ?)", ('Alice', 'alice@example.com'))
+    conn.commit()
+    print("Dados de Alice inseridos.")
+except sqlite3.IntegrityError as e:
+    print(f"Erro ao inserir Alice: {e} (provavelmente email duplicado)")
+
+# conn.close()
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h3>Exemplo 6.2: Inserindo Múltiplos Registros (<code>executemany</code>)</h3>
+            <button class="copy-button" onclick="copyCode('insertMany')">Copiar</button>
+            <pre id="insertMany">
+import sqlite3
+
+conn = sqlite3.connect('meu_banco.db')
+cursor = conn.cursor()
+
+# Lista de tuplas com os dados dos novos usuários
+novos_usuarios = [
+    ('Bob', 'bob@example.com'),
+    ('Charlie', 'charlie@example.com'),
+    ('David', 'david@example.com')
+]
+
+# Usando executemany para inserir vários registros de uma vez
+try:
+    cursor.executemany("INSERT INTO usuarios (nome, email) VALUES (?, ?)", novos_usuarios)
+    conn.commit()
+    print("Dados de Bob, Charlie e David inseridos.")
+except sqlite3.IntegrityError as e:
+    print(f"Erro ao inserir múltiplos usuários: {e} (provavelmente emails duplicados)")
+
+# conn.close()
+            </pre>
+        </div>
+        <div class="note">
+            <p><strong>SQL Injection:</strong></p>
+            <p>Nunca, *nunca* construa strings SQL diretamente com f-strings ou concatenação de strings para incluir valores de entrada do usuário. Sempre use placeholders (<code>?</code>) e passe os valores como uma tupla ou lista separada. Isso protege seu banco de dados contra ataques de injeção de SQL, onde usuários mal-intencionados podem manipular suas consultas.</p>
+        </div>
+
+        <hr>
+
+        <h2>7. Lendo Dados (READ)</h2>
+        <p>Para recuperar dados do banco de dados, você usa o comando SQL <code>SELECT</code>. Os resultados são recuperados usando métodos do objeto cursor.</p>
+
+        <h3>7.1. Selecionando Todos os Dados</h3>
+        <p>Use <code>SELECT * FROM nome_da_tabela</code> para obter todas as colunas de todos os registros.</p>
+        <div class="code-block">
+            <h3>Exemplo 7.1.1: Lendo Todos os Usuários com <code>fetchall()</code></h3>
+            <button class="copy-button" onclick="copyCode('selectAll')">Copiar</button>
+            <pre id="selectAll">
+import sqlite3
+
+conn = sqlite3.connect('meu_banco.db')
+cursor = conn.cursor()
+
+cursor.execute("SELECT * FROM usuarios")
+registros = cursor.fetchall() # fetchall() retorna uma lista de tuplas
+
+print("\n--- Todos os Usuários Registrados ---")
+if registros:
+    for usuario in registros:
+        print(usuario) # Ex: (1, 'Alice', 'alice@example.com')
+else:
+    print("Nenhum usuário encontrado.")
+# conn.close()
+            </pre>
+        </div>
+
+        <h3>7.2. Selecionando Dados Específicos (com <code>WHERE</code>)</h3>
+        <p>Use a cláusula <code>WHERE</code> para filtrar registros com base em condições. Use <code>fetchone()</code> para obter um único resultado.</p>
+        <div class="code-block">
+            <h3>Exemplo 7.2.1: Buscando um Usuário por ID com <code>fetchone()</code></h3>
+            <button class="copy-button" onclick="copyCode('selectWhere')">Copiar</button>
+            <pre id="selectWhere">
+import sqlite3
+
+conn = sqlite3.connect('meu_banco.db')
+cursor = conn.cursor()
+
+# Buscar um usuário específico pelo ID
+id_para_buscar = 1
+cursor.execute("SELECT nome, email FROM usuarios WHERE id = ?", (id_para_buscar,))
+usuario_encontrado = cursor.fetchone() # fetchone() retorna uma tupla ou None
+
+if usuario_encontrado:
+    print(f"\nUsuário encontrado com ID {id_para_buscar}:")
+    print(f"Nome: {usuario_encontrado[0]}, Email: {usuario_encontrado[1]}")
+else:
+    print(f"\nNenhum usuário encontrado com ID {id_para_buscar}.")
+
+# Buscar um usuário por nome
+nome_para_buscar = 'Charlie'
+cursor.execute("SELECT * FROM usuarios WHERE nome = ?", (nome_para_buscar,))
+usuario_charlie = cursor.fetchone()
+
+if usuario_charlie:
+    print(f"\nUsuário '{nome_para_buscar}' encontrado: {usuario_charlie}")
+else:
+    print(f"\nNenhum usuário com o nome '{nome_para_buscar}' encontrado.")
+# conn.close()
+            </pre>
+        </div>
+
+        <h3>7.3. Iterando Diretamente sobre os Resultados</h3>
+        <p>Você pode iterar diretamente sobre o objeto cursor após executar uma consulta <code>SELECT</code>, o que é eficiente para grandes conjuntos de dados.</p>
+        <div class="code-block">
+            <h3>Exemplo 7.3.1: Iterando sobre Usuários com ID > 1</h3>
+            <button class="copy-button" onclick="copyCode('iterateResults')">Copiar</button>
+            <pre id="iterateResults">
+import sqlite3
+
+conn = sqlite3.connect('meu_banco.db')
+cursor = conn.cursor()
+
+print("\n--- Usuários com ID maior que 1 ---")
+# Iterar diretamente sobre o cursor
+for usuario in cursor.execute("SELECT id, nome FROM usuarios WHERE id > ?", (1,)):
+    print(f"ID: {usuario[0]}, Nome: {usuario[1]}")
+
+# conn.close()
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>8. Atualizando Dados (UPDATE)</h2>
+        <p>Para modificar dados existentes em uma tabela, você usa o comando SQL <code>UPDATE</code>.</p>
+        <div class="code-block">
+            <h3>Exemplo 8.1: Atualizando o Email de um Usuário</h3>
+            <button class="copy-button" onclick="copyCode('updateData')">Copiar</button>
+            <pre id="updateData">
+import sqlite3
+
+conn = sqlite3.connect('meu_banco.db')
+cursor = conn.cursor()
+
+novo_email = 'alice.silva@example.com'
+nome_para_atualizar = 'Alice'
+
+cursor.execute("UPDATE usuarios SET email = ? WHERE nome = ?", (novo_email, nome_para_atualizar))
+conn.commit() # Não esqueça de commitar!
+
+print(f"\nEmail de {nome_para_atualizar} atualizado para {novo_email}.")
+
+# Verificando a atualização
+cursor.execute("SELECT * FROM usuarios WHERE nome = ?", (nome_para_atualizar,))
+print(f"Dados de {nome_para_atualizar} após atualização: {cursor.fetchone()}")
+# conn.close()
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>9. Deletando Dados (DELETE)</h2>
+        <p>Para remover registros de uma tabela, você usa o comando SQL <code>DELETE FROM</code>.</p>
+        <div class="code-block">
+            <h3>Exemplo 9.1: Deletando um Usuário</h3>
+            <button class="copy-button" onclick="copyCode('deleteData')">Copiar</button>
+            <pre id="deleteData">
+import sqlite3
+
+conn = sqlite3.connect('meu_banco.db')
+cursor = conn.cursor()
+
+nome_para_deletar = 'Charlie'
+
+cursor.execute("DELETE FROM usuarios WHERE nome = ?", (nome_para_deletar,))
+conn.commit() # Não esqueça de commitar!
+
+print(f"\nUsuário {nome_para_deletar} deletado.")
+
+# Verificando se o usuário foi realmente deletado
+cursor.execute("SELECT * FROM usuarios WHERE nome = ?", (nome_para_deletar,))
+if cursor.fetchone() is None:
+    print(f"Verificação: {nome_para_deletar} não está mais no banco de dados.")
+else:
+    print(f"Verificação: {nome_para_deletar} ainda está no banco de dados (houve um erro).")
+# conn.close()
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>10. Fechando a Conexão (Muito Importante!)</h2>
+        <p>Sempre que você terminar de usar o banco de dados, é crucial fechar a conexão com <code>conn.close()</code>. Isso libera os recursos do sistema e garante que todas as alterações pendentes (não comitadas) sejam revertidas se não houver um <code>commit()</code> explícito.</p>
+        <p>A melhor maneira de garantir que a conexão seja fechada automaticamente, mesmo que ocorram erros, é usar a instrução <code>with</code>.</p>
+
+        <div class="code-block">
+            <h3>Exemplo 10.1: Fechando a Conexão com <code>conn.close()</code></h3>
+            <button class="copy-button" onclick="copyCode('closeConnection')">Copiar</button>
+            <pre id="closeConnection">
+import sqlite3
+
+conn = sqlite3.connect('outro_banco.db')
+cursor = conn.cursor()
+# ... faça operações com o banco de dados ...
+conn.close() # Feche a conexão explicitamente
+print("Conexão com 'outro_banco.db' fechada.")
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h3>Exemplo 10.2: Fechamento Automático com <code>with</code> Statement (Recomendado)</h3>
+            <button class="copy-button" onclick="copyCode('withConnection')">Copiar</button>
+            <pre id="withConnection">
+import sqlite3
+
+# Usando 'with' a conexão é automaticamente fechada
+# e as transações são comitadas ou revertidas (se houver erro)
+with sqlite3.connect('meu_banco_com_with.db') as conn:
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS produtos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT NOT NULL,
+            quantidade INTEGER
+        )
+    ''')
+    cursor.execute("INSERT INTO produtos (nome, quantidade) VALUES (?, ?)", ('Lápis', 50))
+    # conn.commit() não é estritamente necessário aqui, o 'with' faz isso ao sair do bloco
+    # a menos que ocorra uma exceção, onde ele faria um rollback.
+
+    print("Operações dentro do bloco 'with' concluídas.")
+    # A conexão é automaticamente fechada ao sair deste bloco
+
+print("Conexão com 'meu_banco_com_with.db' fechada automaticamente.")
+            </pre>
+        </div>
+        <div class="note">
+            <p>Ao usar o <code>with</code> statement, o Python garante que <code>conn.commit()</code> seja chamado se o bloco for executado sem erros, e <code>conn.rollback()</code> (desfazendo todas as alterações) se uma exceção ocorrer. Isso simplifica muito o gerenciamento de transações e a garantia de que seu banco de dados esteja em um estado consistente.</p>
+        </div>
+
+        <hr>
+
+        <h2>Exercícios</h2>
+
+        <div class="exercise">
+            <h3>Exercício 1: Sistema de Estoque Simples</h3>
+            <p>Crie um script Python que:</p>
+            <ol>
+                <li>Conecte-se a um banco de dados SQLite chamado <code>estoque.db</code>.</li>
+                <li>Crie uma tabela chamada <code>produtos</code> com as seguintes colunas:
+                    <ul>
+                        <li><code>id</code> (INTEGER PRIMARY KEY AUTOINCREMENT)</li>
+                        <li><code>nome_produto</code> (TEXT NOT NULL UNIQUE)</li>
+                        <li><code>quantidade</code> (INTEGER NOT NULL)</li>
+                        <li><code>preco</code> (REAL NOT NULL)</li>
+                    </ul>
+                </li>
+                <li>Insira 3 produtos na tabela:
+                    <ul>
+                        <li>"Camiseta", 50, 29.99</li>
+                        <li>"Calça Jeans", 30, 89.50</li>
+                        <li>"Tênis Esportivo", 20, 150.00</li>
+                    </ul>
+                </li>
+                <li>Consulte e imprima todos os produtos no estoque.</li>
+                <li>Atualize a quantidade da "Camiseta" para 45.</li>
+                <li>Delete o "Tênis Esportivo".</li>
+                <li>Consulte novamente todos os produtos para verificar as alterações.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerSQLite1')">Copiar</button>
+                <pre id="exerSQLite1">
+# Exercício 1: Sistema de Estoque Simples
+import sqlite3
+
+def gerenciar_estoque():
+    conn = None # Inicializa conn como None para o caso de erro na conexão
+    try:
+        conn = sqlite3.connect('estoque.db')
+        cursor = conn.cursor()
+
+        # 1. Criar a tabela produtos
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS produtos (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome_produto TEXT NOT NULL UNIQUE,
+                quantidade INTEGER NOT NULL,
+                preco REAL NOT NULL
+            )
+        ''')
+        conn.commit()
+        print("Tabela 'produtos' criada ou já existente.")
+
+        # 2. Inserir 3 produtos (apenas se não existirem)
+        produtos_para_inserir = [
+            ("Camiseta", 50, 29.99),
+            ("Calça Jeans", 30, 89.50),
+            ("Tênis Esportivo", 20, 150.00)
+        ]
+        for produto in produtos_para_inserir:
+            try:
+                cursor.execute("INSERT INTO produtos (nome_produto, quantidade, preco) VALUES (?, ?, ?)", produto)
+                print(f"Produto '{produto[0]}' inserido.")
+            except sqlite3.IntegrityError:
+                print(f"Produto '{produto[0]}' já existe.")
+        conn.commit()
+
+        # 3. Consultar e imprimir todos os produtos
+        print("\n--- Produtos no Estoque (Inicial) ---")
+        cursor.execute("SELECT * FROM produtos")
+        for produto in cursor.fetchall():
+            print(produto)
+
+        # 4. Atualizar a quantidade da "Camiseta" para 45
+        cursor.execute("UPDATE produtos SET quantidade = ? WHERE nome_produto = ?", (45, "Camiseta"))
+        conn.commit()
+        print("\nQuantidade da Camiseta atualizada para 45.")
+
+        # 5. Deletar o "Tênis Esportivo"
+        cursor.execute("DELETE FROM produtos WHERE nome_produto = ?", ("Tênis Esportivo",))
+        conn.commit()
+        print("\nTênis Esportivo deletado.")
+
+        # 6. Consultar novamente todos os produtos para verificar as alterações
+        print("\n--- Produtos no Estoque (Após alterações) ---")
+        cursor.execute("SELECT * FROM produtos")
+        for produto in cursor.fetchall():
+            print(produto)
+
+    except sqlite3.Error as e:
+        print(f"Erro no banco de dados: {e}")
+    finally:
+        if conn:
+            conn.close()
+            print("\nConexão com 'estoque.db' fechada.")
+
+gerenciar_estoque()
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 2: Gerenciador de Tarefas</h3>
+            <p>Crie um script Python que use funções para gerenciar tarefas em um banco de dados SQLite:</p>
+            <ol>
+                <li>Conecte-se a um banco de dados <code>tarefas.db</code>.</li>
+                <li>Crie uma tabela <code>tarefas</code> com:
+                    <ul>
+                        <li><code>id</code> (INTEGER PRIMARY KEY AUTOINCREMENT)</li>
+                        <li><code>descricao</code> (TEXT NOT NULL)</li>
+                        <li><code>status</code> (TEXT NOT NULL, com valor padrão 'pendente')</li>
+                    </ul>
+                </li>
+                <li>Crie as seguintes funções:
+                    <ul>
+                        <li><code>adicionar_tarefa(descricao)</code>: Insere uma nova tarefa com status 'pendente'.</li>
+                        <li><code>marcar_concluida(id_tarefa)</code>: Atualiza o status de uma tarefa para 'concluida'.</li>
+                        <li><code>listar_tarefas()</code>: Imprime todas as tarefas (id, descrição, status).</li>
+                    </ul>
+                </li>
+                <li>Use essas funções para:
+                    <ul>
+                        <li>Adicionar 3-4 tarefas.</li>
+                        <li>Marcar uma ou duas tarefas como concluídas.</li>
+                        <li>Listar todas as tarefas no final.</li>
+                    </ul>
+                </li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerSQLite2')">Copiar</button>
+                <pre id="exerSQLite2">
+# Exercício 2: Gerenciador de Tarefas
+import sqlite3
+
+DB_NAME = 'tarefas.db'
+
+def conectar_bd():
+    """Conecta ao banco de dados e retorna a conexão e o cursor."""
+    conn = sqlite3.connect(DB_NAME)
+    conn.row_factory = sqlite3.Row # Permite acessar colunas por nome
+    return conn, conn.cursor()
+
+def criar_tabela_tarefas():
+    """Cria a tabela de tarefas se ela não existir."""
+    conn, cursor = conectar_bd()
+    try:
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS tarefas (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                descricao TEXT NOT NULL,
+                status TEXT NOT NULL DEFAULT 'pendente'
+            )
+        ''')
+        conn.commit()
+        print("Tabela 'tarefas' criada ou já existente.")
+    except sqlite3.Error as e:
+        print(f"Erro ao criar tabela: {e}")
+    finally:
+        conn.close()
+
+def adicionar_tarefa(descricao):
+    """Adiciona uma nova tarefa ao banco de dados."""
+    conn, cursor = conectar_bd()
+    try:
+        cursor.execute("INSERT INTO tarefas (descricao) VALUES (?)", (descricao,))
+        conn.commit()
+        print(f"Tarefa '{descricao}' adicionada com sucesso! (ID: {cursor.lastrowid})")
+    except sqlite3.Error as e:
+        print(f"Erro ao adicionar tarefa: {e}")
+    finally:
+        conn.close()
+
+def marcar_concluida(id_tarefa):
+    """Marca uma tarefa como 'concluida'."""
+    conn, cursor = conectar_bd()
+    try:
+        cursor.execute("UPDATE tarefas SET status = 'concluida' WHERE id = ?", (id_tarefa,))
+        conn.commit()
+        if cursor.rowcount > 0:
+            print(f"Tarefa com ID {id_tarefa} marcada como concluída.")
+        else:
+            print(f"Tarefa com ID {id_tarefa} não encontrada.")
+    except sqlite3.Error as e:
+        print(f"Erro ao marcar tarefa como concluída: {e}")
+    finally:
+        conn.close()
+
+def listar_tarefas():
+    """Lista todas as tarefas no banco de dados."""
+    conn, cursor = conectar_bd()
+    try:
+        cursor.execute("SELECT id, descricao, status FROM tarefas")
+        tarefas = cursor.fetchall()
+        print("\n--- Minhas Tarefas ---")
+        if tarefas:
+            for tarefa in tarefas:
+                # Acessando por nome da coluna graças a row_factory = sqlite3.Row
+                print(f"ID: {tarefa['id']}, Descrição: {tarefa['descricao']}, Status: {tarefa['status']}")
+        else:
+            print("Nenhuma tarefa encontrada.")
+    except sqlite3.Error as e:
+        print(f"Erro ao listar tarefas: {e}")
+    finally:
+        conn.close()
+
+# --- Execução do Gerenciador de Tarefas ---
+criar_tabela_tarefas()
+
+adicionar_tarefa("Estudar Python")
+adicionar_tarefa("Fazer compras")
+adicionar_tarefa("Enviar email importante")
+adicionar_tarefa("Preparar apresentação")
+
+listar_tarefas()
+
+marcar_concluida(1) # Marca "Estudar Python" como concluída
+marcar_concluida(3) # Marca "Enviar email importante" como concluída
+marcar_concluida(99) # Exemplo de ID inexistente
+
+listar_tarefas()
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>Conclusão</h2>
+        <p>A integração com bancos de dados é um passo fundamental para construir aplicações robustas e persistentes. Com o SQLite e o módulo <code>sqlite3</code> do Python, você tem uma ferramenta poderosa e acessível para armazenar, gerenciar e recuperar dados de forma estruturada.</p>
+        <p>Os conceitos de comandos SQL (<code>CREATE TABLE</code>, <code>INSERT</code>, <code>SELECT</code>, <code>UPDATE</code>, <code>DELETE</code>) e a manipulação de conexão e cursor são a base para interagir com praticamente qualquer banco de dados relacional, não apenas o SQLite. Bancos de dados maiores como MySQL, PostgreSQL e SQL Server usam os mesmos princípios, embora exijam configuração de servidor e módulos Python específicos para cada um (como <code>psycopg2</code> para PostgreSQL ou <code>mysql-connector-python</code> para MySQL).</p>
+        <p>No próximo conteúdo, vamos explorar as **APIs Web** e como seu programa Python pode interagir com serviços online para obter e enviar dados, conectando diretamente com o que aprendemos sobre JSON.</p>
+
+        </div> <a href="#top" class="back-to-top" title="Voltar ao topo da página">↑</a>
+
+     <footer class="footer">
+  <div class="footer-content">
+    <div class="brand-info">
+      <p>&copy; 2025 <strong>Aprendendo Python</strong> — Todos os direitos reservados.</p>
+      <p>Desenvolvido por: <a href="https://jespedsys.com.br" target="_blank">JesPedSYS</a></p>
+    </div>
+
+    <div class="social-links">
+      <a href="https://github.com/jespedsys" target="_blank" title="GitHub">
+        <img src="../github.png" alt="GitHub">
+      </a>
+      <a href="https://www.linkedin.com/in/jesielpedroza" target="_blank" title="LinkedIn">
+        <img src="../linkedin.png" alt="LinkedIn">
+      </a>
+      <a href="https://twitter.com/jespedsys" target="_blank" title="Twitter/X">
+        <img src="../twitter.png" alt="Twitter/X">
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

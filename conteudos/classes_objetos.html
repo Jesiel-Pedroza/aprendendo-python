@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprenda Python Passo a Passo - Classes e Objetos (POO)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../estilo.css">
+</head>
+<body id="top">
+
+    <div class="main-header">
+        <img src="../logo.png" alt="Logo Aprenda Python" class="logo-header">
+        <h1>Bem-vindo ao Mundo Python!</h1>
+    </div>
+    <div class="container">
+
+        <p>Comece sua jornada na programação com Python, uma linguagem poderosa e fácil de aprender.</p>
+
+      
+     <nav class="main-menu">
+            <h2>Conteúdos:</h2>
+            <ul>
+                <li><a href="index.html">Página Inicial</a></li>
+                <li><a href="heranca.html">→ Próxima Aula: Herança </a></li>
+                
+                </ul>
+        </nav>
+        <h1>Classes e Objetos: Introdução à Programação Orientada a Objetos (POO)</h1>
+
+        <p>Até agora, focamos na **programação procedural**, onde organizamos o código em funções que operam sobre dados. Embora eficaz para programas menores, essa abordagem pode se tornar complexa e difícil de manter em projetos maiores, pois os dados e as funções que os manipulam ficam separados.</p>
+        <p>A **Programação Orientada a Objetos (POO)** é um paradigma de programação que revoluciona essa organização. Em vez de focar em "o que fazer" (funções) e "com quais dados" (variáveis), a POO foca em "quem faz o quê". Ela permite que você modele o mundo real em seu código, combinando dados e as funções que operam nesses dados em unidades chamadas **objetos**.</p>
+        <p>As principais vantagens da POO incluem:</p>
+        <ul>
+            <li>**Reusabilidade de Código:** Crie "moldes" que podem ser usados várias vezes.</li>
+            <li>**Modularidade:** Organize seu código em módulos autocontidos e independentes.</li>
+            <li>**Manutenibilidade:** Códigos bem estruturados em POO são mais fáceis de entender, depurar e modificar.</li>
+            <li>**Modelagem do Mundo Real:** Permite representar conceitos e entidades do mundo real de forma mais intuitiva no código.</li>
+        </ul>
+        <p>Para entender POO, vamos focar em quatro conceitos-chave:</p>
+        <ul>
+            <li>**Classe:** O molde ou a planta.</li>
+            <li>**Objeto (Instância):** Algo concreto criado a partir do molde.</li>
+            <li>**Atributo:** Uma característica ou dado que um objeto possui.</li>
+            <li>**Método:** Uma ação ou comportamento que um objeto pode realizar.</li>
+        </ul>
+
+        <hr>
+
+        <h2>1. O que são Classes?</h2>
+        <p>Uma **classe** é como um **molde, um protótipo, uma planta ou uma categoria** para criar objetos. Ela define a estrutura (quais dados os objetos terão) e o comportamento (quais ações os objetos poderão realizar) que todos os objetos criados a partir dessa classe terão.</p>
+        <p>Uma classe, por si só, não é um dado. Ela é apenas a **definição** de como os objetos serão criados. Por exemplo, a planta de um carro não é um carro, mas ela descreve como um carro deve ser construído.</p>
+
+        <h3>Sintaxe Básica de uma Classe:</h3>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('classSyntax')">Copiar</button>
+            <pre id="classSyntax">
+class NomeDaClasse:
+    # Atributos de classe (opcional, compartilhados por todas as instâncias)
+    # Métodos (funções que operam sobre os objetos desta classe)
+    pass # 'pass' é usado quando o corpo da classe está vazio
+            </pre>
+        </div>
+        <div class="code-block">
+            <h3>Exemplo 1: Uma Classe Simples <code>Carro</code></h3>
+            <button class="copy-button" onclick="copyCode('simpleCarClass')">Copiar</button>
+            <pre id="simpleCarClass">
+class Carro:
+    # Esta classe ainda não tem atributos ou métodos específicos,
+    # mas já serve como um molde básico.
+    pass
+
+print("Classe Carro criada com sucesso!")
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>2. O que são Objetos (Instâncias)?</h2>
+        <p>Um **objeto** é uma **instância concreta** de uma classe. Se a classe é a planta, o objeto é o edifício construído a partir dessa planta. Você pode criar múltiplos objetos a partir da mesma classe, e cada objeto terá suas próprias características e estados, mas todos seguirão a estrutura definida pela classe.</p>
+
+        <h3>Criando um Objeto (Instanciando uma Classe):</h3>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('objectCreation')">Copiar</button>
+            <pre id="objectCreation">
+# Usando a classe Carro que definimos acima
+meu_carro = Carro()    # Criamos um objeto 'meu_carro' da classe Carro
+outro_carro = Carro()  # Criamos um segundo objeto 'outro_carro'
+
+print(f"Tipo de 'meu_carro': {type(meu_carro)}")
+print(f"Tipo de 'outro_carro': {type(outro_carro)}")
+
+print(f"São o mesmo objeto? {meu_carro is outro_carro}") # Irá imprimir False
+            </pre>
+        </div>
+        <p>No exemplo acima, <code>meu_carro</code> e <code>outro_carro</code> são dois objetos distintos, mas ambos são do tipo <code>Carro</code>.</p>
+
+        <hr>
+
+        <h2>3. Atributos (Características dos Objetos)</h2>
+        <p>**Atributos** são as **variáveis** que pertencem a um objeto. Eles armazenam os dados ou o estado do objeto. Cada objeto de uma classe terá seus próprios valores para esses atributos.</p>
+
+        <h3>3.1. Atributos de Instância e o Método <code>__init__</code></h3>
+        <p>A maioria dos atributos que você usará são **atributos de instância**. Eles são definidos dentro do método especial <code>__init__</code>, que é o **construtor** da classe. O método <code>__init__</code> é chamado automaticamente sempre que você cria um novo objeto da classe.</p>
+        <ul>
+            <li>O primeiro parâmetro de <code>__init__</code> (e de todos os métodos de instância) é sempre <code>self</code>. Ele representa a própria instância do objeto que está sendo criada.</li>
+            <li>Dentro de <code>__init__</code>, você usa <code>self.nome_do_atributo = valor</code> para criar e inicializar os atributos específicos daquele objeto.</li>
+        </ul>
+
+        <div class="code-block">
+            <h3>Exemplo 3: Classe <code>Carro</code> com Atributos</h3>
+            <button class="copy-button" onclick="copyCode('carClassAttributes')">Copiar</button>
+            <pre id="carClassAttributes">
+class Carro:
+    def __init__(self, marca, modelo, cor, ano):
+        # Atributos de instância
+        self.marca = marca
+        self.modelo = modelo
+        self.cor = cor
+        self.ano = ano
+        self.velocidade = 0 # Um atributo com valor inicial padrão
+
+# Criando objetos (instâncias) da classe Carro
+carro1 = Carro("Toyota", "Corolla", "Prata", 2022)
+carro2 = Carro("Honda", "Civic", "Preto", 2023)
+carro3 = Carro("Ford", "Fiesta", "Azul", 2018)
+
+# Acessando os atributos dos objetos
+print(f"Carro 1: {carro1.marca} {carro1.modelo} ({carro1.cor}, {carro1.ano})")
+print(f"Velocidade do Carro 1: {carro1.velocidade} km/h")
+
+print(f"Carro 2: {carro2.marca} {carro2.modelo} ({carro2.cor}, {carro2.ano})")
+print(f"Velocidade do Carro 2: {carro2.velocidade} km/h")
+
+# Podemos modificar atributos de um objeto específico
+carro1.velocidade = 80
+print(f"Nova velocidade do Carro 1: {carro1.velocidade} km/h")
+print(f"Velocidade do Carro 2 (inalterada): {carro2.velocidade} km/h")
+            </pre>
+        </div>
+
+        <h3>3.2. Atributos de Classe (Opcional)</h3>
+        <p>Atributos de classe são definidos diretamente na classe (fora de qualquer método) e são **compartilhados** por todas as instâncias dessa classe. Eles são úteis para valores que são os mesmos para todos os objetos da classe.</p>
+        <div class="code-block">
+            <h3>Exemplo 4: Atributo de Classe <code>rodas</code></h3>
+            <button class="copy-button" onclick="copyCode('classAttribute')">Copiar</button>
+            <pre id="classAttribute">
+class Carro:
+    rodas = 4 # Atributo de CLASSE: todas as instâncias de Carro terão 4 rodas
+
+    def __init__(self, marca, modelo):
+        self.marca = marca
+        self.modelo = modelo
+
+carro_eletrico = Carro("Tesla", "Model 3")
+carro_esportivo = Carro("Ferrari", "488")
+
+print(f"Rodas do carro elétrico: {carro_eletrico.rodas}")
+print(f"Rodas do carro esportivo: {carro_esportivo.rodas}")
+
+# Você também pode acessar o atributo de classe diretamente pela classe
+print(f"Rodas padrão para todos os Carros: {Carro.rodas}")
+            </pre>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 3.1: Crie a Classe <code>Pessoa</code> com Atributos</h3>
+            <p>Defina uma classe chamada <code>Pessoa</code>. No método <code>__init__</code>, inicialize os atributos <code>nome</code> e <code>idade</code>.</p>
+            <p>Crie duas instâncias dessa classe (duas pessoas diferentes) e imprima os atributos <code>nome</code> e <code>idade</code> de cada uma.</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerAttributes')">Copiar</button>
+                <pre id="exerAttributes">
+# Exercício 3.1
+class Pessoa:
+    def __init__(self, nome, idade):
+        self.nome = nome
+        self.idade = idade
+
+# Criando instâncias de Pessoa
+pessoa1 = Pessoa("Alice", 30)
+pessoa2 = Pessoa("Bruno", 22)
+
+# Imprimindo os atributos
+print(f"Pessoa 1: Nome: {pessoa1.nome}, Idade: {pessoa1.idade}")
+print(f"Pessoa 2: Nome: {pessoa2.nome}, Idade: {pessoa2.idade}")
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>4. Métodos (Comportamentos dos Objetos)</h2>
+        <p>**Métodos** são as **funções** que pertencem a uma classe e definem o que os objetos dessa classe podem fazer. Eles operam sobre os atributos do objeto. Assim como as funções normais, métodos podem receber argumentos.</p>
+        <ul>
+            <li>O primeiro parâmetro de um método de instância deve ser sempre <code>self</code>, que se refere ao próprio objeto (instância) que está chamando o método.</li>
+        </ul>
+
+        <h3>Sintaxe de um Método:</h3>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('methodSyntax')">Copiar</button>
+            <pre id="methodSyntax">
+class MinhaClasse:
+    def meu_metodo(self, arg1, arg2):
+        # Lógica do método, que pode usar self.atributo
+        print(f"Executando meu_metodo com {arg1} e {arg2}")
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h3>Exemplo 5: Classe <code>Carro</code> com Métodos</h3>
+            <button class="copy-button" onclick="copyCode('carClassMethods')">Copiar</button>
+            <pre id="carClassMethods">
+class Carro:
+    def __init__(self, marca, modelo):
+        self.marca = marca
+        self.modelo = modelo
+        self.ligado = False # Estado inicial do carro
+
+    def ligar(self):
+        """Liga o carro se não estiver ligado."""
+        if not self.ligado:
+            self.ligado = True
+            print(f"{self.marca} {self.modelo} foi ligado.")
+        else:
+            print(f"{self.marca} {self.modelo} já está ligado.")
+
+    def desligar(self):
+        """Desliga o carro se estiver ligado."""
+        if self.ligado:
+            self.ligado = False
+            print(f"{self.marca} {self.modelo} foi desligado.")
+        else:
+            print(f"{self.marca} {self.modelo} já está desligado.")
+
+    def acelerar(self, velocidade_aumento):
+        """Aumenta a velocidade do carro."""
+        if self.ligado:
+            print(f"{self.marca} {self.modelo} está acelerando.")
+        else:
+            print(f"Não é possível acelerar! {self.marca} {self.modelo} está desligado.")
+
+# Criando um objeto Carro
+meu_carro_sonho = Carro("Porsche", "911")
+
+# Chamando os métodos do objeto
+meu_carro_sonho.ligar()
+meu_carro_sonho.acelerar(50)
+meu_carro_sonho.desligar()
+meu_carro_sonho.desligar() # Tentando desligar novamente
+meu_carro_sonho.acelerar(20) # Tentando acelerar desligado
+            </pre>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 4.1: Adicione um Método à Classe <code>Pessoa</code></h3>
+            <p>À classe <code>Pessoa</code> do exercício anterior, adicione um método chamado <code>apresentar()</code>. Este método deve imprimir uma mensagem como: "Olá, meu nome é [nome] e tenho [idade] anos."</p>
+            <p>Crie uma instância de <code>Pessoa</code> e chame o método <code>apresentar()</code>.</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerMethods')">Copiar</button>
+                <pre id="exerMethods">
+# Exercício 4.1
+class Pessoa:
+    def __init__(self, nome, idade):
+        self.nome = nome
+        self.idade = idade
+
+    def apresentar(self):
+        """Imprime uma saudação com o nome e a idade da pessoa."""
+        print(f"Olá, meu nome é {self.nome} e tenho {self.idade} anos.")
+
+# Criando uma instância de Pessoa
+minha_pessoa = Pessoa("Sofia", 28)
+
+# Chamando o método apresentar
+minha_pessoa.apresentar()
+
+outra_pessoa = Pessoa("Carlos", 45)
+outra_pessoa.apresentar()
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>5. Encapsulamento Básico (Convenções de Nomenclatura)</h2>
+        <p>Encapsulamento é um dos princípios da POO que sugere que os detalhes internos de um objeto devem ser "escondidos" do mundo exterior. Isso significa que o acesso aos dados internos de um objeto deve ser feito através de seus métodos, e não diretamente.</p>
+        <p>Em Python, o encapsulamento é mais uma **convenção** do que uma imposição rigorosa, como em outras linguagens (Java, C++).</p>
+        <ul>
+            <li>**Atributos/Métodos "Protegidos" (<code>_nome</code>):** Se um atributo ou método começa com um **único underscore** (ex: <code>_saldo</code>), é uma convenção para indicar que ele é "protegido" ou "interno". Você ainda pode acessá-lo diretamente, mas a ideia é que ele seja usado apenas pela própria classe ou suas subclasses.</li>
+            <li>**Atributos/Métodos "Privados" (<code>__nome</code>):** Se começa com **dois underscores** (ex: <code>__saldo</code>), o Python realiza um processo chamado "name mangling" (distorção de nomes). Isso torna o acesso direto um pouco mais difícil (mas não impossível), como <code>_NomeDaClasse__nome</code>. É um indicativo mais forte de que o atributo/método é privado.</li>
+        </ul>
+
+        <div class="code-block">
+            <h3>Exemplo 6: Encapsulamento Básico com Getters e Setters</h3>
+            <button class="copy-button" onclick="copyCode('encapsulationExample')">Copiar</button>
+            <pre id="encapsulationExample">
+class ContaBancaria:
+    def __init__(self, saldo_inicial):
+        # Usamos '__saldo' para indicar que é um atributo que não deve ser acessado diretamente
+        self.__saldo = saldo_inicial 
+
+    def depositar(self, valor):
+        """Deposita um valor na conta, com validação."""
+        if valor > 0:
+            self.__saldo += valor
+            print(f"Depósito de R${valor:.2f} realizado. Novo saldo: R${self.__saldo:.2f}")
+        else:
+            print("Valor de depósito inválido. Deve ser positivo.")
+
+    def sacar(self, valor):
+        """Saca um valor da conta, com validação."""
+        if valor > 0 and valor <= self.__saldo:
+            self.__saldo -= valor
+            print(f"Saque de R${valor:.2f} realizado. Novo saldo: R${self.__saldo:.2f}")
+        elif valor <= 0:
+            print("Valor de saque inválido. Deve ser positivo.")
+        else:
+            print("Saldo insuficiente para o saque.")
+
+    def get_saldo(self): # Método "getter" para acessar o saldo de forma controlada
+        """Retorna o saldo atual da conta."""
+        return self.__saldo
+
+# Criando um objeto ContaBancaria
+minha_conta = ContaBancaria(1000)
+
+print(f"Saldo inicial: R${minha_conta.get_saldo():.2f}")
+
+minha_conta.depositar(200)
+minha_conta.sacar(150)
+minha_conta.sacar(2000) # Tentando sacar mais do que tem
+minha_conta.depositar(-50) # Tentando depositar valor inválido
+
+# Tentando acessar o atributo "privado" diretamente (Python não impede, mas desaconselha)
+# print(minha_conta.__saldo) # Isso causaria um AttributeError: 'ContaBancaria' object has no attribute '__saldo'
+# Você teria que usar: print(minha_conta._ContaBancaria__saldo) para acessá-lo.
+            </pre>
+        </div>
+        <p>Apesar de Python não ter um encapsulamento forte, a prática de usar métodos (como <code>get_saldo()</code>, <code>depositar()</code>, <code>sacar()</code>) para interagir com os atributos internos é uma boa maneira de garantir que a lógica de validação seja aplicada e que o objeto permaneça em um estado consistente.</p>
+
+        <hr>
+
+        <h2>Conclusão</h2>
+        <p>A Programação Orientada a Objetos (POO) é um conceito poderoso que permite que você organize seu código de forma mais intuitiva e eficiente, modelando entidades do mundo real como objetos com características (atributos) e comportamentos (métodos).</p>
+        <p>Dominar os conceitos de **Classe**, **Objeto**, **Atributo** e **Método** é o primeiro passo crucial para desbloquear todo o potencial da POO em Python. Nos próximos módulos, exploraremos outros pilares da POO, como Herança, Polimorfismo e Abstração, que aprofundam ainda mais essa capacidade de modelagem.</p>
+        <p>No próximo conteúdo, falaremos sobre **Herança**, um conceito que permite que você crie novas classes baseadas em classes existentes, promovendo a reutilização de código.</p>
+
+        </div> <a href="#top" class="back-to-top" title="Voltar ao topo da página">↑</a>
+
+      <footer class="footer">
+  <div class="footer-content">
+    <div class="brand-info">
+      <p>&copy; 2025 <strong>Aprendendo Python</strong> — Todos os direitos reservados.</p>
+      <p>Desenvolvido por: <a href="https://jespedsys.com.br" target="_blank">JesPedSYS</a></p>
+    </div>
+
+    <div class="social-links">
+      <a href="https://github.com/jespedsys" target="_blank" title="GitHub">
+        <img src="../github.png" alt="GitHub">
+      </a>
+      <a href="https://www.linkedin.com/in/jesielpedroza" target="_blank" title="LinkedIn">
+        <img src="../linkedin.png" alt="LinkedIn">
+      </a>
+      <a href="https://twitter.com/jespedsys" target="_blank" title="Twitter/X">
+        <img src="../twitter.png" alt="Twitter/X">
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

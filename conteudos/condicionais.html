@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprenda Python Passo a Passo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../estilo.css">
+</head>
+<body id="top">
+
+    <div class="main-header">
+        <img src="../logo.png" alt="Logo Aprenda Python" class="logo-header">
+        <h1>Bem-vindo ao Mundo Python!</h1>
+    </div>
+    <div class="container">
+
+        <p>Comece sua jornada na programação com Python, uma linguagem poderosa e fácil de aprender.</p>
+
+    
+    <nav class="main-menu">
+            <h2>Conteúdos:</h2>
+            <ul>
+                <li><a href="../index.html">Página Inicial</a></li>
+                <li><a href="loops.html">→ Próxima Aula: Estruturas de Dados</a></li>
+                
+                </ul>
+        </nav>
+        <h1>Estruturas Condicionais: Tomada de Decisão</h1>
+
+        <p>As **estruturas condicionais** permitem que seu programa Python tome decisões. Elas avaliam uma condição e executam um bloco de código específico se essa condição for verdadeira (<code>True</code>), ou outro bloco de código se for falsa (<code>False</code>).</p>
+        <p>Pense nelas como um "caminho ramificado" no seu código: dependendo de uma situação, o programa segue por um caminho ou por outro.</p>
+
+        <hr>
+
+        <h2>1. A Declaração <code>if</code> (Se)</h2>
+        <p>A declaração <code>if</code> é a forma mais básica de uma estrutura condicional. Ela executa um bloco de código APENAS se a condição especificada for verdadeira.</p>
+        <p>A sintaxe em Python é bem intuitiva:</p>
+        <div class="code-block">
+            <h3>Sintaxe Básica do <code>if</code>:</h3>
+            <button class="copy-button" onclick="copyCode('ifSintaxe')">Copiar</button>
+            <pre id="ifSintaxe">
+if condicao_a_ser_testada:
+    # Este código será executado SE a condição for True
+    # Note a INDENTAÇÃO (espaços ou tab) aqui! É CRUCIAL em Python.
+print("Este código está fora do if e sempre será executado.")
+            </pre>
+        </div>
+        <div class="note">
+            <p><strong>ATENÇÃO! Indentação em Python:</strong></p>
+            <p>Diferente de outras linguagens, Python usa a **indentação** (espaços ou tabulações no início da linha) para definir blocos de código. **Cada linha dentro de um <code>if</code> (ou <code>else</code>, <code>elif</code>, loops, funções) deve ter a mesma indentação.** Uma indentação incorreta causará um erro!</p>
+        </div>
+
+        <div class="code-block">
+            <h3>Exemplo de <code>if</code>:</h3>
+            <button class="copy-button" onclick="copyCode('ifExemplo')">Copiar</button>
+            <pre id="ifExemplo">
+idade = 20
+
+if idade >= 18:
+    print("Você é maior de idade.")
+    print("Acesso permitido.")
+
+print("Fim da verificação de idade.")
+            </pre>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 1.1: Verificando um Valor Positivo</h3>
+            <p>Crie uma variável <code>numero = 10</code>.</p>
+            <ol>
+                <li>Use uma declaração <code>if</code> para verificar se <code>numero</code> é maior que 0.</li>
+                <li>Se for, imprima a mensagem: "O número é positivo."</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerIf1')">Copiar</button>
+                <pre id="exerIf1">
+# Exercício 1.1
+numero = 10
+
+if numero > 0:
+    print("O número é positivo.")
+
+# Teste com um número negativo:
+# numero = -5
+# if numero > 0:
+#    print("O número é positivo.")
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 1.2: Passou de Média?</h3>
+            <p>Crie uma variável <code>nota = 7.5</code>.</p>
+            <ol>
+                <li>Use um <code>if</code> para verificar se a <code>nota</code> é maior ou igual a 7.</li>
+                <li>Se a condição for verdadeira, imprima: "Parabéns! Você foi aprovado."</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerIf2')">Copiar</button>
+                <pre id="exerIf2">
+# Exercício 1.2
+nota = 7.5
+
+if nota >= 7:
+    print("Parabéns! Você foi aprovado.")
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 1.3: Estoque Mínimo</h3>
+            <p>Um produto está com <code>estoque = 12</code> unidades.</p>
+            <ol>
+                <li>Defina um <code>estoque_minimo = 10</code>.</li>
+                <li>Use um <code>if</code> para verificar se o <code>estoque</code> atual é menor que o <code>estoque_minimo</code>.</li>
+                <li>Se for, imprima: "Atenção! Estoque baixo. Reponha o produto."</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerIf3')">Copiar</button>
+                <pre id="exerIf3">
+# Exercício 1.3
+estoque = 12
+estoque_minimo = 10
+
+if estoque < estoque_minimo:
+    print("Atenção! Estoque baixo. Reponha o produto.")
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>2. A Declaração <code>else</code> (Senão)</h2>
+        <p>A declaração <code>else</code> é usada em conjunto com o <code>if</code> para definir um bloco de código que será executado **se a condição do <code>if</code> for falsa**.</p>
+        <p>Você usa <code>else</code> quando há duas possibilidades: uma se a condição é verdadeira, e outra se a condição é falsa.</p>
+        <div class="code-block">
+            <h3>Sintaxe do <code>if-else</code>:</h3>
+            <button class="copy-button" onclick="copyCode('ifElseSintaxe')">Copiar</button>
+            <pre id="ifElseSintaxe">
+if condicao:
+    # Código executado se a condição for True
+else:
+    # Código executado se a condição for False
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h3>Exemplo de <code>if-else</code>:</h3>
+            <button class="copy-button" onclick="copyCode('ifElseExemplo')">Copiar</button>
+            <pre id="ifElseExemplo">
+idade = 16
+
+if idade >= 18:
+    print("Você é maior de idade.")
+else:
+    print("Você é menor de idade.")
+            </pre>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 2.1: Par ou Ímpar</h3>
+            <p>Verifique se um número é par ou ímpar.</p>
+            <ol>
+                <li>Crie uma variável <code>numero = 7</code>.</li>
+                <li>Use o operador de módulo (<code>%</code>) para verificar se o resto da divisão por 2 é 0 (para par) ou 1 (para ímpar).</li>
+                <li>Use <code>if-else</code> para imprimir "O número é par." ou "O número é ímpar.".</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerIfElse1')">Copiar</button>
+                <pre id="exerIfElse1">
+# Exercício 2.1
+numero = 7
+
+if numero % 2 == 0:
+    print("O número é par.")
+else:
+    print("O número é ímpar.")
+
+# Teste com numero = 4
+# numero = 4
+# if numero % 2 == 0:
+#    print("O número é par.")
+# else:
+#    print("O número é ímpar.")
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 2.2: Status do Aluno</h3>
+            <p>Determine se um aluno foi aprovado ou reprovado.</p>
+            <ol>
+                <li>Crie uma variável <code>media = 6.8</code>.</li>
+                <li>Use <code>if-else</code>: se a <code>media</code> for maior ou igual a 7, imprima "Aluno Aprovado". Senão, imprima "Aluno Reprovado".</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerIfElse2')">Copiar</button>
+                <pre id="exerIfElse2">
+# Exercício 2.2
+media = 6.8
+
+if media >= 7:
+    print("Aluno Aprovado")
+else:
+    print("Aluno Reprovado")
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 2.3: Permissão de Acesso</h3>
+            <p>Um sistema só permite acesso se a senha estiver correta.</p>
+            <ol>
+                <li>Crie uma variável <code>senha_digitada = "segredo123"</code> e <code>senha_correta = "pythonDEV"</code>.</li>
+                <li>Use <code>if-else</code>: se a <code>senha_digitada</code> for igual à <code>senha_correta</code>, imprima "Acesso concedido!". Senão, imprima "Senha incorreta. Acesso negado.".</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerIfElse3')">Copiar</button>
+                <pre id="exerIfElse3">
+# Exercício 2.3
+senha_digitada = "segredo123"
+senha_correta = "pythonDEV"
+
+if senha_digitada == senha_correta:
+    print("Acesso concedido!")
+else:
+    print("Senha incorreta. Acesso negado.")
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>3. A Declaração <code>elif</code> (Else if)</h2>
+        <p>Quando você precisa testar **múltiplas condições em sequência**, usa-se o <code>elif</code>. Ele é uma combinação de <code>else</code> e <code>if</code>.</p>
+        <p>A primeira condição que for verdadeira será executada, e o restante das condições `elif` e o `else` serão ignorados.</p>
+        <div class="code-block">
+            <h3>Sintaxe do <code>if-elif-else</code>:</h3>
+            <button class="copy-button" onclick="copyCode('ifElifElseSintaxe')">Copiar</button>
+            <pre id="ifElifElseSintaxe">
+if primeira_condicao:
+    # Código se a primeira condição for True
+elif segunda_condicao: # 'else if'
+    # Código se a segunda condição for True (e a primeira for False)
+elif terceira_condicao:
+    # Código se a terceira condição for True (e as anteriores forem False)
+else:
+    # Código se NENHUMA das condições anteriores for True
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h3>Exemplo de <code>if-elif-else</code> (Classificação de Notas):</h3>
+            <button class="copy-button" onclick="copyCode('ifElifElseExemplo')">Copiar</button>
+            <pre id="ifElifElseExemplo">
+nota = 8.5
+
+if nota >= 9:
+    print("Conceito A")
+elif nota >= 7: # Se a nota não é >= 9, mas é >= 7
+    print("Conceito B")
+elif nota >= 5: # Se a nota não é >= 7, mas é >= 5
+    print("Conceito C")
+else: # Se a nota é menor que 5
+    print("Conceito D")
+            </pre>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 3.1: Classificação de Idade</h3>
+            <p>Classifique uma idade em categorias: Criança, Adolescente ou Adulto.</p>
+            <ol>
+                <li>Crie uma variável <code>idade = 15</code>.</li>
+                <li>Use <code>if-elif-else</code>:
+                    <ul>
+                        <li>Se <code>idade</code> for menor que 13, imprima "Criança".</li>
+                        <li>Senão, se <code>idade</code> for menor que 18, imprima "Adolescente".</li>
+                        <li>Senão (se for 18 ou mais), imprima "Adulto".</li>
+                    </ul>
+                </li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerIfElifElse1')">Copiar</button>
+                <pre id="exerIfElifElse1">
+# Exercício 3.1
+idade = 15
+
+if idade < 13:
+    print("Criança")
+elif idade < 18:
+    print("Adolescente")
+else:
+    print("Adulto")
+
+# Teste com idade = 8, idade = 25
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 3.2: Semáforo Simples</h3>
+            <p>Simule um semáforo com base em uma cor.</p>
+            <ol>
+                <li>Crie uma variável <code>cor_semaforo = "verde"</code>.</li>
+                <li>Use <code>if-elif-else</code>:
+                    <ul>
+                        <li>Se <code>cor_semaforo</code> for "verde", imprima "Siga!".</li>
+                        <li>Senão, se for "amarelo", imprima "Atenção!".</li>
+                        <li>Senão, se for "vermelho", imprima "Pare!".</li>
+                        <li>Para qualquer outra cor, imprima "Cor inválida.".</li>
+                    </ul>
+                </li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerIfElifElse2')">Copiar</button>
+                <pre id="exerIfElifElse2">
+# Exercício 3.2
+cor_semaforo = "verde"
+
+if cor_semaforo == "verde":
+    print("Siga!")
+elif cor_semaforo == "amarelo":
+    print("Atenção!")
+elif cor_semaforo == "vermelho":
+    print("Pare!")
+else:
+    print("Cor inválida.")
+
+# Teste com "amarelo", "vermelho", "azul"
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 3.3: Nível de Desempenho</h3>
+            <p>Classifique o desempenho de um funcionário com base em uma pontuação.</p>
+            <ol>
+                <li>Crie uma variável <code>pontuacao = 78</code>.</li>
+                <li>Use <code>if-elif-else</code> para classificar:
+                    <ul>
+                        <li>Pontuação >= 90: "Excelente"</li>
+                        <li>Pontuação >= 70: "Bom"</li>
+                        <li>Pontuação >= 50: "Regular"</li>
+                        <li>Senão: "Insatisfatório"</li>
+                    </ul>
+                </li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerIfElifElse3')">Copiar</button>
+                <pre id="exerIfElifElse3">
+# Exercício 3.3
+pontuacao = 78
+
+if pontuacao >= 90:
+    print("Excelente")
+elif pontuacao >= 70:
+    print("Bom")
+elif pontuacao >= 50:
+    print("Regular")
+else:
+    print("Insatisfatório")
+
+# Teste com pontuacao = 95, 45, 60
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>4. Combinando Condições com Operadores Lógicos</h2>
+        <p>Você pode criar condições mais complexas combinando múltiplas expressões booleanas usando os operadores lógicos <code>and</code>, <code>or</code> e <code>not</code> que vimos anteriormente.</p>
+
+        <div class="code-block">
+            <h3>Exemplo de Lógicos com Condicionais:</h3>
+            <button class="copy-button" onclick="copyCode('logicosComCondicionaisExemplo')">Copiar</button>
+            <pre id="logicosComCondicionaisExemplo">
+idade = 22
+possui_cnh = True
+tem_restricao = False
+
+if idade >= 18 and possui_cnh and not tem_restricao:
+    print("Pode dirigir legalmente.")
+else:
+    print("Não pode dirigir ainda ou há impedimentos.")
+            </pre>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 4.1: Condição para Concessão de Empréstimo</h3>
+            <p>Um empréstimo é concedido se a renda mensal for maior que R$ 3000 E o histórico de crédito for bom.</p>
+            <ol>
+                <li>Crie variáveis <code>renda_mensal = 3500</code> e <code>bom_credito = True</code>.</li>
+                <li>Use um <code>if</code> com o operador <code>and</code> para verificar se o empréstimo pode ser concedido.</li>
+                <li>Imprima "Empréstimo Aprovado!" ou "Empréstimo Negado.".</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerLogicosCondicionais1')">Copiar</button>
+                <pre id="exerLogicosCondicionais1">
+# Exercício 4.1
+renda_mensal = 3500
+bom_credito = True
+
+if renda_mensal > 3000 and bom_credito:
+    print("Empréstimo Aprovado!")
+else:
+    print("Empréstimo Negado.")
+
+# Teste com renda_mensal = 2500, bom_credito = False
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 4.2: Acesso à Área VIP</h3>
+            <p>Um usuário pode entrar na área VIP se for um membro Gold OU se tiver um ingresso VIP.</p>
+            <ol>
+                <li>Crie variáveis <code>eh_membro_gold = False</code> e <code>tem_ingresso_vip = True</code>.</li>
+                <li>Use um <code>if</code> com o operador <code>or</code> para verificar se o acesso é permitido.</li>
+                <li>Imprima "Acesso à Área VIP concedido!" ou "Acesso restrito.".</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerLogicosCondicionais2')">Copiar</button>
+                <pre id="exerLogicosCondicionais2">
+# Exercício 4.2
+eh_membro_gold = False
+tem_ingresso_vip = True
+
+if eh_membro_gold or tem_ingresso_vip:
+    print("Acesso à Área VIP concedido!")
+else:
+    print("Acesso restrito.")
+
+# Teste com eh_membro_gold = True, tem_ingresso_vip = False
+# Teste com eh_membro_gold = False, tem_ingresso_vip = False
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 4.3: Perfil de Usuário Específico</h3>
+            <p>Um perfil especial é ativado se o usuário for administrador E não estiver bloqueado E sua idade for maior que 25.</p>
+            <ol>
+                <li>Crie variáveis: <code>eh_admin = True</code>, <code>esta_bloqueado = False</code>, <code>idade_usuario = 28</code>.</li>
+                <li>Use um <code>if</code> com combinação de <code>and</code> e <code>not</code> para verificar se o perfil especial pode ser ativado.</li>
+                <li>Imprima "Perfil especial ativado!" ou "Condições não atendidas para perfil especial.".</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerLogicosCondicionais3')">Copiar</button>
+                <pre id="exerLogicosCondicionais3">
+# Exercício 4.3
+eh_admin = True
+esta_bloqueado = False
+idade_usuario = 28
+
+if eh_admin and not esta_bloqueado and idade_usuario > 25:
+    print("Perfil especial ativado!")
+else:
+    print("Condições não atendidas para perfil especial.")
+
+# Teste com diferentes combinações de valores para eh_admin, esta_bloqueado, idade_usuario
+                </pre>
+            </div>
+        </div>
+
+        </div> <a href="#top" class="back-to-top" title="Voltar ao topo da página">↑</a>
+
+   <footer class="footer">
+  <div class="footer-content">
+    <div class="brand-info">
+      <p>&copy; 2025 <strong>Aprendendo Python</strong> — Todos os direitos reservados.</p>
+      <p>Desenvolvido por: <a href="https://jespedsys.com.br" target="_blank">JesPedSYS</a></p>
+    </div>
+
+    <div class="social-links">
+      <a href="https://github.com/jespedsys" target="_blank" title="GitHub">
+        <img src="../github.png" alt="GitHub">
+      </a>
+      <a href="https://www.linkedin.com/in/jesielpedroza" target="_blank" title="LinkedIn">
+        <img src="../linkedin.png" alt="LinkedIn">
+      </a>
+      <a href="https://twitter.com/jespedsys" target="_blank" title="Twitter/X">
+        <img src="../twitter.png" alt="Twitter/X">
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprenda Python Passo a Passo - Polimorfismo em POO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../estilo.css">
+</head>
+<body id="top">
+
+    <div class="main-header">
+        <img src="../logo.png" alt="Logo Aprenda Python" class="logo-header">
+        <h1>Bem-vindo ao Mundo Python!</h1>
+    </div>
+    <div class="container">
+
+        <p>Comece sua jornada na programação com Python, uma linguagem poderosa e fácil de aprender.</p>
+
+       <nav class="main-menu">
+            <h2>Conteúdos:</h2>
+            <ul>
+                <li><a href="../index.html">Página Inicial</a></li>
+                <li><a href="dados_csv_json.html">→ Próxima Aula: Tratamento de Dados_csv_json</a></li>
+                
+                </ul>
+        </nav>
+        <h1>Polimorfismo: Flexibilidade e Reutilização de Código em POO</h1>
+
+        <p>Após explorarmos os conceitos de Classes, Objetos e Herança, chegamos a mais um pilar fundamental da Programação Orientada a Objetos: o **Polimorfismo**. Se a herança nos permite criar hierarquias de classes e reutilizar código, o polimorfismo nos dá a flexibilidade para trabalhar com essas hierarquias de forma genérica e extensível.</p>
+        <p>A palavra "Polimorfismo" vem do grego e significa "muitas formas". Em POO, refere-se à capacidade de um objeto assumir muitas formas, ou, mais precisamente, à capacidade de um mesmo método se comportar de diferentes maneiras dependendo do objeto que o invoca. Isso nos permite escrever código que pode operar em objetos de diferentes classes de maneira uniforme.</p>
+        <p>A importância do polimorfismo reside em:</p>
+        <ul>
+            <li>**Flexibilidade:** Seu código pode lidar com objetos de diferentes tipos de forma padronizada.</li>
+            <li>**Extensibilidade:** Você pode adicionar novas classes ao sistema sem precisar modificar o código existente que interage com elas.</li>
+            <li>**Simplificação do Código:** Reduz a necessidade de estruturas condicionais complexas (como múltiplos <code>if/else</code> ou <code>match/case</code>) para verificar o tipo de um objeto.</li>
+        </ul>
+
+        <hr>
+
+        <h2>1. O Conceito de Polimorfismo</h2>
+        <p>Para entender o polimorfismo, pense em um controle remoto universal. O botão "Ligar" nesse controle tem a mesma função (ligar o aparelho), mas a maneira exata como ele executa essa função pode ser diferente para uma TV, um aparelho de som ou um DVD player. O controle não precisa saber o modelo exato do aparelho; ele apenas envia o comando "Ligar", e o aparelho específico "sabe" como responder a ele.</p>
+        <p>No contexto da programação, isso significa que classes diferentes (que geralmente, mas nem sempre, têm uma superclasse comum) podem ter métodos com o **mesmo nome** que realizam ações **similares**, mas de formas **específicas** para cada classe. Quando você chama esse método em um objeto, o Python determina qual implementação específica deve ser executada com base no tipo do objeto em tempo de execução.</p>
+
+        <hr>
+
+        <h2>2. Polimorfismo por Herança (Sobrescrita de Método)</h2>
+        <p>Este é o tipo mais comum e direto de polimorfismo em Python. Ele ocorre quando uma superclasse define um método, e suas subclasses sobrescrevem (<em>override</em>) esse método com suas próprias implementações específicas. Quando um método polimórfico é chamado, a versão do método que pertence ao tipo real do objeto (não ao tipo da referência) é executada.</p>
+
+        <div class="code-block">
+            <h3>Exemplo 1: Animais Fazendo Sons Diferentes</h3>
+            <button class="copy-button" onclick="copyCode('animalSoundPoly')">Copiar</button>
+            <pre id="animalSoundPoly">
+class Animal:
+    def __init__(self, nome):
+        self.nome = nome
+
+    def fazer_som(self):
+        """Método genérico para fazer som."""
+        print(f"{self.nome} faz um som genérico.")
+
+class Cachorro(Animal):
+    def fazer_som(self): # Sobrescreve o método da superclasse
+        print(f"{self.nome} faz Au au!")
+
+class Gato(Animal):
+    def fazer_som(self): # Sobrescreve o método da superclasse
+        print(f"{self.nome} faz Miau!")
+
+class Pato(Animal):
+    def fazer_som(self): # Sobrescreve o método da superclasse
+        print(f"{self.nome} faz Quack quack!")
+
+# Uma função que demonstra o polimorfismo
+def emitir_som(animal):
+    """Recebe um objeto Animal e faz com que ele emita seu som."""
+    animal.fazer_som()
+
+# Criando instâncias de diferentes tipos de animais
+meu_animal = Animal("Bicho")
+meu_cachorro = Cachorro("Rex")
+meu_gato = Gato("Mia")
+meu_pato = Pato("Quacky")
+
+print("--- Testando a função emitir_som ---")
+emitir_som(meu_animal)   # Chama Animal.fazer_som()
+emitir_som(meu_cachorro) # Chama Cachorro.fazer_som()
+emitir_som(meu_gato)     # Chama Gato.fazer_som()
+emitir_som(meu_pato)     # Chama Pato.fazer_som()
+
+print("\n--- Testando em uma lista ---")
+lista_de_animais = [Animal("Bicho Desconhecido"), Cachorro("Bobby"), Gato("Frajola"), Pato("Patolino")]
+
+for animal in lista_de_animais:
+    animal.fazer_som() # O método correto é chamado polimorficamente
+            </pre>
+        </div>
+        <p>No exemplo acima, a função <code>emitir_som()</code> não precisa saber se o objeto <code>animal</code> é um <code>Cachorro</code>, <code>Gato</code>, <code>Pato</code> ou <code>Animal</code>. Ela simplesmente chama <code>animal.fazer_som()</code>, e o Python se encarrega de executar a implementação correta do método, com base no tipo real do objeto. Isso torna o código mais limpo e fácil de estender.</p>
+
+        <hr>
+
+        <h2>3. Polimorfismo com Funções (Duck Typing)</h2>
+        <p>Python é uma linguagem de "Duck Typing" (Tipagem Patística). O nome vem da frase: "Se anda como um pato e quack como um pato, então é um pato."</p>
+        <p>No contexto do polimorfismo, isso significa que o Python não se importa com o tipo formal de um objeto (se ele herda de uma superclasse específica ou implementa uma interface formal). Ele se preocupa apenas se o objeto tem os métodos que você está tentando chamar.</p>
+        <p>Se dois objetos de classes diferentes (mesmo que não tenham uma relação de herança explícita) possuem um método com o mesmo nome e assinatura (parâmetros), eles podem ser tratados polimorficamente através desse método.</p>
+
+        <div class="code-block">
+            <h3>Exemplo 2: Veículos com o Método <code>mover()</code> (Sem Herança Comum)</h3>
+            <button class="copy-button" onclick="copyCode('duckTypingExample')">Copiar</button>
+            <pre id="duckTypingExample">
+class Carro:
+    def mover(self):
+        print("Carro: Rodando na estrada.")
+
+class Barco:
+    def mover(self):
+        print("Barco: Flutuando na água.")
+
+class Aviao:
+    def mover(self):
+        print("Avião: Voando pelos céus.")
+
+# Uma função que opera em qualquer objeto que tenha o método 'mover'
+def fazer_veiculo_mover(veiculo):
+    """Chama o método mover() de qualquer objeto que o possua."""
+    veiculo.mover()
+
+# Criando instâncias de classes diferentes
+meu_carro = Carro()
+meu_barco = Barco()
+meu_aviao = Aviao()
+
+print("--- Chamando a função fazer_veiculo_mover ---")
+fazer_veiculo_mover(meu_carro)
+fazer_veiculo_mover(meu_barco)
+fazer_veiculo_mover(meu_aviao)
+
+print("\n--- Testando em uma lista mista ---")
+lista_de_transportes = [Carro(), Barco(), Aviao()]
+
+for transporte in lista_de_transportes:
+    transporte.mover() # O método mover() é chamado polimorficamente via Duck Typing
+            </pre>
+        </div>
+        <p>Neste exemplo, <code>Carro</code>, <code>Barco</code> e <code>Avião</code> não herdam de uma classe base comum. No entanto, a função <code>fazer_veiculo_mover()</code> consegue operar com qualquer um deles porque todos implementam o método <code>mover()</code>. Isso é o duck typing em ação, um tipo de polimorfismo muito comum e idiomático em Python.</p>
+
+        <hr>
+
+        <h2>4. Exemplos Práticos de Polimorfismo</h2>
+
+        <h3>4.1. Processamento de Pagamentos</h3>
+        <p>Imagine um sistema de e-commerce que precisa processar pagamentos usando diferentes meios (cartão de crédito, Pix, boleto). O polimorfismo simplifica a lógica de pagamento.</p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('paymentPoly')">Copiar</button>
+            <pre id="paymentPoly">
+class MeioPagamento:
+    def processar_pagamento(self, valor):
+        raise NotImplementedError("Este método deve ser implementado por subclasses")
+
+class CartaoCredito(MeioPagamento):
+    def processar_pagamento(self, valor):
+        print(f"Processando pagamento de R${valor:.2f} via Cartão de Crédito...")
+        # Lógica específica para cartão de crédito (API de pagamentos, validação, etc.)
+        print("Pagamento com Cartão de Crédito aprovado.")
+
+class Pix(MeioPagamento):
+    def processar_pagamento(self, valor):
+        print(f"Gerando QR Code Pix para R${valor:.2f}...")
+        # Lógica específica para Pix (geração de QR code, monitoramento de pagamento)
+        print("Pagamento Pix aguardando confirmação.")
+
+class Boleto(MeioPagamento):
+    def processar_pagamento(self, valor):
+        print(f"Gerando Boleto para R${valor:.2f}...")
+        # Lógica específica para boleto (geração de código de barras, data de vencimento)
+        print("Boleto gerado. Pagamento em processamento.")
+
+def realizar_compra(meio_pagamento, valor_total):
+    """Função polimórfica para realizar uma compra."""
+    print(f"\nRealizando compra no valor de R${valor_total:.2f}...")
+    meio_pagamento.processar_pagamento(valor_total)
+    print("Compra concluída.")
+
+# Testando
+carrinho_valor = 150.75
+
+realizar_compra(CartaoCredito(), carrinho_valor)
+realizar_compra(Pix(), 200.00)
+realizar_compra(Boleto(), 75.50)
+            </pre>
+        </div>
+
+        <h3>4.2. Formas Geométricas</h3>
+        <p>Cálculo de área de diferentes formas geométricas.</p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('shapesPoly')">Copiar</button>
+            <pre id="shapesPoly">
+import math
+
+class Forma:
+    def calcular_area(self):
+        raise NotImplementedError("Este método deve ser implementado por subclasses")
+
+class Circulo(Forma):
+    def __init__(self, raio):
+        self.raio = raio
+
+    def calcular_area(self):
+        return math.pi * (self.raio ** 2)
+
+class Retangulo(Forma):
+    def __init__(self, largura, altura):
+        self.largura = largura
+        self.altura = altura
+
+    def calcular_area(self):
+        return self.largura * self.altura
+
+class Triangulo(Forma):
+    def __init__(self, base, altura):
+        self.base = base
+        self.altura = altura
+
+    def calcular_area(self):
+        return 0.5 * self.base * self.altura
+
+# Lista de diferentes formas
+formas = [
+    Circulo(5),
+    Retangulo(4, 6),
+    Triangulo(3, 8),
+    Circulo(2.5)
+]
+
+print("\n--- Calculando áreas das formas ---")
+for forma in formas:
+    nome_forma = forma.__class__.__name__ # Obtém o nome da classe
+    area = forma.calcular_area() # Chama o método polimorficamente
+    print(f"A área do {nome_forma} é: {area:.2f}")
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>Exercícios</h2>
+
+        <div class="exercise">
+            <h3>Exercício 1: Classe <code>Pessoa</code> e Subclasses com <code>saudar()</code></h3>
+            <p>Crie uma superclasse <code>Pessoa</code> com um método <code>saudar()</code> que imprime "Olá! Eu sou uma pessoa.". (Ou use a classe Pessoa de módulos anteriores e modifique).</p>
+            <p>Crie subclasses <code>Estudante</code> e <code>Professor</code> que herdam de <code>Pessoa</code>.</p>
+            <p>Sobrescreva o método <code>saudar()</code> em <code>Estudante</code> para imprimir "Oi, eu sou um estudante!".</p>
+            <p>Sobrescreva o método <code>saudar()</code> em <code>Professor</code> para imprimir "Bom dia, sou o professor!".</p>
+            <p>Crie uma lista mista contendo instâncias de <code>Pessoa</code>, <code>Estudante</code> e <code>Professor</code>.</p>
+            <p>Percorra a lista e chame o método <code>saudar()</code> em cada objeto para demonstrar o polimorfismo.</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerPoly1')">Copiar</button>
+                <pre id="exerPoly1">
+# Exercício 1
+class Pessoa:
+    def saudar(self):
+        print("Olá! Eu sou uma pessoa.")
+
+class Estudante(Pessoa):
+    def saudar(self):
+        print("Oi, eu sou um estudante!")
+
+class Professor(Pessoa):
+    def saudar(self):
+        print("Bom dia, sou o professor!")
+
+# Criando instâncias
+pessoa_generica = Pessoa()
+aluno = Estudante()
+mestre = Professor()
+
+# Lista polimórfica
+participantes = [pessoa_generica, aluno, mestre, Estudante(), Professor()]
+
+print("--- Saudando os participantes ---")
+for p in participantes:
+    p.saudar() # O método correto é chamado de acordo com o tipo do objeto
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 2: Diferentes Dispositivos com <code>ligar()</code></h3>
+            <p>Crie três classes independentes (sem herança): <code>TV</code>, <code>Radio</code>, <code>Celular</code>.</p>
+            <p>Cada uma deve ter um método <code>ligar()</code> que imprime uma mensagem específica para o dispositivo (ex: "TV ligando...", "Rádio ligando...").</p>
+            <p>Crie uma função chamada <code>ligar_dispositivo(dispositivo)</code> que recebe um objeto e chama seu método <code>ligar()</code>.</p>
+            <p>Teste esta função passando instâncias de <code>TV</code>, <code>Radio</code> e <code>Celular</code> para ela, demonstrando o polimorfismo via Duck Typing.</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerPoly2')">Copiar</button>
+                <pre id="exerPoly2">
+# Exercício 2
+class TV:
+    def ligar(self):
+        print("TV ligando... Bem-vindo ao entretenimento!")
+
+class Radio:
+    def ligar(self):
+        print("Rádio ligando... Sintonizando sua estação favorita.")
+
+class Celular:
+    def ligar(self):
+        print("Celular ligando... Aguarde o sistema iniciar.")
+
+# Função polimórfica (Duck Typing)
+def ligar_dispositivo(dispositivo):
+    """Liga qualquer dispositivo que possua o método 'ligar()'."""
+    print("Iniciando processo de ligação...")
+    dispositivo.ligar()
+    print("Dispositivo pronto.\n")
+
+# Criando instâncias de diferentes dispositivos
+minha_tv = TV()
+meu_radio = Radio()
+meu_celular = Celular()
+
+# Testando a função com diferentes tipos de objetos
+ligar_dispositivo(minha_tv)
+ligar_dispositivo(meu_radio)
+ligar_dispositivo(meu_celular)
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>Conclusão</h2>
+        <p>O Polimorfismo é uma ferramenta incrivelmente poderosa que, em conjunto com a herança, eleva a flexibilidade e a extensibilidade do seu código em Python. Ele permite que você escreva código mais genérico, que opera em uma "interface" comum (seja ela formal por herança ou implícita por Duck Typing), tornando seus sistemas mais fáceis de modificar e expandir no futuro.</p>
+        <p>Ao dominar os conceitos de Classes, Objetos, Herança e Polimorfismo, você terá uma base sólida na Programação Orientada a Objetos, um paradigma essencial para desenvolver aplicações complexas e bem estruturadas.</p>
+        <p>No próximo conteúdo, vamos dar uma pausa nos conceitos puramente de POO e explorar um tópico muito prático e comum em desenvolvimento: o **Tratamento de Dados em Formato CSV e JSON**. Isso o preparará para interagir com dados externos em muitos projetos.</p>
+
+        </div> <a href="#top" class="back-to-top" title="Voltar ao topo da página">↑</a>
+
+     <footer class="footer">
+  <div class="footer-content">
+    <div class="brand-info">
+      <p>&copy; 2025 <strong>Aprendendo Python</strong> — Todos os direitos reservados.</p>
+      <p>Desenvolvido por: <a href="https://jespedsys.com.br" target="_blank">JesPedSYS</a></p>
+    </div>
+
+    <div class="social-links">
+      <a href="https://github.com/jespedsys" target="_blank" title="GitHub">
+        <img src="../github.png" alt="GitHub">
+      </a>
+      <a href="https://www.linkedin.com/in/jesielpedroza" target="_blank" title="LinkedIn">
+        <img src="../linkedin.png" alt="LinkedIn">
+      </a>
+      <a href="https://twitter.com/jespedsys" target="_blank" title="Twitter/X">
+        <img src="../twitter.png" alt="Twitter/X">
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprenda Python Passo a Passo - Flask e Banco de Dados com SQLite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../estilo.css">
+</head>
+<body id="top">
+
+    <div class="main-header">
+        <img src="../logo.png" alt="Logo Aprenda Python" class="logo-header">
+        <h1>Bem-vindo ao Mundo Python!</h1>
+    </div>
+    <div class="container">
+
+        <p>Comece sua jornada na programação com Python, uma linguagem poderosa e fácil de aprender.</p>
+
+         <nav class="main-menu">
+            <h2>Conteúdos:</h2>
+            <ul>
+                <li><a href="../index.html">Página Inicial</a></li>
+                <li><a href="flask_auth.html">→ Próxima Aula: Autenticação</a></li>
+                
+              
+            </ul>
+        </nav>
+        <h1>Flask e Banco de Dados: Persistência de Dados com SQLite</h1>
+
+        <p>Até agora, suas aplicações Flask lidam com dados que existem apenas na memória do servidor, ou são passados diretamente na URL. Mas o que acontece quando o servidor é reiniciado? Todos esses dados são perdidos! Para construir aplicações web úteis, você precisa de uma forma de armazenar dados de forma **persistente**, ou seja, que sobreviva ao reinício do servidor.</p>
+        <p>É aqui que os **bancos de dados** entram em cena. Um banco de dados é um sistema organizado para armazenar, gerenciar e recuperar grandes volumes de informações de forma eficiente. Eles são essenciais para:</p>
+        <ul>
+            <li>Armazenar dados de usuários (nomes, senhas, emails).</li>
+            <li>Guardar informações de produtos, posts de blog, pedidos de compra.</li>
+            <li>Manter o estado da sua aplicação entre as sessões.</li>
+            <li>Permitir que múltiplos usuários interajam com os mesmos dados.</li>
+        </ul>
+        <p>Nesta seção, exploraremos o **SQLite**, um banco de dados relacional leve e sem servidor, e o integraremos ao Flask usando a extensão **Flask-SQLAlchemy**.</p>
+
+        <hr>
+
+        <h2>1. Compreendendo o SQLite</h2>
+        <p>O SQLite é um sistema de gerenciamento de banco de dados relacional (RDBMS) muito popular por sua simplicidade. Suas principais características incluem:</p>
+        <ul>
+            <li><strong>Sem Servidor:</strong> Diferente de MySQL, PostgreSQL ou SQL Server, o SQLite não requer um processo de servidor separado. O banco de dados é um arquivo simples no disco, o que o torna extremamente fácil de configurar e usar para desenvolvimento e testes.</li>
+            <li><strong>Leve e Embutido:</strong> É uma biblioteca C pequena que pode ser embutida diretamente em aplicações.</li>
+            <li><strong>Portátil:</strong> O arquivo do banco de dados pode ser copiado e movido facilmente.</li>
+            <li><strong>Compatível com SQL:</strong> Embora seja leve, ele suporta a maioria dos recursos padrão da linguagem SQL.</li>
+        </ul>
+        <p>Para fins de aprendizado e prototipagem com Flask, o SQLite é a escolha perfeita. Para aplicações em produção com alto tráfego ou requisitos de concorrência, bancos de dados como PostgreSQL ou MySQL seriam mais adequados, mas os princípios de integração com ORM que você aprenderá aqui são amplamente transferíveis.</p>
+
+        <hr>
+
+        <h2>2. O que são SQLAlchemy e Flask-SQLAlchemy?</h2>
+
+        <h3>2.1. SQLAlchemy</h3>
+        <p>O <a href="https://www.sqlalchemy.org/" target="_blank">SQLAlchemy</a> é uma das ferramentas de ORM (Object-Relational Mapper) mais poderosas e populares em Python. Um ORM permite que você interaja com o seu banco de dados usando objetos e métodos Python, em vez de escrever SQL puro.</p>
+        <p>Por que usar um ORM?</p>
+        <ul>
+            <li><strong>Produtividade:</strong> Você escreve menos código repetitivo e mais código Python familiar.</li>
+            <li><strong>Portabilidade:</strong> Você pode trocar de banco de dados (de SQLite para PostgreSQL, por exemplo) com poucas ou nenhuma alteração no código Python, pois o ORM abstrai as diferenças.</li>
+            <li><strong>Segurança:</strong> Ajuda a prevenir ataques de injeção SQL, pois o ORM lida com a parametrização das consultas.</li>
+        </ul>
+        <p>Com o SQLAlchemy, você define suas tabelas do banco de dados como classes Python (chamadas "modelos"), e cada instância dessas classes representa uma linha na tabela. As colunas da tabela são atributos da classe.</p>
+
+        <h3>2.2. Flask-SQLAlchemy</h3>
+        <p>A <a href="https://flask-sqlalchemy.palletsprojects.com/" target="_blank">Flask-SQLAlchemy</a> é uma extensão do Flask que simplifica a integração do SQLAlchemy com a sua aplicação Flask. Ela configura o SQLAlchemy para você, gerencia as sessões do banco de dados e fornece um objeto `db` conveniente para interagir com o ORM.</p>
+        <p>É a maneira recomendada de usar SQLAlchemy em projetos Flask.</p>
+
+        <hr>
+
+        <h2>3. Instalando Flask-SQLAlchemy</h2>
+        <p>Certifique-se de que seu ambiente virtual esteja ativado e instale a extensão:</p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('installFlaskSqlAlchemy')">Copiar</button>
+            <pre id="installFlaskSqlAlchemy">
+# Ative seu ambiente virtual primeiro!
+pip install Flask-SQLAlchemy
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>4. Configurando o Banco de Dados no Flask</h2>
+        <p>O primeiro passo é configurar a sua aplicação Flask para usar o Flask-SQLAlchemy e apontar para o seu arquivo de banco de dados SQLite. Adicione as seguintes linhas ao seu arquivo `app.py`:</p>
+
+        <div class="code-block">
+            <h3>Arquivo: <code>app.py</code> (Configuração Inicial do Banco de Dados)</h3>
+            <button class="copy-button" onclick="copyCode('configDbFlask')">Copiar</button>
+            <pre id="configDbFlask">
+# app.py
+from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_sqlalchemy import SQLAlchemy # Importe SQLAlchemy
+from datetime import datetime # Útil para campos de data/hora
+
+app = Flask(__name__)
+
+# --- Configuração do Banco de Dados ---
+# SQLALCHEMY_DATABASE_URI: O caminho para o seu arquivo de banco de dados.
+# 'sqlite:///site.db' significa um arquivo 'site.db' na mesma pasta do 'app.py'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db' 
+# SQLALCHEMY_TRACK_MODIFICATIONS: Define se as modificações do SQLAlchemy devem ser rastreadas.
+# Definir como False economiza memória e geralmente é recomendado.
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False 
+# A secret_key é necessária para usar flash messages e gerenciar sessões
+app.secret_key = 'sua_chave_secreta_aqui_para_flash_messages_e_sessao_muito_segura'
+
+# Inicializa a extensão SQLAlchemy, passando a instância do aplicativo Flask
+db = SQLAlchemy(app)
+
+# --- Fim da Configuração do Banco de Dados ---
+
+# ... (Suas rotas e outras configurações Flask vêm aqui) ...
+
+# Exemplo de rota da página inicial
+@app.route('/')
+def home():
+    return render_template('index.html', titulo='Minha Aplicação Web com BD', mensagem='Dados persistentes!', nome_usuario='Aprendiz de BD')
+
+if __name__ == '__main__':
+    # No primeiro uso, ou quando você alterar os modelos, use db.create_all()
+    # Este bloco com app.app_context() é importante para operações que precisam do contexto da aplicação
+    with app.app_context():
+        db.create_all() # Cria as tabelas definidas nos modelos, se elas ainda não existirem
+    app.run(debug=True)
+            </pre>
+        </div>
+        <p>A linha `app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'` informa ao Flask-SQLAlchemy para criar (ou usar) um arquivo de banco de dados chamado `site.db` na raiz do seu projeto. Se o arquivo não existir, ele será criado automaticamente.</p>
+
+        <hr>
+
+        <h2>5. Definindo Modelos (Tabelas do Banco de Dados)</h2>
+        <p>Agora, vamos definir as tabelas do nosso banco de dados usando classes Python. Cada classe Python representará uma tabela, e os atributos da classe serão as colunas dessa tabela. Essas classes herdam de `db.Model`.</p>
+
+        <div class="code-block">
+            <h3>Arquivo: <code>app.py</code> (Definição de Modelos)</h3>
+            <button class="copy-button" onclick="copyCode('defineModelsFlask')">Copiar</button>
+            <pre id="defineModelsFlask">
+# app.py (continuação - adicione abaixo de db = SQLAlchemy(app))
+
+# Modelo para representar um Usuário no banco de dados (tabela 'usuario')
+class Usuario(db.Model):
+    # id: Chave primária, auto-incrementada automaticamente
+    id = db.Column(db.Integer, primary_key=True) 
+    # username: String de até 80 caracteres, deve ser único e não pode ser nulo
+    username = db.Column(db.String(80), unique=True, nullable=False) 
+    # email: String de até 120 caracteres, deve ser único e não pode ser nulo
+    email = db.Column(db.String(120), unique=True, nullable=False) 
+    # posts: Define um relacionamento "um para muitos". Um Usuário pode ter muitos Posts.
+    # 'Post' é o nome da classe do modelo relacionado.
+    # backref='autor' cria um atributo 'autor' em cada objeto Post, que aponta de volta para o Usuario.
+    # lazy=True significa que os posts relacionados (eager loading) serão carregados apenas quando acessados.
+    posts = db.relationship('Post', backref='autor', lazy=True) 
+
+    # __repr__ é uma função especial que define como um objeto será representado
+    # quando impresso (útil para debugging)
+    def __repr__(self): 
+        return f'&lt;Usuario {self.username}, Email: {self.email}&gt;'
+
+# Modelo para representar um Post no banco de dados (tabela 'post')
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    titulo = db.Column(db.String(100), nullable=False)
+    conteudo = db.Column(db.Text, nullable=False) # Tipo Text para conteúdo mais longo
+    # data_criacao: Armazena data e hora. default=datetime.utcnow define o valor padrão como a hora atual em UTC
+    data_criacao = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    # user_id: Chave estrangeira que referencia o 'id' da tabela 'usuario'.
+    # db.ForeignKey('usuario.id') indica que esta coluna se relaciona com a coluna 'id' da tabela 'usuario'
+    # (o nome da tabela é o nome da classe do modelo em minúsculas).
+    user_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+
+    def __repr__(self):
+        return f'&lt;Post {self.titulo} por {self.user_id}&gt;'
+
+# ... (Suas rotas e outras configurações Flask vêm aqui) ...
+            </pre>
+        </div>
+        <p>Após definir seus modelos, o `db.create_all()` (que já está no `if __name__ == '__main__':` do seu `app.py`) criará as tabelas correspondentes no seu arquivo `site.db` na primeira vez que você rodar o aplicativo.</p>
+        <p><strong>Importante:</strong> Se você adicionar ou modificar modelos após a primeira criação do banco de dados, `db.create_all()` não modificará tabelas existentes. Para gerenciar alterações no esquema do banco de dados (como adicionar uma nova coluna a uma tabela existente), você precisará de uma ferramenta de migração como Flask-Migrate (abordado brevemente na seção 9).</p>
+
+        <hr>
+
+        <h2>6. Operações CRUD Básicas</h2>
+        <p>CRUD é um acrônimo para as quatro operações básicas de persistência de dados: **Create** (Criar), **Read** (Ler), **Update** (Atualizar) e **Delete** (Deletar).</p>
+        <p>Vamos adicionar rotas e lógica ao nosso `app.py` para realizar essas operações com os modelos `Usuario` e `Post`.</p>
+
+        <h3>6.1. Adicionando Dados (CREATE)</h3>
+        <p>Para adicionar um novo registro ao banco de dados, você cria uma instância do seu modelo, adiciona-a à sessão do banco de dados e então "commita" (salva) a sessão.</p>
+
+        <div class="code-block">
+            <h3>Arquivo: <code>app.py</code> (Adicionando Usuários e Posts)</h3>
+            <button class="copy-button" onclick="copyCode('createDataFlask')">Copiar</button>
+            <pre id="createDataFlask">
+# app.py (continuação - adicione estas rotas)
+
+# Rota para exibir o formulário de adição de usuário e processar o envio
+@app.route('/adicionar_usuario', methods=['GET', 'POST'])
+def adicionar_usuario():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        
+        # Cria uma nova instância do modelo Usuario
+        novo_usuario = Usuario(username=username, email=email)
+        try:
+            db.session.add(novo_usuario) # Adiciona o novo objeto à sessão do banco de dados
+            db.session.commit() # Salva as mudanças no banco de dados
+            flash('Usuário adicionado com sucesso!', 'success')
+            return redirect(url_for('listar_usuarios')) # Redireciona para a lista
+        except Exception as e:
+            # Em caso de erro (ex: username/email duplicado), desfaz a operação
+            db.session.rollback() 
+            flash(f'Erro ao adicionar usuário: {e}', 'error')
+    return render_template('adicionar_usuario.html')
+
+# Rota para exibir o formulário de adição de post e processar o envio
+@app.route('/adicionar_post', methods=['GET', 'POST'])
+def adicionar_post():
+    # Precisamos de usuários para associar um post. Busca todos os usuários.
+    usuarios = Usuario.query.all() 
+    if not usuarios:
+        flash('Nenhum usuário cadastrado. Por favor, adicione um usuário primeiro.', 'warning')
+        return redirect(url_for('adicionar_usuario')) # Sugere adicionar usuário
+
+    if request.method == 'POST':
+        titulo = request.form['titulo']
+        conteudo = request.form['conteudo']
+        user_id = request.form['user_id'] # ID do autor selecionado no formulário
+        
+        # Cria uma nova instância do modelo Post
+        novo_post = Post(titulo=titulo, conteudo=conteudo, user_id=user_id)
+        try:
+            db.session.add(novo_post)
+            db.session.commit()
+            flash('Post adicionado com sucesso!', 'success')
+            return redirect(url_for('listar_posts'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao adicionar post: {e}', 'error')
+    return render_template('adicionar_post.html', usuarios=usuarios)
+
+# ... (restante das suas rotas) ...
+            </pre>
+        </div>
+
+        <h4>Crie os Templates HTML para Adicionar:</h4>
+        <p><strong>Arquivo: `templates/adicionar_usuario.html`</strong></p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('addUsuarioHtml')">Copiar</button>
+            <pre id="addUsuarioHtml">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Adicionar Novo Usuário&lt;/title&gt;
+    &lt;link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Adicionar Novo Usuário&lt;/h1&gt;
+    &lt;form action="/adicionar_usuario" method="POST"&gt;
+        &lt;label for="username"&gt;Nome de Usuário:&lt;/label&gt;&lt;br&gt;
+        &lt;input type="text" id="username" name="username" required&gt;&lt;br&gt;&lt;br&gt;
+        
+        &lt;label for="email"&gt;Email:&lt;/label&gt;&lt;br&gt;
+        &lt;input type="email" id="email" name="email" required&gt;&lt;br&gt;&lt;br&gt;
+        
+        &lt;input type="submit" value="Adicionar Usuário"&gt;
+    &lt;/form&gt;
+    &lt;p&gt;&lt;a href="/usuarios"&gt;Voltar para a Lista de Usuários&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+        </div>
+        <p><strong>Arquivo: `templates/adicionar_post.html`</strong></p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('addPostHtml')">Copiar</button>
+            <pre id="addPostHtml">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Criar Novo Post&lt;/title&gt;
+    &lt;link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Criar Novo Post&lt;/h1&gt;
+    &lt;form action="/adicionar_post" method="POST"&gt;
+        &lt;label for="titulo"&gt;Título:&lt;/label&gt;&lt;br&gt;
+        &lt;input type="text" id="titulo" name="titulo" required&gt;&lt;br&gt;&lt;br&gt;
+        
+        &lt;label for="conteudo"&gt;Conteúdo:&lt;/label&gt;&lt;br&gt;
+        &lt;textarea id="conteudo" name="conteudo" rows="8" required&gt;&lt;/textarea&gt;&lt;br&gt;&lt;br&gt;
+        
+        &lt;label for="user_id"&gt;Autor:&lt;/label&gt;&lt;br&gt;
+        &lt;select id="user_id" name="user_id" required&gt;
+            {% for usuario in usuarios %}
+                &lt;option value="{{ usuario.id }}"&gt;{{ usuario.username }}&lt;/option&gt;
+            {% endfor %}
+        &lt;/select&gt;&lt;br&gt;&lt;br&gt;
+        
+        &lt;input type="submit" value="Criar Post"&gt;
+    &lt;/form&gt;
+    &lt;p&gt;&lt;a href="/posts"&gt;Voltar para os Posts&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+        </div>
+
+        <h3>6.2. Lendo Dados (READ)</h3>
+        <p>Para ler dados do banco de dados, você usa os métodos de consulta fornecidos pelo Flask-SQLAlchemy (através do objeto `db.session` ou diretamente do modelo).</p>
+
+        <div class="code-block">
+            <h3>Arquivo: <code>app.py</code> (Lendo Usuários e Posts)</h3>
+            <button class="copy-button" onclick="copyCode('readDataFlask')">Copiar</button>
+            <pre id="readDataFlask">
+# app.py (continuação - adicione estas rotas)
+
+# Rota para listar todos os usuários
+@app.route('/usuarios')
+def listar_usuarios():
+    # Usuario.query.all() busca todos os registros da tabela Usuario
+    usuarios = Usuario.query.all() 
+    return render_template('listar_usuarios.html', usuarios=usuarios)
+
+# Rota para ver os detalhes de um único usuário
+@app.route('/usuario/&lt;int:user_id&gt;')
+def ver_usuario(user_id):
+    # Usuario.query.get_or_404(user_id) busca um usuário pelo ID.
+    # Se não encontrar, retorna uma página de erro 404.
+    usuario = Usuario.query.get_or_404(user_id) 
+    return render_template('ver_usuario.html', usuario=usuario)
+
+# Rota para listar todos os posts
+@app.route('/posts')
+def listar_posts():
+    # Post.query.order_by(Post.data_criacao.desc()).all() busca todos os posts
+    # ordenados pela data de criação em ordem decrescente (mais recentes primeiro)
+    posts = Post.query.order_by(Post.data_criacao.desc()).all()
+    return render_template('listar_posts.html', posts=posts)
+
+# Rota para ver os detalhes de um único post
+@app.route('/post/&lt;int:post_id&gt;')
+def ver_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    # Como definimos um 'backref=autor' em Usuario, podemos acessar o autor do post diretamente
+    # post.autor é um objeto Usuario
+    return render_template('ver_post.html', post=post)
+
+# ... (restante das suas rotas) ...
+            </pre>
+        </div>
+
+        <h4>Crie os Templates HTML para Ler:</h4>
+        <p><strong>Arquivo: `templates/listar_usuarios.html`</strong></p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('listUsuariosHtml')">Copiar</button>
+            <pre id="listUsuariosHtml">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Lista de Usuários&lt;/title&gt;
+    &lt;link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Usuários Cadastrados&lt;/h1&gt;
+    &lt;p&gt;&lt;a href="/adicionar_usuario"&gt;Adicionar Novo Usuário&lt;/a&gt;&lt;/p&gt;
+    &lt;ul&gt;
+        {% if usuarios %}
+            {% for usuario in usuarios %}
+                &lt;li&gt;
+                    &lt;a href="/usuario/{{ usuario.id }}"&gt;{{ usuario.username }}&lt;/a&gt; ({{ usuario.email }})
+                    - &lt;a href="/editar_usuario/{{ usuario.id }}"&gt;Editar&lt;/a&gt;
+                    - &lt;form action="/deletar_usuario/{{ usuario.id }}" method="POST" style="display:inline;"&gt;
+                        &lt;button type="submit" onclick="return confirm('Tem certeza que deseja deletar este usuário?');"&gt;Deletar&lt;/button&gt;
+                      &lt;/form&gt;
+                &lt;/li&gt;
+            {% endfor %}
+        {% else %}
+            &lt;li&gt;Nenhum usuário cadastrado.&lt;/li&gt;
+        {% endif %}
+    &lt;/ul&gt;
+    &lt;p&gt;&lt;a href="/"&gt;Voltar para a Home&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+        </div>
+        <p><strong>Arquivo: `templates/ver_usuario.html`</strong></p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('viewUsuarioHtml')">Copiar</button>
+            <pre id="viewUsuarioHtml">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Perfil de Usuário: {{ usuario.username }}&lt;/title&gt;
+    &lt;link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Perfil de {{ usuario.username }}&lt;/h1&gt;
+    &lt;p&gt;&lt;strong&gt;ID:&lt;/strong&gt; {{ usuario.id }}&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;Email:&lt;/strong&gt; {{ usuario.email }}&lt;/p&gt;
+
+    &lt;h2&gt;Posts de {{ usuario.username }}:&lt;/h2&gt;
+    &lt;ul&gt;
+        {% if usuario.posts %}
+            {% for post in usuario.posts %}
+                &lt;li&gt;&lt;a href="/post/{{ post.id }}"&gt;{{ post.titulo }}&lt;/a&gt; - {{ post.data_criacao.strftime('%d/%m/%Y') }}&lt;/li&gt;
+            {% endfor %}
+        {% else %}
+            &lt;li&gt;Este usuário não tem posts ainda.&lt;/li&gt;
+        {% endif %}
+    &lt;/ul&gt;
+
+    &lt;p&gt;&lt;a href="/usuarios"&gt;Voltar para a Lista de Usuários&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+        </div>
+        <p><strong>Arquivo: `templates/listar_posts.html`</strong></p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('listPostsHtml')">Copiar</button>
+            <pre id="listPostsHtml">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Todos os Posts&lt;/title&gt;
+    &lt;link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Posts Recentes&lt;/h1&gt;
+    &lt;p&gt;&lt;a href="/adicionar_post"&gt;Criar Novo Post&lt;/a&gt;&lt;/p&gt;
+    &lt;ul&gt;
+        {% if posts %}
+            {% for post in posts %}
+                &lt;li&gt;
+                    &lt;h3&gt;&lt;a href="/post/{{ post.id }}"&gt;{{ post.titulo }}&lt;/a&gt;&lt;/h3&gt;
+                    &lt;p&gt;Autor: {{ post.autor.username }} - Data: {{ post.data_criacao.strftime('%d/%m/%Y %H:%M') }}&lt;/p&gt;
+                    &lt;p&gt;{{ post.conteudo[:100] }}...&lt;/p&gt; &lt;!-- Exibe os primeiros 100 caracteres --&gt;
+                    &lt;p&gt;&lt;a href="/editar_post/{{ post.id }}"&gt;Editar Post&lt;/a&gt;&lt;/p&gt;
+                    &lt;form action="/deletar_post/{{ post.id }}" method="POST" style="display:inline;"&gt;
+                        &lt;button type="submit" onclick="return confirm('Tem certeza que deseja deletar este post?');"&gt;Deletar Post&lt;/button&gt;
+                    &lt;/form&gt;
+                &lt;/li&gt;
+                &lt;hr&gt;
+            {% endfor %}
+        {% else %}
+            &lt;li&gt;Nenhum post disponível ainda.&lt;/li&gt;
+        {% endif -&gt;
+    &lt;/ul&gt;
+    &lt;p&gt;&lt;a href="/"&gt;Voltar para a Home&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+        </div>
+        <p><strong>Arquivo: `templates/ver_post.html`</strong></p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('viewPostHtml')">Copiar</button>
+            <pre id="viewPostHtml">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;{{ post.titulo }}&lt;/title&gt;
+    &lt;link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;{{ post.titulo }}&lt;/h1&gt;
+    &lt;p&gt;Por: &lt;a href="/usuario/{{ post.autor.id }}"&gt;{{ post.autor.username }}&lt;/a&gt; em {{ post.data_criacao.strftime('%d/%m/%Y %H:%M') }}&lt;/p&gt;
+    &lt;div&gt;
+        &lt;p&gt;{{ post.conteudo }}&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;p&gt;
+        &lt;a href="/editar_post/{{ post.id }}"&gt;Editar Post&lt;/a&gt; | 
+        &lt;form action="/deletar_post/{{ post.id }}" method="POST" style="display:inline;"&gt;
+            &lt;button type="submit" onclick="return confirm('Tem certeza que deseja deletar este post?');"&gt;Deletar Post&lt;/button&gt;
+        &lt;/form&gt;
+    &lt;/p&gt;
+    &lt;p&gt;&lt;a href="/posts"&gt;Voltar para a Lista de Posts&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+        </div>
+
+        <h3>6.3. Atualizando Dados (UPDATE)</h3>
+        <p>Para atualizar um registro existente, você primeiro o busca no banco de dados, modifica seus atributos e então commita a sessão.</p>
+
+        <div class="code-block">
+            <h3>Arquivo: <code>app.py</code> (Atualizando Usuários e Posts)</h3>
+            <button class="copy-button" onclick="copyCode('updateDataFlask')">Copiar</button>
+            <pre id="updateDataFlask">
+# app.py (continuação - adicione estas rotas)
+
+# Rota para exibir o formulário de edição de usuário e processar o envio
+@app.route('/editar_usuario/&lt;int:user_id&gt;', methods=['GET', 'POST'])
+def editar_usuario(user_id):
+    usuario = Usuario.query.get_or_404(user_id) # Busca o usuário ou retorna 404
+    if request.method == 'POST':
+        usuario.username = request.form['username']
+        usuario.email = request.form['email']
+        try:
+            db.session.commit() # Salva as mudanças no banco de dados
+            flash('Usuário atualizado com sucesso!', 'success')
+            return redirect(url_for('listar_usuarios'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao atualizar usuário: {e}', 'error')
+    return render_template('editar_usuario.html', usuario=usuario)
+
+# Rota para exibir o formulário de edição de post e processar o envio
+@app.route('/editar_post/&lt;int:post_id&gt;', methods=['GET', 'POST'])
+def editar_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    usuarios = Usuario.query.all() # Precisamos dos usuários para o select do autor
+    if request.method == 'POST':
+        post.titulo = request.form['titulo']
+        post.conteudo = request.form['conteudo']
+        post.user_id = request.form['user_id']
+        try:
+            db.session.commit()
+            flash('Post atualizado com sucesso!', 'success')
+            return redirect(url_for('listar_posts'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao atualizar post: {e}', 'error')
+    return render_template('editar_post.html', post=post, usuarios=usuarios)
+
+# ... (restante das suas rotas) ...
+            </pre>
+        </div>
+
+        <h4>Crie os Templates HTML para Atualizar:</h4>
+        <p><strong>Arquivo: `templates/editar_usuario.html`</strong></p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('editUsuarioHtml')">Copiar</button>
+            <pre id="editUsuarioHtml">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Editar Usuário: {{ usuario.username }}&lt;/title&gt;
+    &lt;link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Editar Usuário: {{ usuario.username }}&lt;/h1&gt;
+    &lt;form action="/editar_usuario/{{ usuario.id }}" method="POST"&gt;
+        &lt;label for="username"&gt;Nome de Usuário:&lt;/label&gt;&lt;br&gt;
+        &lt;input type="text" id="username" name="username" value="{{ usuario.username }}" required&gt;&lt;br&gt;&lt;br&gt;
+        
+        &lt;label for="email"&gt;Email:&lt;/label&gt;&lt;br&gt;
+        &lt;input type="email" id="email" name="email" value="{{ usuario.email }}" required&gt;&lt;br&gt;&lt;br&gt;
+        
+        &lt;input type="submit" value="Salvar Alterações"&gt;
+    &lt;/form&gt;
+    &lt;p&gt;&lt;a href="/usuario/{{ usuario.id }}"&gt;Cancelar&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+        </div>
+        <p><strong>Arquivo: `templates/editar_post.html`</strong></p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('editPostHtml')">Copiar</button>
+            <pre id="editPostHtml">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Editar Post: {{ post.titulo }}&lt;/title&gt;
+    &lt;link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Editar Post: {{ post.titulo }}&lt;/h1&gt;
+    &lt;form action="/editar_post/{{ post.id }}" method="POST"&gt;
+        &lt;label for="titulo"&gt;Título:&lt;/label&gt;&lt;br&gt;
+        &lt;input type="text" id="titulo" name="titulo" value="{{ post.titulo }}" required&gt;&lt;br&gt;&lt;br&gt;
+        
+        &lt;label for="conteudo"&gt;Conteúdo:&lt;/label&gt;&lt;br&gt;
+        &lt;textarea id="conteudo" name="conteudo" rows="8" required&gt;{{ post.conteudo }}&lt;/textarea&gt;&lt;br&gt;&lt;br&gt;
+        
+        &lt;label for="user_id"&gt;Autor:&lt;/label&gt;&lt;br&gt;
+        &lt;select id="user_id" name="user_id" required&gt;
+            {% for usuario in usuarios %}
+                &lt;option value="{{ usuario.id }}" {% if usuario.id == post.user_id %}selected{% endif %}&gt;
+                    {{ usuario.username }}
+                &lt;/option&gt;
+            {% endfor %}
+        &lt;/select&gt;&lt;br&gt;&lt;br&gt;
+        
+        &lt;input type="submit" value="Salvar Alterações"&gt;
+    &lt;/form&gt;
+    &lt;p&gt;&lt;a href="/post/{{ post.id }}"&gt;Cancelar&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+        </div>
+
+        <h3>6.4. Deletando Dados (DELETE)</h3>
+        <p>Para deletar um registro, você o busca, o remove da sessão do banco de dados e então commita.</p>
+
+        <div class="code-block">
+            <h3>Arquivo: <code>app.py</code> (Deletando Usuários e Posts)</h3>
+            <button class="copy-button" onclick="copyCode('deleteDataFlask')">Copiar</button>
+            <pre id="deleteDataFlask">
+# app.py (continuação - adicione estas rotas)
+
+# Rota para deletar um usuário
+# Geralmente, operações de deleção são feitas com POST para evitar exclusões acidentais por links
+@app.route('/deletar_usuario/&lt;int:user_id&gt;', methods=['POST']) 
+def deletar_usuario(user_id):
+    usuario = Usuario.query.get_or_404(user_id)
+    try:
+        # Tenta deletar todos os posts do usuário primeiro para evitar erros de chave estrangeira
+        # Ou configure a chave estrangeira para CASCADE DELETE
+        Post.query.filter_by(user_id=user_id).delete()
+        db.session.delete(usuario) # Remove o objeto da sessão
+        db.session.commit() # Confirma a exclusão
+        flash('Usuário e seus posts deletados com sucesso!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Erro ao deletar usuário: {e}', 'error')
+    return redirect(url_for('listar_usuarios'))
+
+# Rota para deletar um post
+@app.route('/deletar_post/&lt;int:post_id&gt;', methods=['POST'])
+def deletar_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    try:
+        db.session.delete(post)
+        db.session.commit()
+        flash('Post deletado com sucesso!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Erro ao deletar post: {e}', 'error')
+    return redirect(url_for('listar_posts'))
+
+# ... (restante do código) ...
+            </pre>
+        </div>
+        <p>Para as operações de deletar, o botão de deletar geralmente é um formulário POST que envia o ID para a rota de exclusão (como visto em `listar_usuarios.html` e `listar_posts.html`).</p>
+
+        <hr>
+
+        <h2>7. Relacionamentos entre Modelos</h2>
+        <p>Vimos no modelo `Usuario` o uso de `db.relationship('Post', backref='autor', lazy=True)`. Isso define um relacionamento "um-para-muitos": um `Usuario` pode ter muitos `Post`s. A chave estrangeira `user_id` em `Post` é a parte que liga fisicamente as tabelas no banco de dados.</p>
+        <ul>
+            <li>`db.relationship()`: Usado no lado "um" (o `Usuario`) para acessar os objetos relacionados no lado "muitos" (`Post`s). Permite acessar `usuario.posts`.</li>
+            <li>`backref='autor'`: Cria um atributo `autor` no modelo `Post`, que permite acessar o `Usuario` associado a um `Post` (ex: `post.autor`).</li>
+            <li>`db.ForeignKey()`: Usado no lado "muitos" (o `Post`) para definir a coluna que contém a chave primária da tabela "um".</li>
+        </ul>
+        <p>Esse relacionamento simplifica muito as consultas. Em vez de fazer uma consulta separada para buscar o autor de um post, você pode simplesmente usar `post.autor.username`.</p>
+
+        <hr>
+
+        <h2>8. Migrações de Banco de Dados (Flask-Migrate)</h2>
+        <p>À medida que sua aplicação evolui, você provavelmente precisará fazer alterações no esquema do seu banco de dados (ex: adicionar uma nova coluna a uma tabela existente, renomear uma coluna). Fazer isso manualmente pode ser complicado e propenso a erros, especialmente se você já tiver dados.</p>
+        <p>É aí que as **ferramentas de migração de banco de dados** se tornam cruciais. Elas permitem que você evolua seu esquema de banco de dados de forma controlada e reversível, criando "migrações" (scripts de atualização) que podem ser aplicadas em diferentes ambientes (desenvolvimento, teste, produção).</p>
+        <p>Para Flask e SQLAlchemy, a ferramenta padrão é **Flask-Migrate**, que é um wrapper para a biblioteca <a href="https://alembic.sqlalchemy.org/en/latest/" target="_blank">Alembic</a>.</p>
+        <ul>
+            <li>**Instalação:** <code>pip install Flask-Migrate</code></li>
+            <li>**Uso Básico (comandos via terminal):**
+                <ul>
+                    <li><code>flask db init</code> (inicializa o diretório de migrações uma vez)</li>
+                    <li><code>flask db migrate -m "Mensagem da sua migração"</code> (detecta mudanças nos modelos e cria um script de migração)</li>
+                    <li><code>flask db upgrade</code> (aplica as migrações pendentes ao banco de dados)</li>
+                    <li><code>flask db downgrade</code> (reverte a última migração)</li>
+                </ul>
+            </li>
+        </ul>
+        <p>Aprender Flask-Migrate é um próximo passo importante para projetos reais, mas para os conceitos básicos de integração com BD, o `db.create_all()` é suficiente.</p>
+
+        <hr>
+
+        <h2>Exercícios</h2>
+
+        <div class="exercise">
+            <h3>Exercício 1: Sistema Básico de Usuários com CRUD Completo</h3>
+            <p>Com base nos exemplos fornecidos, construa ou refine seu `app.py` e os templates (`adicionar_usuario.html`, `listar_usuarios.html`, `ver_usuario.html`, `editar_usuario.html`) para ter um sistema completo de gerenciamento de usuários:</p>
+            <ul>
+                <li>Rota para **adicionar** novos usuários (formulário GET, processamento POST).</li>
+                <li>Rota para **listar** todos os usuários, com links para ver detalhes e editar/deletar.</li>
+                <li>Rota para **ver** os detalhes de um único usuário (passando o ID na URL).</li>
+                <li>Rota para **editar** um usuário existente (formulário GET pré-preenchido, processamento POST).</li>
+                <li>Rota para **deletar** um usuário (preferencialmente via POST com um botão de confirmação).</li>
+                <li>Use `flash` messages para dar feedback ao usuário sobre o sucesso ou falha das operações.</li>
+            </ul>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 2: Sistema de Blog Simples com Posts e Autores</h3>
+            <p>Expanda o seu projeto para incluir um sistema de blog, usando os modelos `Usuario` e `Post` e o relacionamento entre eles:</p>
+            <ul>
+                <li>Crie um formulário para **adicionar** novos posts (`adicionar_post.html`), onde o usuário possa selecionar um autor (deve vir dos usuários já cadastrados no BD).</li>
+                <li>Crie uma rota para **listar** todos os posts (`listar_posts.html`), exibindo o título, parte do conteúdo e o nome do autor.</li>
+                <li>Crie uma rota para **ver** os detalhes de um único post (`ver_post.html`), mostrando o título, conteúdo completo, data de criação e o nome do autor (com link para o perfil do autor).</li>
+                <li>Implemente funcionalidades de **edição** e **deleção** para posts.</li>
+                <li>Na página de perfil do usuário (`ver_usuario.html`), liste todos os posts escritos por aquele usuário.</li>
+            </ul>
+        </div>
+
+        <hr>
+
+        <h2>Conclusão</h2>
+        <p>A persistência de dados é o coração de quase toda aplicação web dinâmica, e com o **Flask-SQLAlchemy** e o **SQLite**, você tem uma combinação poderosa para começar a construir aplicações robustas em Python.</p>
+        <p>Você aprendeu a configurar seu banco de dados, definir modelos que representam suas tabelas, e a realizar as operações CRUD essenciais. Entender o conceito de ORM e como ele abstrai a complexidade do SQL é uma habilidade valiosa que você usará em muitos projetos.</p>
+        <p>Com usuários e posts já em um banco de dados, o próximo passo lógico é controlar quem pode fazer o quê. Em nosso próximo conteúdo, vamos mergulhar na **Autenticação e Autorização com Flask**, aprendendo a registrar usuários, fazer login e proteger rotas.</p>
+
+        </div> <a href="#top" class="back-to-top" title="Voltar ao topo da página">↑</a>
+
+      <footer class="footer">
+  <div class="footer-content">
+    <div class="brand-info">
+      <p>&copy; 2025 <strong>Aprendendo Python</strong> — Todos os direitos reservados.</p>
+      <p>Desenvolvido por: <a href="https://jespedsys.com.br" target="_blank">JesPedSYS</a></p>
+    </div>
+
+    <div class="social-links">
+      <a href="https://github.com/jespedsys" target="_blank" title="GitHub">
+        <img src="../github.png" alt="GitHub">
+      </a>
+      <a href="https://www.linkedin.com/in/jesielpedroza" target="_blank" title="LinkedIn">
+        <img src="../linkedin.png" alt="LinkedIn">
+      </a>
+      <a href="https://twitter.com/jespedsys" target="_blank" title="Twitter/X">
+        <img src="../twitter.png" alt="Twitter/X">
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

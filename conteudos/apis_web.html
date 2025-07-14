@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprenda Python Passo a Passo - APIs Web com Requests</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../estilo.css">
+</head>
+<body id="top">
+
+    <div class="main-header">
+        <img src="../logo.png" alt="Logo Aprenda Python" class="logo-header">
+        <h1>Bem-vindo ao Mundo Python!</h1>
+    </div>
+    <div class="container">
+
+        <p>Comece sua jornada na programação com Python, uma linguagem poderosa e fácil de aprender.</p>
+
+       <nav class="main-menu">
+            <h2>Conteúdos:</h2>
+            <ul>
+                <li><a href="../index.html">Página Inicial</a></li>
+                <li><a href="ambientes_virtuais.html">→ Próxima Aula: Ambientes Virtuais e Dependências</a></li>
+                
+                </ul>
+        </nav>
+        <h1>APIs Web: Interagindo com Serviços Online em Python</h1>
+
+        <p>No mundo interconectado de hoje, dificilmente um aplicativo funciona de forma isolada. Programas frequentemente precisam trocar informações com outros serviços, sejam eles em servidores remotos, outros aplicativos ou bases de dados online. É aqui que entram as **APIs (Application Programming Interfaces)**.</p>
+        <p>No contexto de desenvolvimento web e programação em Python, quando falamos de APIs, geralmente estamos nos referindo a **APIs Web**. Uma API Web é um conjunto de regras e protocolos que define como dois softwares diferentes podem se comunicar entre si pela internet. Ela funciona como um "contrato" de comunicação, especificando quais tipos de requisições podem ser feitas, como fazê-las, e quais formatos de dados serão usados nas respostas.</p>
+        <p>A maioria das APIs Web utiliza o protocolo **HTTP/HTTPS** (os mesmos protocolos que seu navegador usa para acessar sites) para enviar e receber dados, e frequentemente usam **JSON** (JavaScript Object Notation), que você já conhece, como formato para estruturar esses dados.</p>
+        <p>Para interagir com APIs Web em Python, a biblioteca *de facto* (a mais utilizada e recomendada) é o módulo **<code>requests</code>**. Embora Python tenha módulos nativos como <code>urllib</code> para fazer requisições HTTP, o <code>requests</code> é amplamente preferido por sua simplicidade, legibilidade e poder.</p>
+
+        <hr>
+
+        <h2>1. O que são APIs Web?</h2>
+        <p>Imagine que você está em um restaurante. Você, o cliente, quer pedir comida. Você não vai até a cozinha preparar sua própria comida. Em vez disso, você dá seu pedido a um **garçom**. O garçom leva seu pedido à cozinha, que o prepara, e então o garçom traz a comida de volta para você.</p>
+        <ul>
+            <li>Você (o cliente/seu programa Python)</li>
+            <li>O Garçom (a **API Web**)</li>
+            <li>A Cozinha (o **serviço** ou servidor que detém os dados/funcionalidade)</li>
+            <li>A Comida (os **dados** que você recebe)</li>
+        </ul>
+        <p>A API Web é esse "garçom" digital. Ela expõe funcionalidades de um serviço de forma estruturada, permitindo que seu programa solicite dados ou execute ações sem precisar entender a complexidade interna do serviço.</p>
+
+        <h3>Métodos HTTP (Verbos)</h3>
+        <p>Ao interagir com uma API Web, você usa diferentes "métodos" ou "verbos" HTTP para indicar o tipo de operação que deseja realizar:</p>
+        <ul>
+            <li><code>GET</code>: Usado para **obter (ler)** dados de um servidor. É o método mais comum para recuperar informações.</li>
+            <li><code>POST</code>: Usado para **enviar (criar)** novos dados para o servidor. Por exemplo, criar um novo usuário ou um novo post.</li>
+            <li><code>PUT</code>: Usado para **atualizar (substituir)** um recurso existente no servidor com novos dados.</li>
+            <li><code>DELETE</code>: Usado para **remover (apagar)** um recurso específico do servidor.</li>
+            <li><code>PATCH</code> (Opcional): Usado para **atualizar parcialmente** um recurso existente.</li>
+        </ul>
+
+        <h3>Códigos de Status HTTP</h3>
+        <p>Após uma requisição, o servidor responde com um **código de status HTTP**, que indica o resultado da operação. Entender esses códigos é fundamental para depurar suas interações com APIs:</p>
+        <ul>
+            <li><code>200 OK</code>: A requisição foi bem-sucedida.</li>
+            <li><code>201 Created</code>: A requisição <code>POST</code> foi bem-sucedida e um novo recurso foi criado.</li>
+            <li><code>204 No Content</code>: A requisição foi bem-sucedida, mas não há conteúdo para retornar (ex: uma requisição <code>DELETE</code>).</li>
+            <li><code>400 Bad Request</code>: A requisição enviada pelo cliente é inválida ou malformada.</li>
+            <li><code>401 Unauthorized</code>: Autenticação é necessária ou falhou (você não tem permissão).</li>
+            <li><code>403 Forbidden</code>: O servidor entendeu a requisição, mas se recusa a autorizá-la (você tem permissão, mas não para aquela ação específica).</li>
+            <li><code>404 Not Found</code>: O recurso solicitado não foi encontrado no servidor.</li>
+            <li><code>500 Internal Server Error</code>: Um erro inesperado ocorreu no servidor.</li>
+        </ul>
+
+        <hr>
+
+        <h2>2. Instalando o Módulo <code>requests</code></h2>
+        <p>O módulo <code>requests</code> não faz parte da biblioteca padrão do Python, então você precisará instalá-lo usando o <code>pip</code> (o gerenciador de pacotes do Python):</p>
+        <div class="code-block">
+            <h3>Comando de Instalação:</h3>
+            <button class="copy-button" onclick="copyCode('installRequests')">Copiar</button>
+            <pre id="installRequests">
+pip install requests
+            </pre>
+        </div>
+        <p>Abra seu terminal ou prompt de comando e execute este comando.</p>
+
+        <hr>
+
+        <h2>3. Fazendo Requisições <code>GET</code></h2>
+        <p>A requisição <code>GET</code> é usada para recuperar dados de um servidor. É a operação mais comum ao consumir APIs.</p>
+
+        <div class="code-block">
+            <h3>Exemplo 3.1: Consultando um CEP com ViaCEP</h3>
+            <p>A API ViaCEP permite consultar informações de endereço a partir de um CEP.</p>
+            <button class="copy-button" onclick="copyCode('getCep')">Copiar</button>
+            <pre id="getCep">
+import requests
+
+# CEP da Praça da Sé, São Paulo
+cep = "01001000"
+url = f"https://viacep.com.br/ws/{cep}/json/"
+
+print(f"Buscando informações para o CEP: {cep}...")
+response = requests.get(url) # Realiza a requisição GET
+
+# Verifica o código de status HTTP
+if response.status_code == 200:
+    # A requisição foi bem-sucedida (código 200 OK)
+    # response.json() converte a resposta JSON para um dicionário Python
+    dados_cep = response.json()
+
+    # Verifica se o CEP é válido (ViaCEP retorna 'erro': true para CEPs inválidos)
+    if 'erro' not in dados_cep:
+        print("\n--- Dados do Endereço ---")
+        print(f"CEP: {dados_cep['cep']}")
+        print(f"Logradouro: {dados_cep['logradouro']}")
+        print(f"Complemento: {dados_cep.get('complemento', 'N/A')}") # Usar .get para chaves opcionais
+        print(f"Bairro: {dados_cep['bairro']}")
+        print(f"Cidade/UF: {dados_cep['localidade']}/{dados_cep['uf']}")
+        print(f"DDD: {dados_cep['ddd']}")
+    else:
+        print(f"CEP {cep} não encontrado ou inválido.")
+elif response.status_code == 404:
+    print(f"Erro 404: O recurso para o CEP {cep} não foi encontrado.")
+else:
+    print(f"Erro na requisição: Status {response.status_code}")
+    print(f"Conteúdo da resposta: {response.text}") # Exibe o corpo da resposta em caso de erro
+            </pre>
+        </div>
+        <p>Neste exemplo:</p>
+        <ul>
+            <li><code>requests.get(url)</code>: Envia a requisição GET para a URL especificada.</li>
+            <li><code>response</code>: É o objeto de resposta. Ele contém várias informações sobre a resposta do servidor.</li>
+            <li><code>response.status_code</code>: Contém o código de status HTTP da resposta (ex: 200, 404).</li>
+            <li><code>response.json()</code>: É um método conveniente para quando a resposta do servidor é um JSON. Ele analisa a string JSON e a converte em um dicionário ou lista Python.</li>
+            <li><code>response.text</code>: Retorna o corpo da resposta como uma string (útil para depuração quando não é JSON).</li>
+        </ul>
+
+        <hr>
+
+        <h2>4. Passando Parâmetros em Requisições <code>GET</code></h2>
+        <p>Muitas APIs permitem que você filtre ou especifique dados passando parâmetros na URL (a parte após o `?`). O <code>requests</code> torna isso fácil com o parâmetro `params`.</p>
+
+        <div class="code-block">
+            <h3>Exemplo 4.1: Buscando Posts de Usuário no JSONPlaceholder</h3>
+            <p>JSONPlaceholder é uma API fake para testar requisições. Vamos buscar posts de um usuário específico.</p>
+            <button class="copy-button" onclick="copyCode('getParams')">Copiar</button>
+            <pre id="getParams">
+import requests
+
+url_posts = "https://jsonplaceholder.typicode.com/posts"
+# Parâmetros a serem enviados na URL (serão formatados como ?userId=1)
+parametros_get = {"userId": 1, "id": 5} # Buscar posts do usuário com ID 1 e post com ID 5
+
+print(f"\nBuscando posts com parâmetros: {parametros_get}...")
+response_posts = requests.get(url_posts, params=parametros_get)
+
+if response_posts.status_code == 200:
+    posts_encontrados = response_posts.json()
+    print(f"Posts encontrados (para userId=1, id=5): {len(posts_encontrados)}")
+    for post in posts_encontrados:
+        print(f"  - ID: {post['id']}, Título: {post['title']}")
+else:
+    print(f"Erro ao buscar posts: Status {response_posts.status_code}")
+            </pre>
+        </div>
+        <p>Usar o parâmetro `params` é mais seguro e fácil do que construir a URL manualmente com concatenação de strings, pois o <code>requests</code> cuida da codificação correta dos valores (ex: espaços são convertidos para `%20`).</p>
+
+        <hr>
+
+        <h2>5. Fazendo Requisições <code>POST</code></h2>
+        <p>Requisições <code>POST</code> são usadas para enviar dados para o servidor, geralmente para criar um novo recurso (ex: um novo registro de usuário, um novo comentário).</p>
+        <p>Os dados para a requisição <code>POST</code> são geralmente enviados no corpo (body) da requisição. O <code>requests</code> facilita o envio de JSON com o parâmetro `json`.</p>
+
+        <div class="code-block">
+            <h3>Exemplo 5.1: Criando um Novo Post no JSONPlaceholder</h3>
+            <button class="copy-button" onclick="copyCode('postData')">Copiar</button>
+            <pre id="postData">
+import requests
+
+url_criar_post = "https://jsonplaceholder.typicode.com/posts"
+# Dados a serem enviados no corpo da requisição (como um dicionário Python)
+novo_post_data = {
+    "title": "Meu Primeiro Post via Python Requests",
+    "body": "Este é o conteúdo do post que estou criando usando a biblioteca Requests do Python.",
+    "userId": 99 # Um ID de usuário fictício
+}
+
+print("\nCriando um novo post...")
+# requests.post() envia o método POST.
+# O parâmetro 'json' serializa automaticamente o dicionário para JSON e define o cabeçalho Content-Type.
+response_post = requests.post(url_criar_post, json=novo_post_data)
+
+if response_post.status_code == 201: # O código 201 Created indica que o recurso foi criado
+    post_criado_info = response_post.json()
+    print("Post criado com sucesso!")
+    print(f"ID do novo post: {post_criado_info['id']}")
+    print(f"Título: {post_criado_info['title']}")
+    print(f"Corpo: {post_criado_info['body']}")
+else:
+    print(f"Erro ao criar post: Status {response_post.status_code}")
+    print(f"Mensagem de erro: {response_post.text}") # Pode conter detalhes do erro
+            </pre>
+        </div>
+        <div class="note">
+            <p><strong><code>json</code> vs <code>data</code>:</strong></p>
+            <p>
+                <ul>
+                    <li>Use o parâmetro <code>json</code> quando você quer enviar dados no formato JSON. O <code>requests</code> automaticamente define o cabeçalho <code>Content-Type: application/json</code>.</li>
+                    <li>Use o parâmetro <code>data</code> quando você quer enviar dados em formato de formulário (<code>Content-Type: application/x-www-form-urlencoded</code>) ou como bytes.</li>
+                </ul>
+            </p>
+        </div>
+
+        <hr>
+
+        <h2>6. Cabeçalhos (Headers)</h2>
+        <p>Os cabeçalhos HTTP contêm informações adicionais sobre a requisição ou a resposta. Você pode definir cabeçalhos personalizados para sua requisição usando o parâmetro `headers`, que aceita um dicionário.</p>
+        <p>Isso é comum para:</p>
+        <ul>
+            <li>**Autenticação:** Enviar tokens de API ou JWT.</li>
+            <li>**Tipo de Conteúdo:** Informar ao servidor o formato dos dados que você está enviando (ex: <code>Content-Type: application/json</code>).</li>
+            <li>**User-Agent:** Identificar seu cliente HTTP.</li>
+            <li>**Aceitação:** Informar ao servidor quais tipos de conteúdo você prefere na resposta.</li>
+        </ul>
+
+        <div class="code-block">
+            <h3>Exemplo 6.1: Enviando Cabeçalhos Personalizados</h3>
+            <button class="copy-button" onclick="copyCode('headersExample')">Copiar</button>
+            <pre id="headersExample">
+import requests
+
+url_post_com_headers = "https://jsonplaceholder.typicode.com/posts"
+dados_com_headers = {
+    "title": "Post com Headers Personalizados",
+    "body": "Este post inclui um cabeçalho User-Agent.",
+    "userId": 102
+}
+
+# Dicionário de cabeçalhos
+meus_headers = {
+    "Content-Type": "application/json", # Informa que estamos enviando JSON
+    "User-Agent": "MeuAplicativoPythonV1.0", # Identifica sua aplicação
+    "X-My-Custom-Header": "Valor Personalizado" # Exemplo de cabeçalho customizado
+}
+
+print("\nCriando post com cabeçalhos personalizados...")
+response_headers = requests.post(url_post_com_headers, json=dados_com_headers, headers=meus_headers)
+
+if response_headers.status_code == 201:
+    print("Post criado com headers. Resposta do servidor:")
+    print(response_headers.json())
+else:
+    print(f"Erro: Status {response_headers.status_code}")
+    print(response_headers.text)
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>7. Tratamento de Erros e Exceções</h2>
+        <p>Ao lidar com APIs Web, é crucial tratar possíveis erros. A rede pode falhar, o servidor pode estar fora do ar, ou a API pode retornar um erro específico. O módulo <code>requests</code> levanta exceções para problemas de rede e oferece maneiras de verificar erros HTTP.</p>
+
+        <div class="code-block">
+            <h3>Exemplo 7.1: Lidando com Erros de Requisição</h3>
+            <button class="copy-button" onclick="copyCode('errorHandling')">Copiar</button>
+            <pre id="errorHandling">
+import requests
+
+# Exemplo de URL que pode falhar ou não existir
+urls_teste_erro = [
+    "http://site-nao-existe-12345.com", # Erro de conexão/DNS
+    "https://jsonplaceholder.typicode.com/naoexiste", # Erro 404 Not Found
+    "https://jsonplaceholder.typicode.com/posts/abc" # Erro 404 (ID inválido)
+]
+
+print("\n--- Testando Tratamento de Erros ---")
+for url in urls_teste_erro:
+    print(f"\nTentando acessar: {url}")
+    try:
+        # Usar 'timeout' para definir um tempo limite para a requisição
+        response_error = requests.get(url, timeout=5)
+
+        # response.raise_for_status() levanta uma exceção HTTPError para códigos 4xx ou 5xx
+        response_error.raise_for_status()
+
+        # Se chegou aqui, a requisição foi bem-sucedida (status 2xx)
+        print("Requisição bem-sucedida!")
+        print(response_error.json())
+
+    except requests.exceptions.HTTPError as errh:
+        # Erros HTTP (4xx ou 5xx)
+        print(f"Erro HTTP encontrado: {errh}")
+        print(f"Status Code: {errh.response.status_code}")
+        print(f"Conteúdo da resposta: {errh.response.text}")
+    except requests.exceptions.ConnectionError as errc:
+        # Erros de conexão (DNS falhou, site inacessível, etc.)
+        print(f"Erro de Conexão: {errc}")
+    except requests.exceptions.Timeout as errt:
+        # A requisição excedeu o tempo limite
+        print(f"Timeout: {errt}")
+    except requests.exceptions.RequestException as err:
+        # Captura qualquer outra exceção relacionada a requests
+        print(f"Um erro inesperado ocorreu: {err}")
+    except json.JSONDecodeError:
+        # Caso a resposta não seja um JSON válido
+        print(f"Erro: Resposta não é um JSON válido. Conteúdo: {response_error.text[:100]}...") # Imprime parte da resposta
+            </pre>
+        </div>
+        <p>Boas práticas:</p>
+        <ul>
+            <li>Sempre use um bloco <code>try-except</code> ao fazer requisições HTTP para lidar com problemas de rede.</li>
+            <li>Use <code>response.raise_for_status()</code> para que o <code>requests</code> automaticamente levante uma exceção <code>HTTPError</code> se o status da resposta for um erro (4xx ou 5xx).</li>
+            <li>Defina um <code>timeout</code> para suas requisições para evitar que seu programa fique travado indefinidamente se o servidor não responder.</li>
+        </ul>
+
+        <hr>
+
+        <h2>Exercícios</h2>
+
+        <div class="exercise">
+            <h3>Exercício 1: Buscar Feriados Nacionais</h3>
+            <p>Use a API pública de feriados da Nager.Date: <code>https://date.nager.at/api/v3/PublicHolidays/{ano}/{paisCode}</code></p>
+            <p>Exemplo de URL: `https://date.nager.at/api/v3/PublicHolidays/2024/BR`</p>
+            <p>1. Peça ao usuário que digite o **ano** (ex: 2024) e o **código do país** (ex: BR para Brasil, US para EUA).</p>
+            <p>2. Construa a URL da API com os dados fornecidos.</p>
+            <p>3. Faça uma requisição <code>GET</code> para essa URL.</p>
+            <p>4. Se a requisição for bem-sucedida (status 200), itere sobre a lista de feriados retornada e imprima o **Nome do Feriado** e a **Data** para cada um.</p>
+            <p>5. Adicione tratamento de erro para casos como:</p>
+            <ul>
+                <li>API não encontrada (404).</li>
+                <li>Problemas de conexão.</li>
+                <li>Resposta que não seja JSON válido.</li>
+            </ul>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerAPI1')">Copiar</button>
+                <pre id="exerAPI1">
+# Exercício 1: Buscar Feriados Nacionais
+import requests
+import json # Para tratamento de JSONDecodeError
+
+def buscar_feriados():
+    ano = input("Digite o ano (ex: 2024): ")
+    pais_code = input("Digite o código do país (ex: BR, US): ").upper()
+
+    url = f"https://date.nager.at/api/v3/PublicHolidays/{ano}/{pais_code}"
+
+    print(f"\nBuscando feriados para {pais_code} em {ano}...")
+
+    try:
+        response = requests.get(url, timeout=10) # 10 segundos de timeout
+        response.raise_for_status() # Levanta um HTTPError para 4xx/5xx status codes
+
+        feriados = response.json()
+
+        if not feriados:
+            print(f"Nenhum feriado encontrado para {pais_code} em {ano}.")
+            return
+
+        print(f"\n--- Feriados Nacionais em {ano} ({pais_code}) ---")
+        for feriado in feriados:
+            print(f"Data: {feriado['date']}, Feriado: {feriado['name']}")
+
+    except requests.exceptions.HTTPError as errh:
+        if errh.response.status_code == 404:
+            print(f"Erro: Ano ou código do país inválido. Verifique se '{ano}' e '{pais_code}' estão corretos. (Status 404)")
+        else:
+            print(f"Erro HTTP: {errh}")
+    except requests.exceptions.ConnectionError as errc:
+        print(f"Erro de Conexão: Verifique sua conexão com a internet. {errc}")
+    except requests.exceptions.Timeout as errt:
+        print(f"Timeout: A requisição demorou muito para responder. {errt}")
+    except requests.exceptions.RequestException as err:
+        print(f"Um erro inesperado ocorreu: {err}")
+    except json.JSONDecodeError:
+        print("Erro: A resposta da API não é um JSON válido.")
+    except Exception as e:
+        print(f"Ocorreu um erro inesperado: {e}")
+
+# Chame a função para executar o exercício
+# buscar_feriados()
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 2: Publicar um Comentário Fictício (JSONPlaceholder)</h3>
+            <p>Use a API JSONPlaceholder para o endpoint <code>POST /comments</code>.</p>
+            <p>Documentação: <a href="https://jsonplaceholder.typicode.com/guide/" target="_blank">JSONPlaceholder Guide</a></p>
+            <p>1. Crie um dicionário Python com os dados de um novo comentário:</p>
+            <ul>
+                <li><code>postId</code> (um número, ex: 1)</li>
+                <li><code>name</code> (seu nome ou um nome fictício)</li>
+                <li><code>email</code> (seu email ou um email fictício)</li>
+                <li><code>body</code> (o conteúdo do seu comentário)</li>
+            </ul>
+            <p>2. Faça uma requisição <code>POST</code> para <code>https://jsonplaceholder.typicode.com/comments</code>, enviando o dicionário como JSON.</p>
+            <p>3. Se a resposta for um status <code>201 Created</code>, imprima os detalhes do comentário criado que a API retornou (incluindo o `id` gerado).</p>
+            <p>4. Adicione tratamento de erros.</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerAPI2')">Copiar</button>
+                <pre id="exerAPI2">
+# Exercício 2: Publicar um Comentário Fictício (JSONPlaceholder)
+import requests
+import json
+
+def publicar_comentario():
+    url = "https://jsonplaceholder.typicode.com/comments"
+
+    # Dados do novo comentário
+    novo_comentario = {
+        "postId": 1,
+        "name": "Comentário do Aluno Python",
+        "email": "aluno.python@example.com",
+        "body": "Este é um comentário de teste enviado do meu script Python para a API JSONPlaceholder!"
+    }
+
+    print("\nPublicando novo comentário...")
+    try:
+        response = requests.post(url, json=novo_comentario, timeout=10)
+        response.raise_for_status() # Levanta um HTTPError para status 4xx/5xx
+
+        if response.status_code == 201:
+            comentario_criado = response.json()
+            print("Comentário criado com sucesso!")
+            print(f"ID: {comentario_criado['id']}")
+            print(f"Post ID: {comentario_criado['postId']}")
+            print(f"Nome: {comentario_criado['name']}")
+            print(f"Corpo: {comentario_criado['body']}")
+        else:
+            print(f"Erro inesperado: Status {response.status_code}")
+
+    except requests.exceptions.RequestException as e:
+        print(f"Erro ao publicar comentário: {e}")
+    except json.JSONDecodeError:
+        print("Erro: A resposta da API não é um JSON válido.")
+
+# Chame a função para executar o exercício
+# publicar_comentario()
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 3: Informações do GitHub por Usuário (Opcional)</h3>
+            <p>Use a API do GitHub para obter informações de um usuário: <code>https://api.github.com/users/{username}</code></p>
+            <p>1. Peça ao usuário que digite um nome de usuário do GitHub (ex: `octocat`, `torvalds`).</p>
+            <p>2. Faça uma requisição <code>GET</code> para a URL da API.</p>
+            <p>3. Se o usuário for encontrado (status 200), imprima:</p>
+            <ul>
+                <li>Nome real (<code>name</code>)</li>
+                <li>Biografia (<code>bio</code>) - se houver</li>
+                <li>Número de repositórios públicos (<code>public_repos</code>)</li>
+                <li>Número de seguidores (<code>followers</code>)</li>
+            </ul>
+            <p>4. Se o usuário não for encontrado (status 404), imprima uma mensagem amigável.</p>
+            <p>5. Inclua tratamento de erros para problemas de conexão e outros.</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerAPI3')">Copiar</button>
+                <pre id="exerAPI3">
+# Exercício 3: Informações do GitHub por Usuário
+import requests
+import json
+
+def buscar_info_github():
+    username = input("Digite o nome de usuário do GitHub: ")
+    url = f"https://api.github.com/users/{username}"
+
+    print(f"\nBuscando informações do usuário '{username}' no GitHub...")
+
+    try:
+        response = requests.get(url, timeout=10)
+        response.raise_for_status() # Levanta um HTTPError para 4xx/5xx
+
+        user_info = response.json()
+
+        print(f"\n--- Informações do Usuário GitHub: {username} ---")
+        print(f"Nome: {user_info.get('name', 'Não informado')}")
+        print(f"Biografia: {user_info.get('bio', 'Nenhuma biografia.')}")
+        print(f"Repositórios Públicos: {user_info.get('public_repos', 0)}")
+        print(f"Seguidores: {user_info.get('followers', 0)}")
+        print(f"URL do Perfil: {user_info.get('html_url', 'N/A')}")
+
+    except requests.exceptions.HTTPError as errh:
+        if errh.response.status_code == 404:
+            print(f"Erro 404: Usuário '{username}' não encontrado no GitHub.")
+        else:
+            print(f"Erro HTTP: {errh}")
+    except requests.exceptions.ConnectionError as errc:
+        print(f"Erro de Conexão: Verifique sua conexão com a internet. {errc}")
+    except requests.exceptions.Timeout as errt:
+        print(f"Timeout: A requisição demorou muito para responder. {errt}")
+    except requests.exceptions.RequestException as err:
+        print(f"Um erro inesperado ocorreu: {err}")
+    except json.JSONDecodeError:
+        print("Erro: A resposta da API não é um JSON válido.")
+    except Exception as e:
+        print(f"Ocorreu um erro inesperado: {e}")
+
+# Chame a função para executar o exercício
+# buscar_info_github()
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>Conclusão</h2>
+        <p>Aprender a interagir com **APIs Web** é uma habilidade fundamental no desenvolvimento moderno. Ela permite que seus programas Python se conectem a uma vasta gama de serviços online, desde dados climáticos e cotações de moedas até redes sociais e plataformas de e-commerce.</p>
+        <p>O módulo **<code>requests</code>** simplifica enormemente o processo de fazer requisições HTTP, lidar com respostas JSON e gerenciar erros, tornando a comunicação com APIs uma tarefa direta e eficiente em Python.</p>
+        <p>Com este conhecimento, você está pronto para integrar suas aplicações com o "mundo exterior". Antes de avançarmos para tópicos como Web Scraping ou desenvolvimento web com frameworks (que exigem muitas bibliotecas externas), é crucial entender como gerenciar essas bibliotecas de forma organizada.</p>
+        <p>No próximo conteúdo, abordaremos **Ambientes Virtuais e Gerenciamento de Dependências (com Pipenv ou Poetry)**. Isso garantirá que seus projetos Python sejam isolados, reproduzíveis e fáceis de gerenciar.</p>
+
+        </div> <a href="#top" class="back-to-top" title="Voltar ao topo da página">↑</a>
+
+  <footer class="footer">
+  <div class="footer-content">
+    <div class="brand-info">
+      <p>&copy; 2025 <strong>Aprendendo Python</strong> — Todos os direitos reservados.</p>
+      <p>Desenvolvido por: <a href="https://jespedsys.com.br" target="_blank">JesPedSYS</a></p>
+    </div>
+
+    <div class="social-links">
+      <a href="https://github.com/jespedsys" target="_blank" title="GitHub">
+        <img src="../github.png" alt="GitHub">
+      </a>
+      <a href="https://www.linkedin.com/in/jesielpedroza" target="_blank" title="LinkedIn">
+        <img src="../linkedin.png" alt="LinkedIn">
+      </a>
+      <a href="https://twitter.com/jespedsys" target="_blank" title="Twitter/X">
+        <img src="../twitter.png" alt="Twitter/X">
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

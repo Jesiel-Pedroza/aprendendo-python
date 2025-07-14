@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprenda Python Passo a Passo - Testes Unitários em Python</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../estilo.css">
+</head>
+<body id="top">
+
+    <div class="main-header">
+        <img src="../logo.png" alt="Logo Aprenda Python" class="logo-header">
+        <h1>Bem-vindo ao Mundo Python!</h1>
+    </div>
+    <div class="container">
+
+        <p>Comece sua jornada na programação com Python, uma linguagem poderosa e fácil de aprender.</p>
+
+         <nav class="main-menu">
+            <h2>Conteúdos:</h2>
+            <ul>
+                <li><a href="../index.html">Página Inicial</a></li>
+                <li><a href="web_scraping.html">→ Próxima Aula: Web Scraping</a></li>
+                
+                </ul>
+        </nav>
+        <h1>Testes Unitários: Garantindo a Qualidade do seu Código Python</h1>
+
+        <p>No desenvolvimento de software, escrever código que funciona é apenas metade da batalha. A outra metade é garantir que ele continue funcionando corretamente à medida que o projeto cresce e evolui. É aqui que entram os **testes**.</p>
+        <p>Testes são pedaços de código que verificam se outras partes do seu código se comportam como o esperado. Entre os diversos tipos de testes, os **testes unitários** são os mais fundamentais: eles se concentram em testar as menores e mais isoladas "unidades" do seu código, como funções e métodos.</p>
+        <p>Python possui um módulo nativo chamado <code>unittest</code> para escrever e executar testes unitários, além de bibliotecas de terceiros populares como o <code>pytest</code>, que simplificam ainda mais o processo.</p>
+
+        <hr>
+
+        <h2>1. Por Que Testar seu Código?</h2>
+        <p>Investir tempo em escrever testes pode parecer um trabalho extra, mas os benefícios a longo prazo são enormes:</p>
+        <ul>
+            <li><strong>Confiança:</strong> Quando você tem testes que passam, você ganha confiança de que seu código está fazendo o que deveria.</li>
+            <li><strong>Prevenção de Regressões:</strong> Testes atuam como uma rede de segurança. Se você fizer uma alteração em uma parte do código e ela quebrar uma funcionalidade existente em outro lugar (uma "regressão"), os testes irão falhar e avisar você imediatamente.</li>
+            <li><strong>Documentação Viva:</strong> Testes bem escritos podem servir como excelentes exemplos de como usar suas funções e classes, documentando o comportamento esperado do código.</li>
+            <li><strong>Facilita a Refatoração:</strong> Com uma suíte de testes robusta, você pode refatorar (reestruturar) seu código com segurança, sabendo que se algo quebrar, os testes o avisarão.</li>
+            <li><strong>Melhor Design de Código:</strong> A mentalidade de "código testável" encoraja você a escrever funções menores, mais focadas, com entradas e saídas claras, o que leva a um código mais limpo e modular.</li>
+        </ul>
+
+        <hr>
+
+        <h2>2. Tipos de Testes (Breve Visão Geral)</h2>
+        <p>É importante saber que testes unitários são apenas um tipo de teste. Aqui estão outros tipos comuns, para contexto:</p>
+        <ul>
+            <li><strong>Testes Unitários (Unit Tests):</strong> Focam em testar componentes individuais (unidades) de um sistema de forma isolada. Ex: uma única função, um método de uma classe. (Nosso foco nesta página)</li>
+            <li><strong>Testes de Integração (Integration Tests):</strong> Verificam se diferentes unidades de código ou subsistemas interagem corretamente uns com os outros. Ex: testar se a função que salva dados no banco de dados funciona junto com a função que recupera os dados.</li>
+            <li><strong>Testes de Aceitação / End-to-End (E2E Tests):</strong> Testam o sistema completo do ponto de vista do usuário final, simulando interações reais. Ex: testar um fluxo completo de login, adicionar ao carrinho e finalizar compra em um e-commerce.</li>
+            <li><strong>Testes de Performance:</strong> Avaliam o desempenho do software sob diferentes cargas (velocidade, responsividade, estabilidade).</li>
+        </ul>
+
+        <hr>
+
+        <h2>3. O Módulo <code>unittest</code> (Padrão do Python)</h2>
+        <p>O <code>unittest</code> é a biblioteca de testes embutida no Python. Ela segue uma estrutura orientada a objetos e é inspirada em frameworks de teste como o JUnit do Java.</p>
+
+        <h3>3.1. Estrutura Básica de um Teste Unitário com <code>unittest</code></h3>
+        <p>Para usar o <code>unittest</code>, você geralmente segue estas convenções:</p>
+        <ul>
+            <li><strong>Arquivos de Teste:</strong> Devem ser arquivos Python (ex: <code>.py</code>) e é uma boa prática nomeá-los começando com <code>test_</code> (ex: <code>test_minhas_funcoes.py</code>).</li>
+            <li><strong>Classes de Teste:</strong> Seus testes são organizados em classes que herdam de <code>unittest.TestCase</code>.</li>
+            <li><strong>Métodos de Teste:</strong> Dentro de uma classe de teste, cada método que representa um teste individual deve começar com <code>test_</code> (ex: <code>test_soma_positivos</code>).</li>
+        </ul>
+
+        <h3>3.2. Métodos de Asserção</h3>
+        <p>Dentro dos métodos de teste, você usa "métodos de asserção" (assertions) para verificar se uma condição é verdadeira, se dois valores são iguais, se uma exceção foi levantada, etc. Se uma asserção falhar, o teste falha.</p>
+        <p>Alguns métodos de asserção comuns em <code>unittest.TestCase</code>:</p>
+        <ul>
+            <li><code>self.assertEqual(a, b)</code>: Verifica se `a` é igual a `b`.</li>
+            <li><code>self.assertNotEqual(a, b)</code>: Verifica se `a` não é igual a `b`.</li>
+            <li><code>self.assertTrue(x)</code>: Verifica se `x` é avaliado como `True`.</li>
+            <li><code>self.assertFalse(x)</code>: Verifica se `x` é avaliado como `False`.</li>
+            <li><code>self.assertIn(membro, container)</code>: Verifica se `membro` está em `container`.</li>
+            <li><code>self.assertNotIn(membro, container)</code>: Verifica se `membro` não está em `container`.</li>
+            <li><code>self.assertIsNone(x)</code>: Verifica se `x` é `None`.</li>
+            <li><code>self.assertIsNotNone(x)</code>: Verifica se `x` não é `None`.</li>
+            <li><code>self.assertRaises(Excecao, funcao, *args, **kwargs)</code>: Testa se uma `Excecao` específica é levantada quando `funcao` é chamada com os argumentos dados.</li>
+            <li><code>self.assertAlmostEqual(first, second, places=7)</code>: Verifica se dois floats são aproximadamente iguais (útil para evitar problemas de precisão de ponto flutuante).</li>
+        </ul>
+
+        <h3>3.3. Configuração e Desmontagem (<code>setUp</code>, <code>tearDown</code>)</h3>
+        <p>Muitas vezes, você precisará preparar um ambiente para seus testes (ex: criar um objeto, abrir um arquivo) e limpá-lo depois. O <code>unittest</code> oferece métodos especiais para isso:</p>
+        <ul>
+            <li><code>setUp()</code>: É executado <strong>antes de cada método de teste</strong> na classe. Ideal para inicializar objetos ou configurações comuns que todos os testes precisarão.</li>
+            <li><code>tearDown()</code>: É executado <strong>depois de cada método de teste</strong>. Ideal para limpar recursos (fechar arquivos, desconectar de bancos de dados, resetar variáveis).</li>
+        </ul>
+
+        <h3>3.4. Executando Testes</h3>
+        <p>Para executar seus testes, você pode usar a linha de comando:</p>
+        <ul>
+            <li>Para um arquivo específico: <code>python -m unittest nome_do_arquivo_de_teste.py</code></li>
+            <li>Para descobrir e rodar todos os testes em um diretório (e subdiretórios) que seguem a convenção de nomenclatura (ex: <code>test_*.py</code>): <code>python -m unittest discover</code></li>
+        </ul>
+
+        <h3>Exemplo Prático com <code>unittest</code></h3>
+        <p>Vamos criar um módulo simples com algumas operações e, em seguida, um arquivo de teste para elas.</p>
+
+        <div class="code-block">
+            <h3>Arquivo: <code>minhas_operacoes.py</code></h3>
+            <button class="copy-button" onclick="copyCode('minhasOperacoesPy')">Copiar</button>
+            <pre id="minhasOperacoesPy">
+# minhas_operacoes.py
+
+def soma(a, b):
+    """Retorna a soma de dois números."""
+    return a + b
+
+def subtrai(a, b):
+    """Retorna a subtração de dois números."""
+    return a - b
+
+def divide(a, b):
+    """Retorna a divisão de dois números. Levanta ValueError se b for zero."""
+    if b == 0:
+        raise ValueError("Não é possível dividir por zero!")
+    return a / b
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h3>Arquivo: <code>test_operacoes.py</code></h3>
+            <button class="copy-button" onclick="copyCode('testOperacoesPy')">Copiar</button>
+            <pre id="testOperacoesPy">
+# test_operacoes.py
+import unittest
+from minhas_operacoes import soma, subtrai, divide
+
+class TestMinhasOperacoes(unittest.TestCase):
+
+    # Método setUp é opcional, mas útil para setup comum
+    def setUp(self):
+        print("\nConfigurando teste...")
+        self.valor_inicial = 10
+
+    # Método tearDown é opcional, mas útil para limpeza
+    def tearDown(self):
+        print("Finalizando teste...")
+
+    def test_soma_positivos(self):
+        """Testa a soma com números positivos."""
+        self.assertEqual(soma(2, 3), 5)
+        self.assertEqual(soma(self.valor_inicial, 5), 15) # Usando valor do setUp
+
+    def test_soma_negativos(self):
+        """Testa a soma com números negativos."""
+        self.assertEqual(soma(-1, -1), -2)
+        self.assertEqual(soma(-10, 5), -5)
+
+    def test_subtrai_simples(self):
+        """Testa a subtração básica."""
+        self.assertEqual(subtrai(5, 2), 3)
+        self.assertEqual(subtrai(self.valor_inicial, 3), 7) # Usando valor do setUp
+
+    def test_subtrai_zero(self):
+        """Testa a subtração por zero."""
+        self.assertEqual(subtrai(10, 0), 10)
+
+    def test_divide_normal(self):
+        """Testa a divisão normal."""
+        self.assertEqual(divide(10, 2), 5)
+
+    def test_divide_por_zero(self):
+        """Testa se a divisão por zero levanta ValueError."""
+        with self.assertRaises(ValueError):
+            divide(10, 0)
+        # Você também pode testar a mensagem da exceção
+        with self.assertRaisesRegex(ValueError, "Não é possível dividir por zero!"):
+            divide(10, 0)
+
+    def test_divide_resultado_float(self):
+        """Testa divisão com resultado float, usando assertAlmostEqual."""
+        self.assertAlmostEqual(divide(5, 2), 2.5)
+        self.assertAlmostEqual(divide(10, 3), 3.3333333333333335) # Resultado exato
+
+# Esta linha permite que você execute os testes diretamente do arquivo
+if __name__ == '__main__':
+    unittest.main()
+            </pre>
+        </div>
+        <p>Para executar estes testes:</p>
+        <ol>
+            <li>Certifique-se de estar na pasta que contém ambos os arquivos (`minhas_operacoes.py` e `test_operacoes.py`).</li>
+            <li>No terminal, com seu ambiente virtual ativado (se aplicável), execute:
+                <div class="code-block">
+                    <pre>python -m unittest test_operacoes.py</pre>
+                </div>
+                Ou para descobrir todos os testes na pasta:
+                <div class="code-block">
+                    <pre>python -m unittest discover</pre>
+                </div>
+            </li>
+        </ol>
+        <div class="terminal-output">
+            <pre>
+Configurando teste...
+.Finalizando teste...
+Configurando teste...
+.Finalizando teste...
+Configurando teste...
+.Finalizando teste...
+Configurando teste...
+.Finalizando teste...
+Configurando teste...
+.Finalizando teste...
+Configurando teste...
+.Finalizando teste...
+Configurando teste...
+.Finalizando teste...
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.001s
+
+OK
+            </pre>
+        </div>
+        <p>A saída `OK` significa que todos os testes passaram. Se algum falhar, ele indicará qual teste falhou e porquê.</p>
+
+        <hr>
+
+        <h2>4. Introdução ao <code>pytest</code> (Ferramenta Popular)</h2>
+        <p>O <code>pytest</code> é uma estrutura de teste de terceiros que se tornou extremamente popular na comunidade Python. Ele oferece uma sintaxe mais simples e flexível do que o <code>unittest</code> para muitos casos, além de recursos avançados e uma comunidade vibrante de plugins.</p>
+
+        <h3>Vantagens do <code>pytest</code>:</h3>
+        <ul>
+            <li><strong>Sintaxe Mais Simples:</strong> Você pode escrever testes como funções simples usando a instrução `assert` do Python, sem a necessidade de herdar de classes `TestCase` ou usar métodos como `self.assertEqual`.</li>
+            <li><strong>Mensagens de Erro Ricas:</strong> O `pytest` fornece saídas de erro detalhadas e fáceis de ler quando um teste falha.</li>
+            <li><strong>Descoberta Automática:</strong> Ele detecta automaticamente os arquivos e funções de teste seguindo convenções de nomenclatura.</li>
+            <li><strong>Plugins:</strong> Possui um vasto ecossistema de plugins para funcionalidades adicionais (ex: cobertura de código, testes parametrizados).</li>
+        </ul>
+
+        <h3>Instalando <code>pytest</code></h3>
+        <p>Como é uma biblioteca de terceiros, você precisa instalá-la:</p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('installPytest')">Copiar</button>
+            <pre id="installPytest">
+# Com seu ambiente virtual ativado
+pip install pytest
+            </pre>
+        </div>
+
+        <h3>Exemplo Simples com <code>pytest</code></h3>
+        <p>Vamos testar as mesmas funções de `minhas_operacoes.py` usando `pytest`.</p>
+
+        <div class="code-block">
+            <h3>Arquivo: <code>test_operacoes_pytest.py</code></h3>
+            <button class="copy-button" onclick="copyCode('testOperacoesPytestPy')">Copiar</button>
+            <pre id="testOperacoesPytestPy">
+# test_operacoes_pytest.py
+from minhas_operacoes import soma, subtrai, divide
+import pytest # Necessário para pytest.raises
+
+def test_soma_positivos_pytest():
+    """Testa a soma com números positivos."""
+    assert soma(2, 3) == 5
+    assert soma(10, 5) == 15
+
+def test_soma_negativos_pytest():
+    """Testa a soma com números negativos."""
+    assert soma(-1, -1) == -2
+
+def test_subtrai_simples_pytest():
+    """Testa a subtração básica."""
+    assert subtrai(5, 2) == 3
+
+def test_divide_por_zero_pytest():
+    """Testa se a divisão por zero levanta ValueError com pytest.raises."""
+    with pytest.raises(ValueError, match="Não é possível dividir por zero!"):
+        divide(10, 0)
+
+def test_divide_resultado_float_pytest():
+    """Testa divisão com resultado float."""
+    assert divide(5, 2) == 2.5
+    # Para comparações de floats que precisam de tolerância:
+    # assert divide(10, 3) == pytest.approx(3.3333333333333335)
+            </pre>
+        </div>
+        <p>Note a simplicidade: funções em vez de classes, e a palavra-chave `assert` diretamente. Para testar exceções, usamos `pytest.raises` como um gerenciador de contexto.</p>
+
+        <h3>Executando Testes com <code>pytest</code></h3>
+        <p>No terminal, na pasta do projeto (com o ambiente virtual ativado e `pytest` instalado), basta executar:</p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('runPytest')">Copiar</button>
+            <pre id="runPytest">
+pytest
+            </pre>
+        </div>
+        <div class="terminal-output">
+            <pre>
+============================= test session starts ==============================
+platform linux -- Python 3.9.7, pytest-7.4.0, pluggy-1.3.0
+rootdir: /home/usuario/meu_projeto
+collected 5 items
+
+test_operacoes_pytest.py .....                                           [100%]
+
+============================== 5 passed in 0.01s ===============================
+            </pre>
+        </div>
+        <p>O <code>pytest</code> automaticamente procura por arquivos que começam com `test_` ou terminam com `_test.py` e executa as funções que começam com `test_` dentro deles.</p>
+        <p>Para iniciantes, o <code>unittest</code> é um excelente ponto de partida, pois já vem com Python. No entanto, muitos desenvolvedores experientes preferem o <code>pytest</code> por sua sintaxe mais limpa e recursos poderosos. Sinta-se à vontade para explorar ambos!</p>
+
+        <hr>
+
+        <h2>Exercícios</h2>
+
+        <div class="exercise">
+            <h3>Exercício 1: Testando uma Função de Formatação de String</h3>
+            <p>1. Crie um arquivo Python chamado <code>formatador.py</code> com a seguinte função:</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerTest1_func')">Copiar</button>
+                <pre id="exerTest1_func">
+# formatador.py
+
+def formatar_nome(nome_completo):
+    """
+    Recebe um nome completo (string) e retorna cada palavra capitalizada.
+    Ex: "joao silva" -> "Joao Silva"
+    Trata múltiplos espaços e espaços nas extremidades.
+    """
+    if not isinstance(nome_completo, str):
+        raise TypeError("O nome deve ser uma string.")
+    
+    palavras = nome_completo.strip().lower().split()
+    nome_formatado = [palavra.capitalize() for palavra in palavras]
+    return " ".join(nome_formatado)
+                </pre>
+            </div>
+            <p>2. Crie um arquivo de teste chamado <code>test_formatador.py</code> usando o módulo <code>unittest</code> para testar a função <code>formatar_nome</code>. Inclua os seguintes casos:</p>
+            <ul>
+                <li>Nome simples: "fulano"</li>
+                <li>Nome composto: "fulano de tal"</li>
+                <li>Nome com múltiplos espaços: "  maria   do   carmo   "</li>
+                <li>Nome com espaços no início e fim: "  pedro souza  "</li>
+                <li>String vazia: ""</li>
+                <li>Teste para verificar se um <code>TypeError</code> é levantado se a entrada não for uma string (ex: <code>formatar_nome(123)</code>).</li>
+            </ul>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerTest1_test')">Copiar</button>
+                <pre id="exerTest1_test">
+# test_formatador.py
+import unittest
+from formatador import formatar_nome
+
+class TestFormatadorNome(unittest.TestCase):
+
+    def test_nome_simples(self):
+        self.assertEqual(formatar_nome("fulano"), "Fulano")
+
+    def test_nome_composto(self):
+        self.assertEqual(formatar_nome("fulano de tal"), "Fulano De Tal")
+
+    def test_multiplos_espacos(self):
+        self.assertEqual(formatar_nome("  maria   do   carmo   "), "Maria Do Carmo")
+
+    def test_espacos_nas_extremidades(self):
+        self.assertEqual(formatar_nome("  pedro souza  "), "Pedro Souza")
+
+    def test_string_vazia(self):
+        self.assertEqual(formatar_nome(""), "")
+
+    def test_entrada_nao_string(self):
+        with self.assertRaises(TypeError):
+            formatar_nome(123)
+        with self.assertRaises(TypeError):
+            formatar_nome(None)
+        with self.assertRaises(TypeError):
+            formatar_nome(['lista', 'de', 'nomes'])
+
+if __name__ == '__main__':
+    unittest.main()
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 2: Testando uma Função de Validação de Idade</h3>
+            <p>1. Crie um arquivo Python chamado <code>validador.py</code> com a seguinte função:</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerTest2_func')">Copiar</button>
+                <pre id="exerTest2_func">
+# validador.py
+
+def eh_adulto(idade):
+    """
+    Verifica se uma pessoa é considerada adulta (idade >= 18).
+    Levanta ValueError se a idade não for um número válido ou for negativa.
+    """
+    if not isinstance(idade, (int, float)):
+        raise TypeError("A idade deve ser um número.")
+    if idade < 0:
+        raise ValueError("A idade não pode ser negativa.")
+    return idade >= 18
+                </pre>
+            </div>
+            <p>2. Crie um arquivo de teste chamado <code>test_validador.py</code> usando o módulo <code>unittest</code> para testar a função <code>eh_adulto</code>. Inclua os seguintes casos:</p>
+            <ul>
+                <li>Idade maior que 18 (ex: 20).</li>
+                <li>Idade igual a 18.</li>
+                <li>Idade menor que 18 (ex: 17, 0).</li>
+                <li>Teste para verificar se um <code>TypeError</code> é levantado se a entrada não for numérica (ex: <code>"vinte"</code>).</li>
+                <li>Teste para verificar se um <code>ValueError</code> é levantado se a idade for negativa (ex: -5).</li>
+            </ul>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerTest2_test')">Copiar</button>
+                <pre id="exerTest2_test">
+# test_validador.py
+import unittest
+from validador import eh_adulto
+
+class TestValidadorIdade(unittest.TestCase):
+
+    def test_idade_maior_que_18(self):
+        self.assertTrue(eh_adulto(25))
+        self.assertTrue(eh_adulto(18.5)) # Testando float
+
+    def test_idade_igual_a_18(self):
+        self.assertTrue(eh_adulto(18))
+
+    def test_idade_menor_que_18(self):
+        self.assertFalse(eh_adulto(17))
+        self.assertFalse(eh_adulto(0))
+
+    def test_idade_nao_numerica_type_error(self):
+        with self.assertRaises(TypeError):
+            eh_adulto("vinte")
+        with self.assertRaises(TypeError):
+            eh_adulto(None)
+        with self.assertRaises(TypeError):
+            eh_adulto([18])
+
+    def test_idade_negativa_value_error(self):
+        with self.assertRaises(ValueError):
+            eh_adulto(-5)
+        with self.assertRaisesRegex(ValueError, "A idade não pode ser negativa."):
+            eh_adulto(-1)
+
+if __name__ == '__main__':
+    unittest.main()
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>Conclusão</h2>
+        <p>Os **testes unitários** são uma parte indispensável do desenvolvimento de software moderno. Eles fornecem uma rede de segurança para seu código, ajudam a prevenir bugs, facilitam a refatoração e atuam como uma forma de documentação viva.</p>
+        <p>Ao adotar a prática de escrever testes, você construirá um código mais robusto, confiável e fácil de manter a longo prazo. Comece com o módulo <code>unittest</code> que já vem com Python e, conforme ganhar experiência, explore ferramentas como o <code>pytest</code> para maior flexibilidade e conveniência.</p>
+        <p>No próximo conteúdo, vamos explorar uma aplicação prática de tudo o que aprendemos sobre requisições HTTP e manipulação de dados: o **Web Scraping com Beautiful Soup**.</p>
+
+        </div> <a href="#top" class="back-to-top" title="Voltar ao topo da página">↑</a>
+ <footer class="footer">
+  <div class="footer-content">
+    <div class="brand-info">
+      <p>&copy; 2025 <strong>Aprendendo Python</strong> — Todos os direitos reservados.</p>
+      <p>Desenvolvido por: <a href="https://jespedsys.com.br" target="_blank">JesPedSYS</a></p>
+    </div>
+
+    <div class="social-links">
+      <a href="https://github.com/jespedsys" target="_blank" title="GitHub">
+        <img src="../github.png" alt="GitHub">
+      </a>
+      <a href="https://www.linkedin.com/in/jesielpedroza" target="_blank" title="LinkedIn">
+        <img src="../linkedin.png" alt="LinkedIn">
+      </a>
+      <a href="https://twitter.com/jespedsys" target="_blank" title="Twitter/X">
+        <img src="../twitter.png" alt="Twitter/X">
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

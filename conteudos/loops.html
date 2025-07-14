@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprenda Python Passo a Passo - Estruturas de Repetição</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../estilo.css">
+</head>
+<body id="top">
+
+    <div class="main-header">
+        <img src="../logo.png" alt="Logo Aprenda Python" class="logo-header">
+        <h1>Bem-vindo ao Mundo Python!</h1>
+    </div>
+    <div class="container">
+
+        <p>Comece sua jornada na programação com Python, uma linguagem poderosa e fácil de aprender.</p>
+
+       
+    <nav class="main-menu">
+            <h2>Conteúdos:</h2>
+            <ul>
+                <li><a href="../index.html">Página Inicial</a></li>
+                <li><a href="estruturas_dados.html">→ Próxima Aula: Estruturas de Dados</a></li>
+                
+                </ul>
+        </nav>
+        <h1>Estruturas de Repetição (Loops): Automatizando Tarefas</h1>
+
+        <p>Após aprender a tomar decisões com as estruturas condicionais (<code>if</code>, <code>elif</code>, <code>else</code>), o próximo passo fundamental na programação é entender como **repetir ações**. As **estruturas de repetição**, também conhecidas como **loops**, permitem que você execute um bloco de código várias vezes, de forma automática e eficiente.</p>
+        <p>Pense nos loops como uma forma de ensinar seu programa a realizar tarefas repetitivas sem a necessidade de escrever o mesmo código várias e várias vezes. Isso é a base da automação!</p>
+        <p>Em Python, os dois tipos principais de loops são o <code>while</code> (enquanto) e o <code>for</code> (para cada).</p>
+
+        <hr>
+
+        <h2>1. A Declaração <code>while</code> (Enquanto)</h2>
+        <p>O loop <code>while</code> executa um bloco de código **enquanto uma condição específica for verdadeira (<code>True</code>)**. Ele continua repetindo até que a condição se torne falsa (<code>False</code>).</p>
+        <p>É ideal para situações em que você não sabe de antemão quantas vezes o loop precisará ser executado; a repetição depende de uma condição ser satisfeita ou não.</p>
+
+        <div class="code-block">
+            <h3>Sintaxe Básica do <code>while</code>:</h3>
+            <button class="copy-button" onclick="copyCode('whileSintaxe')">Copiar</button>
+            <pre id="whileSintaxe">
+while condicao_a_ser_testada:
+    # Este código será executado REPETIDAMENTE ENQUANTO a condição for True
+    # Lembre-se da INDENTAÇÃO! É CRUCIAL em Python.
+    # Algo deve acontecer aqui dentro para que a 'condicao_a_ser_testada'
+    # eventualmente se torne False e o loop termine.
+print("Este código está fora do loop while e será executado após o seu término.")
+            </pre>
+        </div>
+
+        <div class="note">
+            <p><strong>ATENÇÃO! Cuidado com Loops Infinitos:</strong></p>
+            <p>Se a condição de um loop <code>while</code> nunca se tornar <code>False</code>, o programa executará o bloco de código indefinidamente. Isso é chamado de **loop infinito** e fará com que seu programa trave. Certifique-se sempre de que, dentro do loop, algo altere a condição para que ela possa eventualmente se tornar falsa e o loop termine.</p>
+        </div>
+
+        <div class="code-block">
+            <h3>Exemplo de <code>while</code>: Contador Simples</h3>
+            <button class="copy-button" onclick="copyCode('whileExemploContador')">Copiar</button>
+            <pre id="whileExemploContador">
+# Exemplo: Contando de 1 a 5
+contador = 1
+while contador &lt;= 5:
+    print(f"Contador atual: {contador}")
+    contador = contador + 1 # Incrementa o contador em 1 (pode usar 'contador += 1')
+
+print("Contagem finalizada!")
+            </pre>
+        </div>
+        <p>Neste exemplo, o loop continua enquanto <code>contador</code> for menor ou igual a 5. A cada repetição, o valor de <code>contador</code> é incrementado, garantindo que a condição se tornará falsa quando <code>contador</code> atingir 6.</p>
+
+        <div class="exercise">
+            <h3>Exercício 1.1: Contagem Regressiva</h3>
+            <p>Crie um programa que faça uma contagem regressiva de 10 até 1 e, ao final, imprima "Decolagem!".</p>
+            <ol>
+                <li>Use uma variável <code>numero = 10</code>.</li>
+                <li>Use um loop <code>while</code> para continuar enquanto <code>numero</code> for maior ou igual a 1.</li>
+                <li>Dentro do loop, imprima o valor de <code>numero</code> e depois decremente-o em 1.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerWhile1')">Copiar</button>
+                <pre id="exerWhile1">
+# Exercício 1.1
+numero = 10
+
+while numero >= 1:
+    print(numero)
+    numero -= 1 # Equivalente a: numero = numero - 1
+
+print("Decolagem!")
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 1.2: Soma Acumulada</h3>
+            <p>Crie um programa que calcule a soma dos números de 1 a 5.</p>
+            <ol>
+                <li>Crie uma variável <code>num_atual = 1</code> e <code>soma_total = 0</code>.</li>
+                <li>Use um loop <code>while</code> para continuar enquanto <code>num_atual</code> for menor ou igual a 5.</li>
+                <li>Dentro do loop, adicione <code>num_atual</code> à <code>soma_total</code> e depois incremente <code>num_atual</code>.</li>
+                <li>Ao final, imprima o valor de <code>soma_total</code>.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerWhile2')">Copiar</button>
+                <pre id="exerWhile2">
+# Exercício 1.2
+num_atual = 1
+soma_total = 0
+
+while num_atual <= 5:
+    soma_total += num_atual # Adiciona o num_atual à soma_total
+    num_atual += 1          # Passa para o próximo número
+
+print(f"A soma dos números de 1 a 5 é: {soma_total}") # Deve ser 15
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 1.3: Senha Simples (Loop com Entrada do Usuário)</h3>
+            <p>Simule um sistema de login simples que pede uma senha até que a correta seja digitada.</p>
+            <ol>
+                <li>Defina uma <code>senha_correta = "python123"</code>.</li>
+                <li>Crie uma variável <code>senha_digitada = ""</code> (vazia inicialmente).</li>
+                <li>Use um loop <code>while</code> que continue enquanto <code>senha_digitada</code> for diferente de <code>senha_correta</code>.</li>
+                <li>Dentro do loop, use a função <code>input()</code> para pedir ao usuário que digite a senha.</li>
+                <li>Quando a senha correta for digitada, imprima "Login bem-sucedido!"</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerWhile3')">Copiar</button>
+                <pre id="exerWhile3">
+# Exercício 1.3
+senha_correta = "python123"
+senha_digitada = "" # Inicialmente vazia para o loop começar
+
+while senha_digitada != senha_correta:
+    senha_digitada = input("Digite a senha: ") # Python espera entrada no console
+    if senha_digitada != senha_correta:
+        print("Senha incorreta. Tente novamente.")
+
+print("Login bem-sucedido!")
+                </pre>
+            </div>
+            <div class="note">
+                <p><strong>Nota sobre <code>input()</code>:</strong></p>
+                <p>A função <code>input()</code> pausa a execução do programa e espera que o usuário digite algo e pressione Enter. Em um ambiente web (HTML/CSS/JS), essa interação seria feita de forma diferente, mas para o aprendizado de Python, imagine que você está executando este código em um terminal ou ambiente como o Replit.</p>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>2. A Declaração <code>for</code> (Para cada)</h2>
+        <p>O loop <code>for</code> é usado para **iterar sobre sequências (como strings, listas, tuplas, etc.) ou outros objetos iteráveis**. Ele é frequentemente usado quando você sabe o número de vezes que o loop deve ser executado, ou quando você quer processar cada item em uma coleção.</p>
+        <p>Em Python, o <code>for</code> é muito versátil e intuitivo para percorrer coleções.</p>
+
+        <div class="code-block">
+            <h3>Sintaxe Básica do <code>for</code> com <code>range()</code>:</h3>
+            <button class="copy-button" onclick="copyCode('forSintaxeRange')">Copiar</button>
+            <pre id="forSintaxeRange">
+for variavel_de_iteracao in range(valor_inicial, valor_final, passo):
+    # Este código será executado para cada item/iteração no 'range'
+    # 'variavel_de_iteracao' assume o valor de cada item em sequência.
+    # INDENTAÇÃO aqui também!
+            </pre>
+        </div>
+
+        <h3>Entendendo a Função <code>range()</code>:</h3>
+        <p>A função <code>range()</code> é muito comum com loops <code>for</code> para gerar sequências de números.</p>
+        <ul>
+            <li><code>range(fim)</code>: Gera números de 0 até <code>fim-1</code>. (Ex: `range(5)` gera 0, 1, 2, 3, 4)</li>
+            <li><code>range(inicio, fim)</code>: Gera números de <code>inicio</code> até <code>fim-1</code>. (Ex: `range(2, 7)` gera 2, 3, 4, 5, 6)</li>
+            <li><code>range(inicio, fim, passo)</code>: Gera números de <code>inicio</code> até <code>fim-1</code>, pulando de acordo com o <code>passo</code>. (Ex: `range(0, 10, 2)` gera 0, 2, 4, 6, 8)</li>
+        </ul>
+
+        <div class="code-block">
+            <h3>Exemplo de <code>for</code> com <code>range()</code>:</h3>
+            <button class="copy-button" onclick="copyCode('forExemploRange')">Copiar</button>
+            <pre id="forExemploRange">
+# Exemplo: Iterando com range()
+for i in range(3): # Gera 0, 1, 2
+    print(f"Contando: {i}")
+
+print("-" * 20) # Linha divisória
+
+for ano in range(2020, 2024): # Gera 2020, 2021, 2022, 2023
+    print(f"Estamos no ano: {ano}")
+
+print("-" * 20)
+
+for x in range(10, 0, -1): # Contagem regressiva de 10 a 1
+    print(f"Contagem regressiva: {x}")
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h3>Exemplo de <code>for</code> Iterando sobre uma String:</h3>
+            <button class="copy-button" onclick="copyCode('forExemploString')">Copiar</button>
+            <pre id="forExemploString">
+# Exemplo: Percorrendo uma string
+palavra = "Python"
+for letra in palavra:
+    print(f"Caractere: {letra}")
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h3>Exemplo de <code>for</code> Iterando sobre uma Lista (breve introdução):</h3>
+            <button class="copy-button" onclick="copyCode('forExemploLista')">Copiar</button>
+            <pre id="forExemploLista">
+# Exemplo: Percorrendo uma lista (veremos mais sobre listas em breve!)
+frutas = ["Maçã", "Banana", "Cereja"]
+for fruta in frutas:
+    print(f"Eu gosto de {fruta}.")
+            </pre>
+        </div>
+        <p>O <code>for</code> é extremamente útil para trabalhar com coleções de dados, que serão exploradas em detalhes na próxima lição!</p>
+
+        <div class="exercise">
+            <h3>Exercício 2.1: Lista de Números Pares</h3>
+            <p>Use um loop <code>for</code> para imprimir todos os números pares de 0 a 10 (inclusive).</p>
+            <ol>
+                <li>Utilize a função <code>range()</code> com o terceiro argumento para gerar apenas números pares.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerFor1')">Copiar</button>
+                <pre id="exerFor1">
+# Exercício 2.1
+for num_par in range(0, 11, 2): # Inicia em 0, vai até 10 (11-1), de 2 em 2
+    print(num_par)
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 2.2: Saudar Nomes</h3>
+            <p>Dada uma lista de nomes, imprima uma saudação para cada um.</p>
+            <ol>
+                <li>Crie uma lista de strings: <code>nomes = ["Alice", "Bob", "Charlie"]</code>.</li>
+                <li>Use um loop <code>for</code> para iterar sobre esta lista.</li>
+                <li>Para cada nome, imprima a mensagem: "Olá, [Nome]!".</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerFor2')">Copiar</button>
+                <pre id="exerFor2">
+# Exercício 2.2
+nomes = ["Alice", "Bob", "Charlie"]
+
+for nome in nomes:
+    print(f"Olá, {nome}!")
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 2.3: Tabuada</h3>
+            <p>Gere a tabuada do 7 (de 7x1 até 7x10) usando um loop <code>for</code>.</p>
+            <ol>
+                <li>Use <code>range()</code> para gerar os multiplicadores de 1 a 10.</li>
+                <li>Dentro do loop, calcule e imprima a multiplicação.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerFor3')">Copiar</button>
+                <pre id="exerFor3">
+# Exercício 2.3
+numero_tabuada = 7
+
+for i in range(1, 11): # Multiplicadores de 1 a 10
+    resultado = numero_tabuada * i
+    print(f"{numero_tabuada} x {i} = {resultado}")
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>3. Comandos <code>break</code> e <code>continue</code></h2>
+        <p>Python oferece comandos especiais para controlar o fluxo de execução dentro de loops:</p>
+        <ul>
+            <li><strong><code>break</code>:</strong> Interrompe o loop imediatamente. A execução do programa continua na primeira linha de código após o loop.</li>
+            <li><strong><code>continue</code>:</strong> Pula o restante do código da iteração atual do loop e avança para a próxima iteração.</li>
+        </ul>
+
+        <div class="code-block">
+            <h3>Exemplo de <code>break</code>:</h3>
+            <button class="copy-button" onclick="copyCode('breakExemplo')">Copiar</button>
+            <pre id="breakExemplo">
+# Exemplo: Encontrando um número e parando o loop
+numeros = [10, 20, 30, 40, 50]
+alvo = 30
+
+for num in numeros:
+    if num == alvo:
+        print(f"Número {alvo} encontrado! Parando a busca.")
+        break # Interrompe o loop
+    print(f"Verificando: {num}")
+
+print("Loop finalizado (pelo break ou por terminar a lista).")
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h3>Exemplo de <code>continue</code>:</h3>
+            <button class="copy-button" onclick="copyCode('continueExemplo')">Copiar</button>
+            <pre id="continueExemplo">
+# Exemplo: Pulando um número em uma contagem
+for i in range(1, 6):
+    if i == 3:
+        print(f"Pulando o número {i} nesta iteração.")
+        continue # Pula para a próxima iteração do loop
+    print(f"Processando número: {i}")
+
+print("Contagem completa (com um pulo).")
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>Conclusão</h2>
+        <p>As estruturas de repetição <code>while</code> e <code>for</code> são ferramentas incrivelmente poderosas para automatizar tarefas e processar grandes volumes de dados em Python. A prática com diferentes cenários é a chave para dominá-las.</p>
+        <p>No próximo módulo, exploraremos as **Estruturas de Dados em Python**, como Listas e Dicionários, que são frequentemente usadas em conjunto com loops para organizar e manipular informações de forma eficiente.</p>
+
+        </div> <a href="#top" class="back-to-top" title="Voltar ao topo da página">↑</a>
+
+   <footer class="footer">
+  <div class="footer-content">
+    <div class="brand-info">
+      <p>&copy; 2025 <strong>Aprendendo Python</strong> — Todos os direitos reservados.</p>
+      <p>Desenvolvido por: <a href="https://jespedsys.com.br" target="_blank">JesPedSYS</a></p>
+    </div>
+
+    <div class="social-links">
+      <a href="https://github.com/jespedsys" target="_blank" title="GitHub">
+        <img src="../github.png" alt="GitHub">
+      </a>
+      <a href="https://www.linkedin.com/in/jesielpedroza" target="_blank" title="LinkedIn">
+        <img src="../linkedin.png" alt="LinkedIn">
+      </a>
+      <a href="https://twitter.com/jespedsys" target="_blank" title="Twitter/X">
+        <img src="../twitter.png" alt="Twitter/X">
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

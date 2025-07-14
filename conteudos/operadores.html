@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprenda Python Passo a Passo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../estilo.css" />
+</head>
+<body id="top">
+
+    <div class="main-header">
+        <img src="logo.png" alt="Logo Aprenda Python" class="logo-header">
+        <h1>Bem-vindo ao Mundo Python!</h1>
+    </div>
+    <div class="container">
+
+        <p>Comece sua jornada na programação com Python, uma linguagem poderosa e fácil de aprender.</p>
+
+         
+  <nav class="main-menu">
+            <h2>Conteúdos:</h2>
+            <ul>
+                <li><a href="../index.html">Página Inicial</a></li>
+                <li><a href="condicionais.html">→ Próxima Aula: Condicionais</a></li>
+                </ul>
+        </nav>
+        <h1>Operadores em Python</h1>
+
+        <p>Os **operadores** são símbolos especiais que realizam operações em valores e variáveis. Eles são a base para realizar cálculos, fazer comparações e tomar decisões em seus programas Python.</p>
+
+        <hr>
+
+        <h2>1. Operadores Aritméticos</h2>
+        <p>Utilizados para realizar operações matemáticas comuns.</p>
+        <ul>
+            <li><code>+</code> : Adição</li>
+            <li><code>-</code> : Subtração</li>
+            <li><code>*</code> : Multiplicação</li>
+            <li><code>/</code> : Divisão (retorna um float)</li>
+            <li><code>//</code> : Divisão Inteira (retorna apenas a parte inteira)</li>
+            <li><code>%</code> : Módulo (retorna o resto da divisão)</li>
+            <li><code>**</code> : Exponenciação (potência)</li>
+        </ul>
+
+        <div class="code-block">
+            <h3>Exemplo de Operadores Aritméticos:</h3>
+            <button class="copy-button" onclick="copyCode('aritmeticosExemplo')">Copiar</button>
+            <pre id="aritmeticosExemplo">
+# Operadores Aritméticos
+a = 15
+b = 4
+
+print("a + b =", a + b)   # Adição
+print("a - b =", a - b)   # Subtração
+print("a * b =", a * b)   # Multiplicação
+print("a / b =", a / b)   # Divisão (resultado float)
+print("a // b =", a // b) # Divisão inteira
+print("a % b =", a % b)   # Módulo (resto da divisão)
+print("a ** 2 =", a ** 2) # Exponenciação (a elevado a 2)
+            </pre>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 1.1: Cálculos de Preço</h3>
+            <p>Um produto custa R$ 125.75. O cliente comprou 3 unidades e teve um desconto de R$ 10.50.</p>
+            <ol>
+                <li>Crie variáveis para o preço do produto, a quantidade e o valor do desconto.</li>
+                <li>Calcule o preço total **sem o desconto**.</li>
+                <li>Calcule o preço final **com o desconto**.</li>
+                <li>Imprima ambos os resultados de forma clara.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerAritmetico1')">Copiar</button>
+                <pre id="exerAritmetico1">
+# Exercício 1.1
+preco_unitario = 125.75
+quantidade = 3
+desconto = 10.50
+
+# Calcule aqui
+preco_total_sem_desconto = preco_unitario * quantidade
+preco_final_com_desconto = preco_total_sem_desconto - desconto
+
+print("Preço total sem desconto:", preco_total_sem_desconto)
+print("Preço final com desconto:", preco_final_com_desconto)
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 1.2: Conversão de Tempo</h3>
+            <p>Você tem um total de segundos. Converta-os para minutos e segundos.</p>
+            <ol>
+                <li>Crie uma variável <code>total_segundos = 250</code>.</li>
+                <li>Use os operadores de divisão inteira (<code>//</code>) e módulo (<code>%</code>) para calcular quantos minutos e segundos isso representa.</li>
+                <li>Imprima o resultado no formato "X minutos e Y segundos".</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerAritmetico2')">Copiar</button>
+                <pre id="exerAritmetico2">
+# Exercício 1.2
+total_segundos = 250
+
+minutos = total_segundos // 60
+segundos = total_segundos % 60
+
+print(minutos, "minutos e", segundos, "segundos")
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 1.3: Área de um Quadrado</h3>
+            <p>Calcule a área de um quadrado cujo lado mede 7 unidades.</p>
+            <ol>
+                <li>Crie uma variável <code>lado = 7</code>.</li>
+                <li>Calcule a área usando o operador de exponenciação (<code>**</code>).</li>
+                <li>Imprima a área.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerAritmetico3')">Copiar</button>
+                <pre id="exerAritmetico3">
+# Exercício 1.3
+lado = 7
+
+area = lado ** 2
+
+print("A área do quadrado é:", area)
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>2. Operadores de Atribuição</h2>
+        <p>Usados para atribuir valores a variáveis. Podem ser combinados com operadores aritméticos para uma sintaxe mais concisa.</p>
+        <ul>
+            <li><code>=</code> : Atribuição simples</li>
+            <li><code>+=</code> : Adicionar e atribuir (ex: <code>x += 5</code> é o mesmo que <code>x = x + 5</code>)</li>
+            <li><code>-=</code> : Subtrair e atribuir</li>
+            <li><code>*=</code> : Multiplicar e atribuir</li>
+            <li><code>/=</code> : Dividir e atribuir</li>
+            <li><code>//=</code> : Divisão inteira e atribuir</li>
+            <li><code>%=</code> : Módulo e atribuir</li>
+            <li><code>**=</code> : Exponenciação e atribuir</li>
+        </ul>
+
+        <div class="code-block">
+            <h3>Exemplo de Operadores de Atribuição:</h3>
+            <button class="copy-button" onclick="copyCode('atribuicaoExemplo')">Copiar</button>
+            <pre id="atribuicaoExemplo">
+# Operadores de Atribuição
+saldo = 100
+
+saldo += 50   # saldo = saldo + 50 (agora saldo é 150)
+print("Saldo após adição:", saldo)
+
+saldo -= 20   # saldo = saldo - 20 (agora saldo é 130)
+print("Saldo após subtração:", saldo)
+
+multiplicador = 2
+multiplicador *= 3 # multiplicador = multiplicador * 3 (agora multiplicador é 6)
+print("Multiplicador após multiplicação:", multiplicador)
+            </pre>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 2.1: Pontuação em Jogo</h3>
+            <p>Você começou um jogo com 100 pontos. Realize as seguintes operações usando operadores de atribuição:</p>
+            <ol>
+                <li>Ganhe 50 pontos.</li>
+                <li>Perda 15 pontos.</li>
+                <li>Dobre sua pontuação atual.</li>
+                <li>Imprima a pontuação final.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerAtribuicao1')">Copiar</button>
+                <pre id="exerAtribuicao1">
+# Exercício 2.1
+pontuacao = 100
+
+# Implemente as operações aqui usando operadores de atribuição
+pontuacao += 50
+pontuacao -= 15
+pontuacao *= 2
+
+print("Pontuação final:", pontuacao)
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 2.2: Controle de Estoque</h3>
+            <p>Um estoque de camisetas tem 50 unidades. Venda 10, adicione um novo lote de 25 e depois divida o estoque pela metade para outra loja (divisão inteira).</p>
+            <ol>
+                <li>Crie uma variável <code>estoque = 50</code>.</li>
+                <li>Realize as operações usando operadores de atribuição.</li>
+                <li>Imprima o estoque final.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerAtribuicao2')">Copiar</button>
+                <pre id="exerAtribuicao2">
+# Exercício 2.2
+estoque = 50
+
+# Implemente as operações aqui
+estoque -= 10
+estoque += 25
+estoque //= 2
+
+print("Estoque final:", estoque)
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 2.3: Crescimento Exponencial</h3>
+            <p>Um valor inicial de 2 está crescendo. Ele se eleva à potência de 3, e depois à potência de 2 novamente.</p>
+            <ol>
+                <li>Crie uma variável <code>valor = 2</code>.</li>
+                <li>Use o operador de atribuição de exponenciação para elevar <code>valor</code> à potência de 3.</li>
+                <li>Novamente, use o mesmo operador para elevar o novo <code>valor</code> à potência de 2.</li>
+                <li>Imprima o <code>valor</code> final.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerAtribuicao3')">Copiar</button>
+                <pre id="exerAtribuicao3">
+# Exercício 2.3
+valor = 2
+
+# Implemente as operações aqui
+valor **= 3 # 2 ** 3 = 8
+valor **= 2 # 8 ** 2 = 64
+
+print("Valor final:", valor)
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>3. Operadores de Comparação (Relacionais)</h2>
+        <p>Usados para comparar dois valores. O resultado de uma comparação é sempre um valor booleano: <code>True</code> (verdadeiro) ou <code>False</code> (falso).</p>
+        <ul>
+            <li><code>==</code> : Igual a (atenção: um único <code>=</code> é atribuição, dois <code>==</code> é comparação!)</li>
+            <li><code>!=</code> : Diferente de</li>
+            <li><code>></code> : Maior que</li>
+            <li><code><</code> : Menor que</li>
+            <li><code>>=</code> : Maior ou igual a</li>
+            <li><code><=</code> : Menor ou igual a</li>
+        </ul>
+
+        <div class="code-block">
+            <h3>Exemplo de Operadores de Comparação:</h3>
+            <button class="copy-button" onclick="copyCode('comparacaoExemplo')">Copiar</button>
+            <pre id="comparacaoExemplo">
+# Operadores de Comparação
+x = 10
+y = 20
+
+print("x == y ?", x == y)   # Falso
+print("x != y ?", x != y)   # Verdadeiro
+print("x > y ?", x > y)    # Falso
+print("x < y ?", x < y)    # Verdadeiro
+print("x >= 10 ?", x >= 10) # Verdadeiro
+print("y <= 15 ?", y <= 15) # Falso
+            </pre>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 3.1: Verificação de Idade</h3>
+            <p>Verifique se uma pessoa é maior de idade (18 anos ou mais).</p>
+            <ol>
+                <li>Crie uma variável <code>idade = 17</code>.</li>
+                <li>Use um operador de comparação para verificar se a <code>idade</code> é maior ou igual a 18.</li>
+                <li>Imprima o resultado. Mude a <code>idade</code> para 18 e depois para 19 e veja o que acontece.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerComparacao1')">Copiar</button>
+                <pre id="exerComparacao1">
+# Exercício 3.1
+idade = 17
+
+eh_maior_idade = idade >= 18
+print("É maior de idade?", eh_maior_idade)
+
+idade = 18 # Teste com 18
+eh_maior_idade = idade >= 18
+print("É maior de idade?", eh_maior_idade)
+
+idade = 19 # Teste com 19
+eh_maior_idade = idade >= 18
+print("É maior de idade?", eh_maior_idade)
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 3.2: Comparando Strings</h3>
+            <p>Operadores de comparação também funcionam com strings!</p>
+            <ol>
+                <li>Crie duas variáveis: <code>palavra1 = "python"</code> e <code>palavra2 = "Python"</code>.</li>
+                <li>Verifique se <code>palavra1</code> é igual a <code>palavra2</code>.</li>
+                <li>Verifique se <code>palavra1</code> é diferente de <code>palavra2</code>.</li>
+                <li>Imprima os resultados. Observe a diferença entre maiúsculas e minúsculas!</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerComparacao2')">Copiar</button>
+                <pre id="exerComparacao2">
+# Exercício 3.2
+palavra1 = "python"
+palavra2 = "Python"
+
+print("As palavras são iguais?", palavra1 == palavra2)
+print("As palavras são diferentes?", palavra1 != palavra2)
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 3.3: Verificação de Login Simples</h3>
+            <p>Simule uma verificação de usuário e senha (apenas para fins de comparação).</p>
+            <ol>
+                <li>Crie variáveis <code>usuario_correto = "admin"</code> e <code>senha_correta = "12345"</code>.</li>
+                <li>Crie variáveis para a entrada do usuário: <code>usuario_digitado = "admin"</code> e <code>senha_digitada = "senha123"</code>.</li>
+                <li>Verifique se o <code>usuario_digitado</code> é igual ao <code>usuario_correto</code>.</li>
+                <li>Verifique se a <code>senha_digitada</code> é diferente da <code>senha_correta</code>.</li>
+                <li>Imprima os resultados de cada comparação.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerComparacao3')">Copiar</button>
+                <pre id="exerComparacao3">
+# Exercício 3.3
+usuario_correto = "admin"
+senha_correta = "12345"
+
+usuario_digitado = "admin"
+senha_digitada = "senha123"
+
+usuario_ok = usuario_digitado == usuario_correto
+senha_errada = senha_digitada != senha_correta
+
+print("Usuário correto?", usuario_ok)
+print("Senha está errada?", senha_errada)
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>4. Operadores Lógicos</h2>
+        <p>Usados para combinar expressões booleanas (<code>True</code> ou <code>False</code>).</p>
+        <ul>
+            <li><code>and</code> : Retorna <code>True</code> se AMBAS as condições são verdadeiras.</li>
+            <li><code>or</code> : Retorna <code>True</code> se PELO MENOS UMA das condições é verdadeira.</li>
+            <li><code>not</code> : Inverte o valor booleano (<code>True</code> vira <code>False</code>, <code>False</code> vira <code>True</code>).</li>
+        </ul>
+
+        <div class="code-block">
+            <h3>Exemplo de Operadores Lógicos:</h3>
+            <button class="copy-button" onclick="copyCode('logicosExemplo')">Copiar</button>
+            <pre id="logicosExemplo">
+# Operadores Lógicos
+tem_idade = True
+tem_carteira = False
+
+# Usando 'and'
+pode_dirigir = tem_idade and tem_carteira # Falso, pois tem_carteira é False
+print("Pode dirigir (idade E carteira)?", pode_dirigir)
+
+# Usando 'or'
+precisa_ajuda = not tem_idade or not tem_carteira # Verdadeiro (não tem carteira)
+print("Precisa de ajuda (NÃO idade OU NÃO carteira)?", precisa_ajuda)
+
+# Usando 'not'
+nao_tem_idade = not tem_idade # Falso
+print("Não tem idade?", nao_tem_idade)
+            </pre>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 4.1: Condição de Desconto</h3>
+            <p>Um cliente recebe desconto se comprar mais de 5 itens OU se o valor total for maior que R$ 100.</p>
+            <ol>
+                <li>Crie variáveis <code>num_itens = 4</code> e <code>valor_total = 120.00</code>.</li>
+                <li>Crie uma expressão booleana usando o operador <code>or</code> para verificar se o cliente tem direito a desconto.</li>
+                <li>Imprima se o cliente tem desconto. Teste com diferentes valores para ver os resultados.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerLogico1')">Copiar</button>
+                <pre id="exerLogico1">
+# Exercício 4.1
+num_itens = 4
+valor_total = 120.00
+
+# Verifique a condição de desconto
+tem_desconto = num_itens > 5 or valor_total > 100
+
+print("O cliente tem desconto?", tem_desconto)
+
+# Teste com outros valores
+num_itens = 6
+valor_total = 80.00
+tem_desconto = num_itens > 5 or valor_total > 100
+print("O cliente tem desconto (novo teste)?", tem_desconto)
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 4.2: Acesso Restrito</h3>
+            <p>O acesso a um sistema é permitido apenas se o usuário for administrador E a senha estiver correta.</p>
+            <ol>
+                <li>Crie variáveis <code>eh_admin = True</code> e <code>senha_correta = True</code>.</li>
+                <li>Use o operador <code>and</code> para verificar se o acesso é permitido.</li>
+                <li>Imprima se o acesso é permitido. Mude os valores e teste.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerLogico2')">Copiar</button>
+                <pre id="exerLogico2">
+# Exercício 4.2
+eh_admin = True
+senha_correta = True
+
+acesso_permitido = eh_admin and senha_correta
+print("Acesso permitido?", acesso_permitido)
+
+eh_admin = False # Teste: não é admin
+acesso_permitido = eh_admin and senha_correta
+print("Acesso permitido (não admin)?", acesso_permitido)
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 4.3: Condição Invertida</h3>
+            <p>Verifique se uma pessoa **NÃO** está apta para um empréstimo. Ela não está apta se a renda for baixa OU se tiver dívidas.</p>
+            <ol>
+                <li>Crie variáveis <code>renda_baixa = False</code> e <code>tem_dividas = True</code>.</li>
+                <li>Use o operador <code>not</code> combinado com <code>or</code> para verificar se a pessoa **não está apta**.</li>
+                <li>Imprima o resultado.</li>
+            </ol>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerLogico3')">Copiar</button>
+                <pre id="exerLogico3">
+# Exercício 4.3
+renda_baixa = False
+tem_dividas = True
+
+# Condição para estar INAPTO: renda_baixa OU tem_dividas
+esta_inapto = renda_baixa or tem_dividas
+
+# Se a pessoa está INAPTA, então ela NÃO ESTÁ APTA
+nao_esta_apta_emprestimo = esta_inapto # ou diretamente: (renda_baixa or tem_dividas)
+
+print("Não está apta para o empréstimo?", nao_esta_apta_emprestimo)
+
+renda_baixa = False
+tem_dividas = False
+nao_esta_apta_emprestimo = renda_baixa or tem_dividas
+print("Não está apta para o empréstimo (ambos False)?", nao_esta_apta_emprestimo)
+                </pre>
+            </div>
+        </div>
+
+        </div> <a href="#top" class="back-to-top" title="Voltar ao topo da página">↑</a>
+
+    <footer class="footer">
+  <div class="footer-content">
+    <div class="brand-info">
+      <p>&copy; 2025 <strong>Aprendendo Python</strong> — Todos os direitos reservados.</p>
+      <p>Desenvolvido por: <a href="https://jespedsys.com.br" target="_blank">JesPedSYS</a></p>
+    </div>
+
+    <div class="social-links">
+      <a href="https://github.com/jespedsys" target="_blank" title="GitHub">
+        <img src="../github.png" alt="GitHub">
+      </a>
+      <a href="https://www.linkedin.com/in/jesielpedroza" target="_blank" title="LinkedIn">
+        <img src="../linkedin.png" alt="LinkedIn">
+      </a>
+      <a href="https://twitter.com/jespedsys" target="_blank" title="Twitter/X">
+        <img src="../twitter.png" alt="Twitter/X">
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

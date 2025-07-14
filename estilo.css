@@ -1,0 +1,394 @@
+/* Estilos Gerais */
+* {
+    box-sizing: border-box; /* Garante que padding e borda não aumentem o tamanho total do elemento */
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    color: #ecf0f1; /* Cor do texto principal agora é CLARA para contrastar com o fundo escuro */
+
+    /* Propriedades para a imagem de fundo */
+    background-image: url('fundo.png'); /* Use o nome que você salvou para sua imagem de fundo! */
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+
+    /* Overlay para escurecer a imagem e melhorar o contraste do texto CLARO */
+    background-color: rgba(0, 0, 0, 0.7); /* Overlay preto com 70% de opacidade */
+    background-blend-mode: overlay; /* Mistura a cor de fundo com a imagem */
+    overflow-x: hidden; /* Previne rolagem horizontal indesejada em caso de conteúdo largo */
+}
+
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: rgba(44, 62, 80, 0.9); /* Fundo do container escuro e semi-transparente (azul escuro) */
+    border-radius: 15px; /* Bordas mais arredondadas */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); /* Sombra mais forte */
+    color: #ecf0f1; /* Texto dentro do container também claro */
+}
+
+/* Estilos para o Cabeçalho Principal (Logo e Título) */
+.main-header {
+    display: flex; /* Para alinhar a logo e o H1 lado a lado */
+    align-items: center; /* Alinha verticalmente no centro */
+    justify-content: center; /* Centraliza horizontalmente o bloco */
+    gap: 20px; /* Espaço entre a logo e o título */
+    margin-bottom: 30px; /* Espaço abaixo do cabeçalho principal */
+    flex-wrap: wrap; /* Permite quebrar linha em telas menores */
+    padding: 20px; /* Adiciona padding interno ao cabeçalho */
+    background-color: rgba(30, 48, 66, 0.7); /* Fundo sutil para o cabeçalho */
+    border-radius: 0 0 10px 10px; /* Bordas arredondadas apenas na parte inferior */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra para destaque */
+    width: 100%; /* Garante que ocupe toda a largura */
+    box-sizing: border-box; /* Inclui padding e borda na largura */
+}
+
+.logo-header {
+    max-width: 100px; /* Tamanho da logo no cabeçalho (ajuste conforme preferir) */
+    height: auto;
+    margin: 0; /* Garante que as margens sejam controladas pelo 'gap' */
+    padding: 0;
+}
+
+/* Regra geral para todas as imagens de conteúdo para garantir responsividade */
+img:not(.logo-header) { /* Aplica-se a todas as imagens EXCETO a logo do cabeçalho */
+    max-width: 100%;
+    height: auto; /* Mantém a proporção da imagem */
+    display: block; /* Remove o espaço extra abaixo da imagem */
+    margin: 0 auto; /* Centraliza a imagem se ela for menor que 100% */
+}
+
+
+h1 { /* Este H1 é o do cabeçalho principal "Bem-vindo ao Mundo Python!" */
+    color: #61dafb; /* Cor do título */
+    font-size: 2.8em; /* Tamanho da fonte do título principal */
+    text-align: center; /* Garante que o texto esteja centralizado se quebrar linha */
+    border-bottom: 2px solid #61dafb; /* Linha azul ciano abaixo do título */
+    padding-bottom: 10px; /* Espaçamento entre o texto e a linha */
+    margin-bottom: 20px; /* Margem entre o h1 e o parágrafo p que vem depois */
+    margin-top: 0; /* Garante que não haja margem superior extra, já que está dentro de main-header */
+    line-height: 1.2; /* Espaçamento entre linhas, se o título for grande */
+}
+
+/* Os outros H2 e H3 gerais da página (para títulos de lições, subseções, exercícios) */
+h2 {
+    font-size: 2em;
+    color: #2ecc71; /* Um verde vibrante para seções (similar ao da imagem) */
+    margin-top: 35px;
+    margin-bottom: 20px;
+    text-align: center; /* Centraliza todos os H2 */
+}
+
+h3 {
+    color: #61dafb; /* Um azul ciano vibrante (tom de código) */
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 1.3em;
+}
+
+p {
+    margin-bottom: 15px;
+    font-size: 1.1em;
+    color: #bdc3c7; /* Cinza claro para o texto */
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+ul li {
+    background-color: rgba(52, 73, 94, 0.7); /* Fundo do item de lista: um azul mais escuro e semi-transparente */
+    margin-bottom: 10px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border-left: 5px solid #2ecc71; /* Barra lateral verde vibrante */
+    font-size: 1.05em;
+    color: #ecf0f1; /* Texto do item de lista claro */
+}
+
+a {
+    color: #61dafb; /* Links com o azul ciano vibrante */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Estilo para Blocos de Código */
+.code-block {
+    background-color: #1a1a1a; /* Fundo mais escuro para o código */
+    color: #f8f8f2;
+    padding: 20px;
+    border-radius: 10px; /* Bordas um pouco mais arredondadas */
+    overflow-x: auto; /* Permite rolagem horizontal se o código for muito longo */
+    font-family: 'Consolas', 'Monaco', 'Lucida Console', monospace;
+    font-size: 1em;
+    margin: 25px 0;
+    position: relative;
+    border: 1px solid #333; /* Borda sutil */
+    box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.1); /* Brilho interno verde sutil */
+}
+
+.code-block h3 { /* Título dentro do code-block */
+    color: #2ecc71; /* Verde vibrante para o título do código */
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+.code-block pre {
+    margin: 0;
+    white-space: pre-wrap; /* Quebra a linha automaticamente se o conteúdo for muito longo */
+    word-wrap: break-word; /* Força a quebra de palavras longas */
+}
+
+/* Estilo para Notas/Dicas */
+.note {
+    background-color: rgba(52, 152, 219, 0.2); /* Azul mais suave e semi-transparente para notas */
+    border-left: 5px solid #3498db; /* Borda azul vibrante */
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-top: 30px;
+    color: #ecf0f1; /* Texto da nota claro */
+}
+
+.note p {
+    margin: 0;
+    font-size: 1em;
+    color: #ecf0f1; /* Texto da nota claro */
+}
+
+.note strong {
+    color: #61dafb; /* Destaque em azul ciano */
+}
+
+/* Botão de Copiar */
+.copy-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: #2ecc71; /* Botão copiar verde vibrante */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+
+.copy-button:hover {
+    background-color: #27ae60; /* Verde um pouco mais escuro no hover */
+}
+
+.copy-button:active {
+    background-color: #1e8449;
+}
+
+/* Estilos para o Menu de Navegação */
+.main-menu {
+    background-color: rgba(30, 48, 66, 0.9);
+    padding: 15px 0;
+    border-radius: 10px;
+    margin-bottom: 40px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.main-menu h2 { /* Título "Conteúdos:" dentro do menu */
+    color: #61dafb;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+}
+
+.main-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.main-menu li {
+    margin: 0;
+    background-color: transparent;
+    border-left: none;
+    padding: 0;
+}
+
+.main-menu a {
+    color: #ecf0f1;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1em;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(97, 218, 251, 0.3);
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.main-menu a:hover {
+    background-color: #61dafb;
+    color: #2c3e50;
+    text-decoration: none;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 255, 255, 0.3);
+}
+
+/* Estilos para os blocos de exercício */
+.exercise {
+    background-color: rgba(30, 48, 66, 0.8); /* Fundo do exercício: azul escuro semi-transparente */
+    border: 1px solid #2ecc71; /* Borda verde vibrante */
+    padding: 25px; /* Mais padding */
+    border-radius: 12px; /* Bordas mais arredondadas */
+    margin-top: 35px;
+    margin-bottom: 35px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Sombra mais pronunciada */
+    color: #ecf0f1; /* Texto do exercício claro */
+}
+
+.exercise h3 { /* Título dentro do bloco de exercício */
+    color: #61dafb; /* Título do exercício em azul ciano */
+    margin-top: 0;
+    margin-bottom: 18px;
+    border-bottom: 1px dashed rgba(97, 218, 251, 0.3); /* Linha tracejada sutil */
+    padding-bottom: 12px;
+}
+
+.exercise p, .exercise ol li {
+    color: #bdc3c7; /* Texto e itens de lista do exercício em cinza claro */
+}
+
+.exercise ol {
+    margin-top: 15px;
+    margin-left: 20px;
+    list-style-type: decimal;
+    color: #bdc3c7;
+}
+
+.exercise ol li {
+    background-color: transparent;
+    border-left: none;
+    padding: 5px 0;
+    margin-bottom: 5px;
+}
+
+/* Estilos para o Rodapé */
+.footer {
+    text-align: center;
+    margin-top: 50px;
+    padding: 30px 20px; /* Aumenta o padding do rodapé */
+    background-color: rgba(30, 48, 66, 0.95); /* Fundo escuro e quase opaco, combinando com o menu */
+    border-top: 1px solid rgba(97, 218, 251, 0.2);
+    font-size: 0.95em;
+    color: #bdc3c7; /* Texto claro */
+    width: 100%; /* Garante que ocupe a largura total */
+    box-sizing: border-box; /* Inclui padding e borda na largura */
+}
+
+.footer p {
+    margin: 5px 0; /* Espaçamento entre parágrafos */
+    color: inherit; /* Garante que a cor do texto seja herdada */
+}
+
+.footer .social-links {
+    margin-top: 20px;
+}
+
+.footer .social-links a {
+    display: inline-block; /* Para os ícones ficarem lado a lado */
+    margin: 0 10px;
+    transition: transform 0.3s ease;
+}
+
+.footer .social-links a img {
+    width: 32px; /* Tamanho dos ícones */
+    height: 32px;
+    vertical-align: middle; /* Alinha o ícone no meio */
+}
+
+.footer .social-links a:hover {
+    transform: translateY(-3px) scale(1.1); /* Efeito de "subir" e aumentar no hover */
+}
+
+/* Estilos para o Botão Voltar ao Topo */
+.back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px; /* Aumentado para 60px */
+    height: 60px; /* Aumentado para 60px */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3em; /* Aumentado para 3em (a seta ficará maior) */
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra um pouco mais forte para destaque */
+    cursor: pointer;
+    z-index: 1000;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.back-to-top:hover {
+    background-color: #27ae60;
+    transform: translateY(-7px); /* Efeito de "saltar" mais pronunciado */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); /* Sombra ainda mais forte no hover */
+}
+.footer {
+  background-color: #0f172a;
+  color: #f9fafb;
+  padding: 20px 10px;
+  text-align: center;
+  font-size: 14px;
+  border-top: 2px solid #334155;
+  margin-top: 40px;
+}
+
+.footer a {
+  color: #93c5fd;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.footer .social-links {
+  margin-top: 10px;
+}
+
+.footer .social-links a {
+  display: inline-block;
+  margin: 0 8px;
+}
+
+.footer .social-links img {
+  width: 28px;
+  height: 28px;
+  filter: brightness(0) invert(1); /* deixa o ícone branco */
+  transition: transform 0.2s ease;
+}
+
+.footer .social-links img:hover {
+  transform: scale(1.1);
+}

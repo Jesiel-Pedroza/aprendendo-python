@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprenda Python Passo a Passo - Web Scraping com Beautiful Soup</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../estilo.css">
+</head>
+<body id="top">
+
+    <div class="main-header">
+        <img src="../logo.png" alt="Logo Aprenda Python" class="logo-header">
+        <h1>Bem-vindo ao Mundo Python!</h1>
+    </div>
+    <div class="container">
+
+        <p>Comece sua jornada na programação com Python, uma linguagem poderosa e fácil de aprender.</p>
+
+        <nav class="main-menu">
+            <h2>Conteúdos:</h2>
+            <ul>
+                <li><a href="../index.html">Página Inicial</a></li>
+                <li><a href="flask_intro.html">→ Próxima Aula: Introdução ao Flask</a></li>
+                
+                </ul>
+        </nav>
+        <h1>Web Scraping: Extraindo Dados de Páginas Web com Python</h1>
+
+        <p>Você já se perguntou como coletar grandes volumes de dados de sites que não oferecem uma API? A resposta é **Web Scraping**. Web scraping, também conhecido como raspagem de dados web, é a técnica de extrair informações de websites de forma automatizada.</p>
+        <p>Enquanto as <a href="apis_web.html">APIs Web</a> são interfaces criadas especificamente para a troca de dados entre sistemas, o web scraping é utilizado quando um site não oferece uma API, ou a API é limitada e não fornece todos os dados de que você precisa. Ele permite que seu programa "leia" o conteúdo de uma página web como um navegador faria, e então extraia as informações desejadas.</p>
+        <p>O Web Scraping é útil para diversas finalidades, como:</p>
+        <ul>
+            <li>Análise de preços de produtos em e-commerce.</li>
+            <li>Monitoramento de notícias ou artigos.</li>
+            <li>Coleta de dados para pesquisa acadêmica ou de mercado.</li>
+            <li>Automatização de tarefas que envolvem formulários web.</li>
+        </ul>
+        <p>Nesta seção, utilizaremos duas bibliotecas poderosas: <code>requests</code> (que você já conhece para fazer as requisições HTTP) e <code>Beautiful Soup</code> (para analisar e navegar pelo HTML das páginas).</p>
+
+        <hr>
+
+        <h2>1. Ética e Legalidade no Web Scraping: Cuidado Essencial!</h2>
+        <p>Antes de mergulhar na prática, é crucial entender que o web scraping envolve considerações éticas e legais. Nem todo site permite a coleta automatizada de dados, e ignorar as regras pode levar a problemas sérios, como bloqueio de IP ou até ações legais.</p>
+        <ul>
+            <li><strong>Verifique o <code>robots.txt</code>:</strong> Muitos sites possuem um arquivo <code>robots.txt</code> (ex: <code>seusite.com/robots.txt</code>) que informa aos bots e crawlers (como o seu script) quais partes do site eles não devem acessar. Respeitar o <code>robots.txt</code> é uma boa prática.</li>
+            <li><strong>Termos de Serviço:</strong> Sempre verifique os termos de serviço (ToS) do site. Alguns sites proíbem explicitamente o web scraping ou a coleta de dados de forma automatizada.</li>
+            <li><strong>Não Sobrecarregue o Servidor:</strong> Faça requisições em intervalos razoáveis (adicione pausas com <code>time.sleep()</code> entre as requisições) para não sobrecarregar o servidor do site e causar uma negação de serviço. Um fluxo rápido de requisições pode ser interpretado como um ataque DDoS.</li>
+            <li><strong>Respeite os Dados:</strong> Use os dados coletados de forma responsável e ética. Não viole direitos autorais, privacidade ou qualquer lei aplicável.</li>
+            <li><strong>Prefira APIs:</strong> Se o site oferece uma API, use-a! APIs são projetadas para acesso programático e são muito mais eficientes e seguras do que o web scraping.</li>
+        </ul>
+        <div class="note">
+            <p><strong>Aviso:</strong> Os exemplos nesta página usarão sites públicos e projetados para scraping de teste. Nunca aplique técnicas de scraping em sites sem verificar sua política e respeitar as diretrizes.</p>
+        </div>
+
+        <hr>
+
+        <h2>2. Fluxo Básico do Web Scraping</h2>
+        <p>A maioria dos projetos de web scraping segue uma série de passos lógicos:</p>
+        <ol>
+            <li><strong>Fazer a Requisição HTTP:</strong> Seu script faz uma requisição HTTP (geralmente GET) para a URL da página que você deseja raspar. O servidor responde com o conteúdo HTML da página. (Usamos <code>requests</code> para isso).</li>
+            <li><strong>Parsear o HTML:</strong> O conteúdo HTML é uma longa string de texto. Para navegar por ela e encontrar os dados desejados, precisamos "parseá-la" em uma estrutura de dados que Python possa manipular facilmente. (Usamos <code>Beautiful Soup</code>).</li>
+            <li><strong>Encontrar Elementos:</strong> Uma vez que o HTML foi parseado, você usa seletores (como seletores CSS ou nomes de tags/classes/ids HTML) para localizar os elementos que contêm os dados de interesse.</li>
+            <li><strong>Extrair Dados:</strong> Com os elementos localizados, você extrai o texto contido neles ou os valores de seus atributos (ex: o `href` de um link, o `src` de uma imagem).</li>
+            <li><strong>Armazenar Dados:</strong> Os dados extraídos são então armazenados em um formato útil, como um arquivo CSV, JSON, ou um banco de dados.</li>
+        </ol>
+
+        <hr>
+
+        <h2>3. Instalando as Bibliotecas</h2>
+        <p>Para o web scraping básico, você precisará de <code>requests</code> e <code>beautifulsoup4</code> (o nome do pacote no pip para Beautiful Soup).</p>
+        <p>Lembre-se de sempre fazer isso dentro de um <a href="ambientes_virtuais.html">ambiente virtual</a> para o seu projeto!</p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('installScrapingLibs')">Copiar</button>
+            <pre id="installScrapingLibs">
+# Ative seu ambiente virtual primeiro!
+pip install requests beautifulsoup4
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>4. Obtendo a Página Web com <code>requests</code></h2>
+        <p>O primeiro passo é sempre fazer a requisição HTTP para obter o conteúdo da página. Usaremos a biblioteca <code>requests</code> para isso, como você aprendeu na seção de APIs Web.</p>
+        <p>É uma boa prática incluir um <code>User-Agent</code> nos cabeçalhos da requisição. Isso faz com que seu script se pareça mais com um navegador web real, o que pode ajudar a evitar alguns bloqueios básicos por parte do servidor.</p>
+
+        <div class="code-block">
+            <h3>Exemplo 4.1: Obtendo HTML de um Site de Citações para Teste</h3>
+            <p>Usaremos <code>http://quotes.toscrape.com/</code>, um site feito especificamente para praticar web scraping.</p>
+            <button class="copy-button" onclick="copyCode('getHtmlExample')">Copiar</button>
+            <pre id="getHtmlExample">
+import requests
+
+url = "http://quotes.toscrape.com/"
+# Definindo um User-Agent para simular um navegador
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+}
+
+try:
+    # Faz a requisição GET com os cabeçalhos e um timeout
+    response = requests.get(url, headers=headers, timeout=10)
+    # Levanta uma exceção HTTPError para respostas de status 4xx/5xx
+    response.raise_for_status()
+    
+    # Obtém o conteúdo HTML como texto
+    html_content = response.text
+    
+    print("HTML obtido com sucesso (primeiros 500 caracteres):")
+    print(html_content[:500]) # Imprime apenas uma parte para não poluir o console
+
+except requests.exceptions.HTTPError as errh:
+    print(f"Erro HTTP: {errh}")
+except requests.exceptions.ConnectionError as errc:
+    print(f"Erro de Conexão: {errc}")
+except requests.exceptions.Timeout as errt:
+    print(f"Timeout: {errt}")
+except requests.exceptions.RequestException as err:
+    print(f"Um erro inesperado ocorreu: {err}")
+            </pre>
+        </div>
+        <p>O resultado de `response.text` é uma grande string contendo todo o HTML da página. Agora, precisamos de uma forma de navegar e extrair dados dessa string.</p>
+
+        <hr>
+
+        <h2>5. Parseando HTML com <code>Beautiful Soup</code></h2>
+        <p>O Beautiful Soup (pacote `beautifulsoup4`) é uma biblioteca que facilita a extração de informações de páginas HTML e XML. Ele transforma o documento HTML em uma árvore de objetos Python, permitindo que você navegue e pesquise por tags, atributos e textos de forma muito intuitiva.</p>
+
+        <div class="code-block">
+            <h3>Exemplo 5.1: Inicializando o Beautiful Soup</h3>
+            <button class="copy-button" onclick="copyCode('initBsExample')">Copiar</button>
+            <pre id="initBsExample">
+from bs4 import BeautifulSoup
+# Assumindo que 'html_content' foi obtido do exemplo anterior
+
+# Cria um objeto BeautifulSoup, passando o HTML e o parser a ser usado
+# 'html.parser' é o parser padrão do Python e geralmente é suficiente
+soup = BeautifulSoup(html_content, 'html.parser')
+
+print("\nObjeto BeautifulSoup criado com sucesso!")
+print("Tipo do objeto soup:", type(soup))
+# print("Primeiros 200 caracteres do HTML parseado (exemplo):")
+# print(soup.prettify()[:200]) # prettify() formata o HTML para leitura mais fácil
+            </pre>
+        </div>
+        <p>Agora que você tem um objeto `soup`, ele representa todo o documento HTML e você pode começar a pesquisar por elementos específicos.</p>
+
+        <hr>
+
+        <h2>6. Encontrando Elementos e Extraindo Dados</h2>
+        <p>O Beautiful Soup oferece vários métodos para encontrar elementos na árvore HTML. Os mais comuns são:</p>
+        <ul>
+            <li><code>soup.find(name, attrs={}, recursive=True, string=None, **kwargs)</code>: Encontra a primeira tag que corresponde aos critérios.</li>
+            <li><code>soup.find_all(name, attrs={}, recursive=True, string=None, limit=None, **kwargs)</code>: Encontra *todas* as tags que correspondem aos critérios e retorna uma lista.</li>
+            <li><code>soup.select_one(selector)</code>: Encontra o primeiro elemento que corresponde a um seletor CSS (poderoso!).</li>
+            <li><code>soup.select(selector)</code>: Encontra todos os elementos que correspondem a um seletor CSS e retorna uma lista.</li>
+        </ul>
+        <p>Para usar esses métodos de forma eficaz, você precisará inspecionar o código HTML do site. No seu navegador, clique com o botão direito na informação que deseja extrair e selecione "Inspecionar" (ou "Inspecionar Elemento"). Isso abrirá as ferramentas de desenvolvedor e mostrará o HTML daquela parte da página, revelando tags, classes e IDs.</p>
+
+        <div class="code-block">
+            <h3>Exemplo 6.1: Extraindo Citações, Autores e Tags de <code>quotes.toscrape.com</code></h3>
+            <button class="copy-button" onclick="copyCode('extractDataExample')">Copiar</button>
+            <pre id="extractDataExample">
+# Continuacao do exemplo anterior (soup ja foi criado)
+
+print("\n--- Extraindo Citações e Autores (usando find_all) ---")
+# Cada citação está dentro de uma div com a classe 'quote'
+quotes_elements = soup.find_all('div', class_='quote') 
+
+for quote_element in quotes_elements:
+    # Dentro de cada 'quote', encontramos o texto da citação (span com classe 'text')
+    text = quote_element.find('span', class_='text').text
+    
+    # Encontramos o autor (small com classe 'author')
+    author = quote_element.find('small', class_='author').text
+    
+    # Encontramos as tags (dentro de uma div com classe 'tags', cada tag é um 'a' com classe 'tag')
+    tags_div = quote_element.find('div', class_='tags')
+    tags = [tag.text for tag in tags_div.find_all('a', class_='tag')]
+
+    print(f"Citação: {text}")
+    print(f"Autor: {author}")
+    print(f"Tags: {', '.join(tags)}")
+    print("-" * 30)
+
+print("\n--- Extraindo com Seletores CSS (usando select) ---")
+# Seletores CSS são muito poderosos e concisos.
+# 'div.quote' seleciona todas as tags div com a classe 'quote'.
+for quote_element_css in soup.select('div.quote'):
+    # 'span.text' seleciona um span com classe 'text' dentro do elemento atual.
+    text_css = quote_element_css.select_one('span.text').text
+    
+    # 'small.author' seleciona um small com classe 'author' dentro do elemento atual.
+    author_css = quote_element_css.select_one('small.author').text
+    
+    # 'div.tags > a.tag' seleciona tags 'a' com classe 'tag' que são filhos diretos de uma div com classe 'tags'.
+    tags_css = [tag.text for tag in quote_element_css.select('div.tags > a.tag')] 
+
+    print(f"Citação (CSS): {text_css}")
+    print(f"Autor (CSS): {author_css}")
+    print(f"Tags (CSS): {', '.join(tags_css)}")
+    print("=" * 30)
+            </pre>
+        </div>
+        <p><strong>Para extrair o texto de um elemento:</strong> use `.text` (ex: `element.text`).</p>
+        <p><strong>Para extrair o valor de um atributo:</strong> use `element.get('nome_do_atributo')` (ex: `link_element.get('href')`).</p>
+
+        <hr>
+
+        <h2>7. Navegando entre Páginas (Paginação)</h2>
+        <p>Muitos sites dividem seu conteúdo em várias páginas (paginação). Para raspar todos os dados, você precisará automatizar a navegação entre essas páginas.</p>
+        <p>Geralmente, isso envolve identificar um padrão na URL para as próximas páginas (ex: <code>page=1</code>, <code>page=2</code> ou <code>/page/1/</code>, <code>/page/2/</code>) ou encontrar o link "Próxima Página" no HTML.</p>
+
+        <div class="code-block">
+            <h3>Exemplo 7.1: Coletando Citações de Múltiplas Páginas</h3>
+            <button class="copy-button" onclick="copyCode('paginateExample')">Copiar</button>
+            <pre id="paginateExample">
+import requests
+from bs4 import BeautifulSoup
+import time # Importar para adicionar atrasos
+
+base_url = "http://quotes.toscrape.com/page/"
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+}
+all_quotes_data = [] # Lista para armazenar todas as citações coletadas
+
+for page_num in range(1, 4): # Coletar as primeiras 3 páginas para demonstração
+    url = f"{base_url}{page_num}/"
+    print(f"\nColetando página: {url}")
+    
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        # Encontra todas as divs de citação na página atual
+        quotes_on_page = soup.find_all('div', class_='quote')
+        
+        if not quotes_on_page:
+            print("Nenhuma citação encontrada nesta página ou fim das páginas. Parando.")
+            break # Sai do loop se não houver mais citações
+
+        for quote in quotes_on_page:
+            text = quote.find('span', class_='text').text
+            author = quote.find('small', class_='author').text
+            tags_elements = quote.find('div', class_='tags').find_all('a', class_='tag')
+            tags = [tag.text for tag in tags_elements]
+            
+            all_quotes_data.append({
+                "text": text,
+                "author": author,
+                "tags": tags
+            })
+        
+        # IMPORTANTE: Adicionar um pequeno atraso para não sobrecarregar o servidor
+        time.sleep(1) 
+
+    except requests.exceptions.RequestException as e:
+        print(f"Erro ao coletar página {url}: {e}")
+        break # Parar o scraping em caso de erro de rede/servidor
+
+print(f"\nTotal de citações coletadas: {len(all_quotes_data)}")
+# Para ver algumas das citações coletadas:
+# for i, q in enumerate(all_quotes_data[:5]):
+#     print(f"Citação {i+1}: {q['text'][:50]}... - {q['author']}")
+            </pre>
+        </div>
+        <p>Para um scraping mais avançado, você pode procurar o link "Next" (próxima página) na página e seguir o `href` dele até que não exista mais, em vez de depender de um número fixo de páginas.</p>
+
+        <hr>
+
+        <h2>8. Salvando os Dados Coletados</h2>
+        <p>Após coletar os dados, o próximo passo é armazená-los. Você pode usar o que aprendeu nas seções anteriores sobre <a href="dados_csv_json.html">manipulação de CSV e JSON</a>, ou até mesmo <a href="bancos_dados.html">bancos de dados</a>.</p>
+
+        <div class="code-block">
+            <h3>Exemplo 8.1: Salvando Citações em CSV e JSON</h3>
+            <button class="copy-button" onclick="copyCode('saveScrapedData')">Copiar</button>
+            <pre id="saveScrapedData">
+import csv
+import json
+
+# Suponha que 'all_quotes_data' é a lista de dicionários coletada do exemplo anterior
+
+# --- Salvar em CSV ---
+csv_file_path = "quotes_coletadas.csv"
+# Definindo os nomes das colunas para o CSV (chaves dos dicionários)
+fieldnames = ['text', 'author', 'tags'] 
+
+try:
+    with open(csv_file_path, 'w', newline='', encoding='utf-8') as file:
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader() # Escreve a linha de cabeçalho
+        writer.writerows(all_quotes_data) # Escreve todas as linhas de dados
+    print(f"\nDados salvos com sucesso em {csv_file_path}")
+except IOError as e:
+    print(f"Erro ao escrever arquivo CSV: {e}")
+
+# --- Salvar em JSON ---
+json_file_path = "quotes_coletadas.json"
+try:
+    with open(json_file_path, 'w', encoding='utf-8') as file:
+        # indent=4 para formatação legível, ensure_ascii=False para caracteres especiais
+        json.dump(all_quotes_data, file, indent=4, ensure_ascii=False)
+    print(f"Dados salvos com sucesso em {json_file_path}")
+except IOError as e:
+    print(f"Erro ao escrever arquivo JSON: {e}")
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>Exercícios</h2>
+
+        <div class="exercise">
+            <h3>Exercício 1: Extrair Títulos de Notícias de um Blog Simples</h3>
+            <p>Escolha um blog simples e público que não exija login e que você se sinta confortável em raspar. Sugestões (verifique sempre o <code>robots.txt</code> e ToS!):</p>
+            <ul>
+                <li>Um blog pessoal que você conhece.</li>
+                <li>Um site de notícias com estrutura simples.</li>
+            </ul>
+            <p>1. Identifique a URL da página principal do blog.</p>
+            <p>2. Use o inspetor de elementos do navegador para encontrar a tag HTML, classe ou ID que envolve os títulos das notícias/artigos.</p>
+            <p>3. Escreva um script Python usando <code>requests</code> e <code>Beautiful Soup</code> para:</p>
+            <ul>
+                <li>Fazer a requisição GET para a página.</li>
+                <li>Parsear o HTML.</li>
+                <li>Encontrar todos os elementos que contêm os títulos.</li>
+                <li>Extrair o texto de cada título e imprimi-los no console.</li>
+            </ul>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerScraping1')">Copiar</button>
+                <pre id="exerScraping1">
+# Exercício 1: Extrair Títulos de Notícias
+import requests
+from bs4 import BeautifulSoup
+
+def extrair_titulos_noticias(url):
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    }
+    
+    print(f"\nExtraindo títulos de: {url}")
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        # DICA: INSPECIONE O CÓDIGO HTML DO SITE ESCOLHIDO PARA ENCONTRAR OS SELECTORES CORRETOS!
+        # Exemplo hipotético: títulos podem estar em tags h2 com uma classe específica
+        # Ou em tags 'a' dentro de um div de artigo.
+        
+        # Exemplo para um blog com títulos em h2.entry-title
+        # titles = soup.find_all('h2', class_='entry-title') 
+        
+        # Exemplo para outro site com títulos em a.post-title
+        # titles = soup.select('a.post-title') 
+        
+        # Substitua este seletor pelo que você encontrar no site real
+        # Para o site de exemplo quotes.toscrape.com/ podemos buscar autores (small.author) ou textos (span.text)
+        # Vamos usar um exemplo genérico para TÍTULOS DE NOTÍCIAS
+        # Assumindo que os títulos estão em tags 'h2' com a classe 'post-title'
+        titles = soup.find_all(['h2', 'h3'], class_=['post-title', 'article-title']) 
+        
+        if not titles:
+            print("Nenhum título encontrado com os seletores especificados. Verifique o HTML do site.")
+            return
+
+        print("\n--- Títulos Encontrados ---")
+        for i, title in enumerate(titles):
+            print(f"{i+1}. {title.text.strip()}") # .strip() remove espaços em branco extras
+
+    except requests.exceptions.RequestException as e:
+        print(f"Erro ao acessar a URL: {e}")
+    except Exception as e:
+        print(f"Ocorreu um erro: {e}")
+
+# Substitua pela URL do blog/site que você escolher!
+# extrair_titulos_noticias("https://blog.python.org/") 
+# extrair_titulos_noticias("http://quotes.toscrape.com/") # Exemplo com o site usado na aula
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 2: Extrair Informações de Produtos de uma Página de E-commerce Fictícia</h3>
+            <p>Para este exercício, usaremos um site de e-commerce fictício projetado para scraping: <a href="http://books.toscrape.com/" target="_blank">http://books.toscrape.com/</a>.</p>
+            <p>Navegue por algumas categorias e páginas para entender a estrutura.</p>
+            <p>1. Escreva um script Python que:</p>
+            <ul>
+                <li>Acesse a página inicial de `http://books.toscrape.com/`.</li>
+                <li>Para cada livro na **primeira página**, extraia as seguintes informações:
+                    <ul>
+                        <li>**Título do livro**</li>
+                        <li>**Preço** (converta para float)</li>
+                        <li>**Avaliação em estrelas** (converta para texto, ex: "Two", "Three", "Four")</li>
+                    </ul>
+                </li>
+                <li>Armazene os dados de cada livro em um dicionário e adicione esses dicionários a uma lista.</li>
+                <li>Ao final, salve a lista de livros coletados em um arquivo **JSON** chamado `livros.json`.</li>
+            </ul>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerScraping2')">Copiar</button>
+                <pre id="exerScraping2">
+# Exercício 2: Extrair Informações de Livros de books.toscrape.com
+import requests
+from bs4 import BeautifulSoup
+import json # Para salvar em JSON
+
+def extrair_livros():
+    url = "http://books.toscrape.com/"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    }
+    
+    livros_coletados = []
+    print(f"\nExtraindo livros de: {url}")
+
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        # Encontrar todos os "artigos" que representam um livro na página
+        # Inspecione o HTML para ver que cada livro está dentro de um article com classe 'product_pod'
+        livro_elements = soup.find_all('article', class_='product_pod')
+
+        if not livro_elements:
+            print("Nenhum livro encontrado na página. Verifique os seletores.")
+            return
+
+        for livro in livro_elements:
+            # Título do livro
+            titulo_tag = livro.find('h3').find('a')
+            titulo = titulo_tag['title'].strip() # O título está no atributo 'title' do link
+
+            # Preço
+            preco_tag = livro.find('p', class_='price_color')
+            # Remove o símbolo de moeda e converte para float
+            preco = float(preco_tag.text.replace('£', '').strip())
+
+            # Avaliação (estrelas)
+            # A avaliação está em uma tag 'p' com uma classe que indica o número de estrelas
+            avaliacao_tag = livro.find('p', class_='star-rating')
+            # A classe contém o nome da avaliação (ex: 'Two', 'Three')
+            avaliacao = avaliacao_tag['class'][1] # Pega a segunda classe (índice 1)
+
+            livros_coletados.append({
+                "titulo": titulo,
+                "preco": preco,
+                "avaliacao": avaliacao
+            })
+            
+        # Salvar em JSON
+        json_file_path = "livros.json"
+        with open(json_file_path, 'w', encoding='utf-8') as file:
+            json.dump(livros_coletados, file, indent=4, ensure_ascii=False)
+        
+        print(f"\nTotal de {len(livros_coletados)} livros coletados e salvos em {json_file_path}.")
+
+    except requests.exceptions.RequestException as e:
+        print(f"Erro ao acessar a URL: {e}")
+    except Exception as e:
+        print(f"Ocorreu um erro: {e}")
+
+# Chame a função para executar o exercício
+# extrair_livros()
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>Conclusão</h2>
+        <p>O **Web Scraping** é uma habilidade poderosa em Python, permitindo que você colete dados de praticamente qualquer website. Com <code>requests</code> para obter o HTML e <code>Beautiful Soup</code> para parseá-lo e extrair informações, você tem um arsenal robusto para automatizar a coleta de dados.</p>
+        <p>Lembre-se sempre da **ética e da legalidade**. Use esta ferramenta de forma responsável, respeitando os termos de serviço dos sites, o arquivo <code>robots.txt</code> e, acima de tudo, não sobrecarregando os servidores.</p>
+        <p>O Web Scraping pode ser um pouco frágil, pois os sites podem mudar sua estrutura HTML a qualquer momento, quebrando seu script. No entanto, para tarefas de coleta de dados pontuais ou em pequena escala, é uma ferramenta inestimável.</p>
+        <p>Com este conhecimento, você já tem as bases para construir aplicações que interagem com a internet de diversas formas. Agora, vamos mudar um pouco o foco e aprender como **criar** suas próprias aplicações web com Python, usando o framework **Flask**.</p>
+
+        </div> <a href="#top" class="back-to-top" title="Voltar ao topo da página">↑</a>
+
+ <footer class="footer">
+  <div class="footer-content">
+    <div class="brand-info">
+      <p>&copy; 2025 <strong>Aprendendo Python</strong> — Todos os direitos reservados.</p>
+      <p>Desenvolvido por: <a href="https://jespedsys.com.br" target="_blank">JesPedSYS</a></p>
+    </div>
+
+    <div class="social-links">
+      <a href="https://github.com/jespedsys" target="_blank" title="GitHub">
+        <img src="../github.png" alt="GitHub">
+      </a>
+      <a href="https://www.linkedin.com/in/jesielpedroza" target="_blank" title="LinkedIn">
+        <img src="../linkedin.png" alt="LinkedIn">
+      </a>
+      <a href="https://twitter.com/jespedsys" target="_blank" title="Twitter/X">
+        <img src="../twitter.png" alt="Twitter/X">
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

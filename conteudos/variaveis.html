@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aprenda Python - Variáveis</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../estilo.css" />
+</head>
+<body id="top">
+
+  <div class="main-header">
+    <img src="../logo.png" alt="Logo Aprenda Python" class="logo-header" />
+    <h1>Bem-vindo ao Mundo Python!</h1>
+  </div>
+
+  <div class="container">
+    <nav class="main-menu">
+      <h2>Conteúdos:</h2>
+      <ul>
+        <li><a href="../index.html">Página Inicial</a></li>
+        <li><a href="operadores.html">→ Próxima Aula: Operadores</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <h1>Entendendo Variáveis em Python</h1>
+
+      <h2>O que são Variáveis?</h2>
+      <p>As <strong>variáveis</strong> são como "caixas" rotuladas onde podemos armazenar informações (dados) para usar depois em nosso programa. Cada caixa tem um <strong>nome</strong> (o rótulo) e guarda um <strong>valor</strong> (o que está dentro da caixa).</p>
+      <p>Em Python, criar uma variável e atribuir um valor a ela é muito simples. Você só precisa dar um nome à variável e usar o sinal de igual (<code>=</code>) para atribuir um valor.</p>
+
+      <div class="code-block">
+        <h3>Exemplo de Variável:</h3>
+        <button class="copy-button" onclick="copyCode('exemploVariavel')">Copiar</button>
+        <pre id="exemploVariavel">
+# Criando uma variável chamada 'nome' e atribuindo o texto "Alice" a ela
+nome = "Alice"
+
+# Criando uma variável chamada 'idade' e atribuindo o número 30 a ela
+idade = 30
+
+# Exibindo o conteúdo das variáveis
+print(nome)
+print(idade)
+        </pre>
+      </div>
+
+      <div class="note">
+        <p><strong>Lembre-se:</strong></p>
+        <ul>
+          <li>O sinal <code>=</code> é usado para <strong>atribuir</strong> um valor, não para comparar.</li>
+          <li>Nomes de variáveis devem ser descritivos, como <code>nome_cliente</code>, <code>preco_total</code>.</li>
+          <li>Em Python, você <strong>não precisa declarar o tipo</strong> da variável. Python detecta automaticamente!</li>
+        </ul>
+      </div>
+
+      <hr />
+
+      <h2>Tipos de Dados Comuns</h2>
+      <ul>
+        <li><strong>Strings (Texto):</strong> Ex: <code>"Olá!"</code>, <code>'Python'</code></li>
+        <li><strong>Inteiros:</strong> Ex: <code>10</code>, <code>-5</code>, <code>1000</code></li>
+        <li><strong>Floats:</strong> Ex: <code>3.14</code>, <code>0.5</code>, <code>-1.2</code></li>
+        <li><strong>Booleanos:</strong> <code>True</code> ou <code>False</code></li>
+      </ul>
+
+      <hr />
+
+      <h2>Exercícios de Variáveis</h2>
+      <p>Abra o Google Colab e tente resolver os exercícios abaixo:</p>
+
+      <div class="exercise">
+        <h3>Exercício 1: Crie e Imprima suas informações</h3>
+        <ol>
+          <li><code>cidade_natal</code> como texto</li>
+          <li><code>ano_nascimento</code> como número</li>
+          <li>Imprima uma frase com essas informações</li>
+        </ol>
+        <div class="code-block">
+          <button class="copy-button" onclick="copyCode('exercicio1Code')">Copiar</button>
+          <pre id="exercicio1Code">
+# Exercício 1
+cidade_natal = "Sua Cidade"
+ano_nascimento = 1990
+
+print("Minha cidade natal é", cidade_natal, "e nasci em", ano_nascimento)
+          </pre>
+        </div>
+      </div>
+
+      <div class="exercise">
+        <h3>Exercício 2: Troca de Valores</h3>
+        <ol>
+          <li>Crie: <code>a = 10</code> e <code>b = 20</code></li>
+          <li>Troque os valores</li>
+          <li>Imprima os novos valores</li>
+        </ol>
+        <div class="code-block">
+          <button class="copy-button" onclick="copyCode('exercicio2Code')">Copiar</button>
+          <pre id="exercicio2Code">
+# Exercício 2
+a = 10
+b = 20
+
+# Troca com uma linha
+a, b = b, a
+
+print("Novo valor de a:", a)
+print("Novo valor de b:", b)
+          </pre>
+        </div>
+      </div>
+
+      <div class="exercise">
+        <h3>Exercício 3: Cálculo Simples com Variáveis</h3>
+        <ol>
+          <li><code>preco_produto = 45.50</code></li>
+          <li><code>quantidade = 3</code></li>
+          <li><code>total = preco_produto * quantidade</code></li>
+        </ol>
+        <div class="code-block">
+          <button class="copy-button" onclick="copyCode('exercicio3Code')">Copiar</button>
+          <pre id="exercicio3Code">
+# Exercício 3
+preco_produto = 45.50
+quantidade = 3
+
+total = preco_produto * quantidade
+
+print("O valor total da compra é:", total)
+          </pre>
+        </div>
+      </div>
+
+      <div class="next-lesson">
+        <a href="operadores.html">→ Ir para a próxima aula: Operadores</a>
+      </div>
+    </main>
+  </div>
+
+  <a href="#top" class="back-to-top" title="Voltar ao topo da página">↑</a>
+
+<footer class="footer">
+  <div class="footer-content">
+    <div class="brand-info">
+      <p>&copy; 2025 <strong>Aprendendo Python</strong> — Todos os direitos reservados.</p>
+      <p>Desenvolvido por: <a href="https://jespedsys.com.br" target="_blank">JesPedSYS</a></p>
+    </div>
+
+    <div class="social-links">
+      <a href="https://github.com/jespedsys" target="_blank" title="GitHub">
+        <img src="../github.png" alt="GitHub">
+      </a>
+      <a href="https://www.linkedin.com/in/jesielpedroza" target="_blank" title="LinkedIn">
+        <img src="../linkedin.png" alt="LinkedIn">
+      </a>
+      <a href="https://twitter.com/jespedsys" target="_blank" title="Twitter/X">
+        <img src="../twitter.png" alt="Twitter/X">
+      </a>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="../script.js"></script>
+</body>
+</html>

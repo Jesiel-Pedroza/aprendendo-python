@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprenda Python Passo a Passo - Flask: Autenticação e Autorização</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../estilo.css">
+</head>
+<body id="top">
+
+    <div class="main-header">
+        <img src="../logo.png" alt="Logo Aprenda Python" class="logo-header">
+        <h1>Bem-vindo ao Mundo Python!</h1>
+    </div>
+    <div class="container">
+
+        <p>Comece sua jornada na programação com Python, uma linguagem poderosa e fácil de aprender.</p>
+
+        <nav class="main-menu">
+            <h2>Conteúdos:</h2>
+            <ul>
+                <li><a href="../index.html">Página Inicial</a></li>
+                 <li><a href="flask_wtf_forms.html">→ Flask: Formulários</a></li>
+               
+            </ul>
+        </nav>
+        <h1>Flask: Autenticação e Autorização com Flask-Login</h1>
+
+        <p>No desenvolvimento web, é fundamental controlar quem pode acessar o quê e quem é o usuário atual. Isso nos leva a dois conceitos chave:</p>
+        <ul>
+            <li><strong>Autenticação:</strong> É o processo de verificar a identidade de um usuário. "Você é quem diz ser?" Isso é feito geralmente através de um login com nome de usuário/email e senha.</li>
+            <li><strong>Autorização:</strong> É o processo de determinar o que um usuário autenticado tem permissão para fazer. "Você tem permissão para acessar esta página ou executar esta ação?" Por exemplo, apenas administradores podem acessar certas áreas.</li>
+        </ul>
+        <p>Nesta seção, vamos implementar a autenticação e autorização em nossa aplicação Flask usando a extensão **Flask-Login** e garantindo a segurança das senhas.</p>
+
+        <hr>
+
+        <h2>1. Hash de Senhas: `werkzeug.security`</h2>
+        <p>Nunca, em hipótese alguma, armazene senhas de usuários em texto puro no seu banco de dados. Se o banco de dados for comprometido, todas as senhas seriam expostas. Em vez disso, armazenamos um <strong>hash</strong> da senha.</p>
+        <p>Um hash é uma string de tamanho fixo gerada a partir da senha. É um processo unidirecional, o que significa que é praticamente impossível reverter o hash para obter a senha original. Quando um usuário tenta fazer login, a senha fornecida é hashed e comparada com o hash armazenado. Se os hashes forem iguais, a senha está correta.</p>
+        <p>O Flask já inclui o `werkzeug.security` que oferece funções seguras para isso:</p>
+        <ul>
+            <li>`generate_password_hash(password)`: Cria um hash da senha. Inclui um "salt" (um valor aleatório adicionado à senha antes do hash para evitar ataques de tabela arco-íris) e um algoritmo de hash seguro (padrão é `pbkdf2:sha256`).</li>
+            <li>`check_password_hash(hashed_password, password)`: Compara uma senha em texto puro com um hash armazenado.</li>
+        </ul>
+
+        <div class="code-block">
+            <h3>Exemplo de Uso de Hashing de Senhas (Python Interativo)</h3>
+            <button class="copy-button" onclick="copyCode('hashPasswordExample')">Copiar</button>
+            <pre id="hashPasswordExample">
+from werkzeug.security import generate_password_hash, check_password_hash
+
+# Gerando um hash
+senha_original = "minhasenha_secreta123"
+senha_hashed = generate_password_hash(senha_original)
+print(f"Senha Original: {senha_original}")
+print(f"Senha Hashed:   {senha_hashed}")
+# Ex: Senha Hashed:   pbkdf2:sha256:150000$g7b0c8d9e0f1a2b3c4d5e6f7$8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b
+
+# Verificando uma senha
+print(f"Verificando 'minhasenha_secreta123': {check_password_hash(senha_hashed, 'minhasenha_secreta123')}") # Deve ser True
+print(f"Verificando 'senha_errada': {check_password_hash(senha_hashed, 'senha_errada')}")           # Deve ser False
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>2. Instalando Flask-Login</h2>
+        <p>Primeiro, instale a extensão no seu ambiente virtual:</p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('installFlaskLogin')">Copiar</button>
+            <pre id="installFlaskLogin">
+pip install Flask-Login
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>3. Configurando Flask-Login</h2>
+        <p>A integração do Flask-Login envolve alguns passos no seu arquivo `app.py`:</p>
+        <ol>
+            <li>Importar as classes necessárias.</li>
+            <li>Inicializar o `LoginManager`.</li>
+            <li>Configurar a rota de login (`login_view`).</li>
+            <li>Atualizar seu modelo `Usuario` para herdar de `UserMixin` e adicionar a coluna `password_hash`.</li>
+            <li>Implementar a função `user_loader` para carregar um usuário pelo ID.</li>
+        </ol>
+
+        <div class="code-block">
+            <h3>Arquivo: <code>app.py</code> (Configuração Flask-Login e Modelo Atualizado)</h3>
+            <button class="copy-button" onclick="copyCode('configFlaskLogin')">Copiar</button>
+            <pre id="configFlaskLogin">
+# app.py (continuação ou novo arquivo para demonstração)
+from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_sqlalchemy import SQLAlchemy
+# Importe as classes do Flask-Login e Werkzeug Security
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user 
+from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# A secret_key deve ser longa, aleatória e mantida em segredo! Essencial para sessões.
+app.secret_key = 'uma_chave_secreta_super_segura_e_longa_aqui_para_a_producao' 
+
+db = SQLAlchemy(app)
+
+# --- Configuração do Flask-Login ---
+login_manager = LoginManager()
+login_manager.init_app(app) # Inicializa o Flask-Login com a aplicação
+login_manager.login_view = 'login' # Define a rota para onde usuários não autenticados serão redirecionados
+login_manager.login_message_category = 'info' # Define a categoria para as flash messages do Flask-Login
+login_manager.login_message = 'Por favor, faça login para acessar esta página.' # Mensagem padrão
+
+# --- Modelos (Adaptados para Flask-Login) ---
+# O modelo Usuario deve herdar de UserMixin
+class Usuario(db.Model, UserMixin): # &lt;-- Adicione UserMixin aqui!
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    # Nova coluna para armazenar o hash da senha
+    password_hash = db.Column(db.String(128), nullable=False) 
+    # Coluna opcional para autorização básica
+    is_admin = db.Column(db.Boolean, default=False, nullable=False)
+
+    posts = db.relationship('Post', backref='autor', lazy=True)
+
+    # Método para definir a senha (faz o hash)
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    # Método para verificar a senha
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+    def __repr__(self):
+        return f'&lt;Usuario {self.username}&gt;'
+
+# Modelo Post (mantém-se o mesmo, mas user_id agora se refere a um usuário logado)
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    titulo = db.Column(db.String(100), nullable=False)
+    conteudo = db.Column(db.Text, nullable=False)
+    data_criacao = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+
+    def __repr__(self):
+        return f'&lt;Post {self.titulo}&gt;'
+
+# --- Função user_loader (OBRIGATÓRIA para Flask-Login) ---
+# Esta função é usada pelo Flask-Login para recarregar o objeto usuário da sessão
+# dado o ID do usuário armazenado na sessão.
+@login_manager.user_loader
+def load_user(user_id):
+    return Usuario.query.get(int(user_id))
+
+# ... (Rotas existentes: home, listar_usuarios, ver_usuario, etc.) ...
+
+# Certifique-se de que db.create_all() é executado para criar a coluna password_hash
+# Se você já tem um site.db, precisará de migrações ou recriar o BD.
+if __name__ == '__main__':
+    with app.app_context():
+        # Apenas rode db.create_all() se estiver começando do zero ou não se importa em perder dados.
+        # Para projetos em andamento com dados, use Flask-Migrate (ver seção 8 da página anterior).
+        db.create_all() 
+    app.run(debug=True)
+            </pre>
+        </div>
+        <p><strong>Atenção ao `db.create_all()`:</strong> Se você já possui um arquivo `site.db` do capítulo anterior, rodar `db.create_all()` novamente não adicionará a nova coluna `password_hash` automaticamente sem apagar os dados existentes. Para projetos em desenvolvimento, você pode simplesmente apagar o arquivo `site.db` e rodar `app.py` novamente. Para um controle de versão adequado do seu banco de dados, você usaria uma ferramenta de migração como Flask-Migrate (mencionado anteriormente).</p>
+
+        <hr>
+
+        <h2>4. Rotas de Registro de Usuário</h2>
+        <p>Vamos criar uma rota para que novos usuários possam se registrar na aplicação.</p>
+
+        <div class="code-block">
+            <h3>Arquivo: <code>app.py</code> (Rota de Registro)</h3>
+            <button class="copy-button" onclick="copyCode('registerRoute')">Copiar</button>
+            <pre id="registerRoute">
+# app.py (continuação - adicione esta rota)
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    # Se o usuário já estiver autenticado, redireciona para a página inicial
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+
+        # Verifica se o nome de usuário ou email já estão em uso
+        user_exists = Usuario.query.filter_by(username=username).first()
+        email_exists = Usuario.query.filter_by(email=email).first()
+
+        if user_exists:
+            flash('Nome de usuário já existe. Por favor, escolha outro.', 'danger')
+        elif email_exists:
+            flash('Este email já está cadastrado. Por favor, use outro ou faça login.', 'danger')
+        else:
+            # Cria um novo usuário e define a senha hashed
+            novo_usuario = Usuario(username=username, email=email)
+            novo_usuario.set_password(password) # Usa o método que faz o hash
+
+            try:
+                db.session.add(novo_usuario)
+                db.session.commit()
+                flash('Sua conta foi criada com sucesso! Agora você pode fazer login.', 'success')
+                return redirect(url_for('login')) # Redireciona para a página de login
+            except Exception as e:
+                db.session.rollback() # Desfaz a operação em caso de erro
+                flash(f'Ocorreu um erro ao registrar sua conta: {e}', 'danger')
+    
+    return render_template('register.html')
+            </pre>
+        </div>
+
+        <h4>Crie o Template HTML para Registro:</h4>
+        <p><strong>Arquivo: `templates/register.html`</strong></p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('registerHtml')">Copiar</button>
+            <pre id="registerHtml">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Registrar Nova Conta&lt;/title&gt;
+    &lt;link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Registrar Nova Conta&lt;/h1&gt;
+    &lt;!-- Exibe as mensagens flash --&gt;
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            &lt;ul class="flashes"&gt;
+            {% for category, message in messages %}
+                &lt;li class="{{ category }}"&gt;{{ message }}&lt;/li&gt;
+            {% endfor %}
+            &lt;/ul&gt;
+        {% endif %}
+    {% endwith %}
+
+    &lt;form action="/register" method="POST"&gt;
+        &lt;label for="username"&gt;Nome de Usuário:&lt;/label&gt;&lt;br&gt;
+        &lt;input type="text" id="username" name="username" required&gt;&lt;br&gt;&lt;br&gt;
+        
+        &lt;label for="email"&gt;Email:&lt;/label&gt;&lt;br&gt;
+        &lt;input type="email" id="email" name="email" required&gt;&lt;br&gt;&lt;br&gt;
+        
+        &lt;label for="password"&gt;Senha:&lt;/label&gt;&lt;br&gt;
+        &lt;input type="password" id="password" name="password" required&gt;&lt;br&gt;&lt;br&gt;
+        
+        &lt;input type="submit" value="Registrar"&gt;
+    &lt;/form&gt;
+    &lt;p&gt;Já tem uma conta? &lt;a href="{{ url_for('login') }}"&gt;Faça Login aqui&lt;/a&gt;.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>5. Rotas de Login de Usuário</h2>
+        <p>A rota de login processa as credenciais do usuário e, se forem válidas, usa `login_user()` do Flask-Login para iniciar a sessão do usuário.</p>
+
+        <div class="code-block">
+            <h3>Arquivo: <code>app.py</code> (Rota de Login)</h3>
+            <button class="copy-button" onclick="copyCode('loginRoute')">Copiar</button>
+            <pre id="loginRoute">
+# app.py (continuação - adicione esta rota)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    # Se o usuário já estiver autenticado, redireciona para a página inicial
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        # Verifica se o checkbox "Lembrar-me" foi marcado
+        remember = request.form.get('remember_me') 
+
+        # Busca o usuário pelo nome de usuário
+        usuario = Usuario.query.filter_by(username=username).first()
+
+        # Verifica se o usuário existe e se a senha está correta
+        if usuario and usuario.check_password(password):
+            login_user(usuario, remember=remember) # Faz o login do usuário
+            flash(f'Bem-vindo de volta, {usuario.username}!', 'success')
+            # Redireciona para a página que o usuário tentou acessar antes do login (se houver)
+            next_page = request.args.get('next') 
+            return redirect(next_page or url_for('home')) # Se não houver 'next', vai para a home
+        else:
+            flash('Login falhou. Verifique seu nome de usuário e senha.', 'danger')
+            
+    return render_template('login.html')
+            </pre>
+        </div>
+
+        <h4>Crie o Template HTML para Login:</h4>
+        <p><strong>Arquivo: `templates/login.html`</strong></p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('loginHtml')">Copiar</button>
+            <pre id="loginHtml">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Login&lt;/title&gt;
+    &lt;link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Login&lt;/h1&gt;
+    &lt;!-- Exibe as mensagens flash --&gt;
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            &lt;ul class="flashes"&gt;
+            {% for category, message in messages %}
+                &lt;li class="{{ category }}"&gt;{{ message }}&lt;/li&gt;
+            {% endfor %}
+            &lt;/ul&gt;
+        {% endif %}
+    {% endwith %}
+
+    &lt;form action="/login" method="POST"&gt;
+        &lt;label for="username"&gt;Nome de Usuário:&lt;/label&gt;&lt;br&gt;
+        &lt;input type="text" id="username" name="username" required&gt;&lt;br&gt;&lt;br&gt;
+        
+        &lt;label for="password"&gt;Senha:&lt;/label&gt;&lt;br&gt;
+        &lt;input type="password" id="password" name="password" required&gt;&lt;br&gt;&lt;br&gt;
+        
+        &lt;input type="checkbox" id="remember_me" name="remember_me"&gt;
+        &lt;label for="remember_me"&gt;Lembrar-me&lt;/label&gt;&lt;br&gt;&lt;br&gt;
+        
+        &lt;input type="submit" value="Entrar"&gt;
+    &lt;/form&gt;
+    &lt;p&gt;Não tem uma conta? &lt;a href="{{ url_for('register') }}"&gt;Registre-se aqui&lt;/a&gt;.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>6. Rota de Logout de Usuário</h2>
+        <p>Deslogar um usuário é simples com `logout_user()`.</p>
+
+        <div class="code-block">
+            <h3>Arquivo: <code>app.py</code> (Rota de Logout)</h3>
+            <button class="copy-button" onclick="copyCode('logoutRoute')">Copiar</button>
+            <pre id="logoutRoute">
+# app.py (continuação - adicione esta rota)
+
+@app.route('/logout')
+@login_required # Garante que apenas usuários logados podem acessar esta rota
+def logout():
+    logout_user() # Desconecta o usuário atual
+    flash('Você foi desconectado com sucesso.', 'info')
+    return redirect(url_for('home'))
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>7. Protegendo Rotas com `@login_required`</h2>
+        <p>O decorador `@login_required` do Flask-Login é a maneira mais fácil de proteger rotas. Se um usuário não autenticado tentar acessar uma rota decorada com `@login_required`, ele será redirecionado para a `login_view` que configuramos (`/login`).</p>
+
+        <div class="code-block">
+            <h3>Arquivo: <code>app.py</code> (Protegendo Rota)</h3>
+            <button class="copy-button" onclick="copyCode('protectRoute')">Copiar</button>
+            <pre id="protectRoute">
+# app.py (continuação - exemplo de rota protegida)
+
+# Rota para adicionar posts - AGORA PROTEGIDA!
+@app.route('/adicionar_post', methods=['GET', 'POST'])
+@login_required # &lt;-- APENAS USUÁRIOS LOGADOS PODEM ACESSAR ESTA ROTA
+def adicionar_post():
+    usuarios = Usuario.query.all() # Ainda precisamos de todos os usuários para o dropdown no admin
+    if request.method == 'POST':
+        titulo = request.form['titulo']
+        conteudo = request.form['conteudo']
+        
+        # Se for um usuário comum, o autor é o próprio usuário logado
+        user_id = current_user.id 
+        
+        # Se você quiser permitir que um admin escolha o autor:
+        # if current_user.is_admin:
+        #     user_id = request.form['user_id'] # Pega do formulário
+        # else:
+        #     user_id = current_user.id # Pega do usuário logado
+
+        novo_post = Post(titulo=titulo, conteudo=conteudo, user_id=user_id)
+        try:
+            db.session.add(novo_post)
+            db.session.commit()
+            flash('Post adicionado com sucesso!', 'success')
+            return redirect(url_for('listar_posts'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao adicionar post: {e}', 'danger')
+    # Passe current_user para o template para controle de isAdmin etc.
+    return render_template('adicionar_post.html', usuarios=usuarios, current_user=current_user)
+
+# Outras rotas que você pode proteger:
+@app.route('/editar_usuario/&lt;int:user_id&gt;', methods=['GET', 'POST'])
+@login_required
+def editar_usuario(user_id):
+    # Lógica adicional para garantir que o usuário só pode editar seu próprio perfil,
+    # ou que é um admin.
+    if not current_user.is_admin and current_user.id != user_id:
+        flash('Você não tem permissão para editar este perfil.', 'danger')
+        return redirect(url_for('home'))
+    # ... (restante do código) ...
+
+@app.route('/deletar_usuario/&lt;int:user_id&gt;', methods=['POST'])
+@login_required
+def deletar_usuario(user_id):
+    if not current_user.is_admin and current_user.id != user_id:
+        flash('Você não tem permissão para deletar este perfil.', 'danger')
+        return redirect(url_for('home'))
+    # ... (restante do código) ...
+
+# Rota de exemplo para admin
+@app.route('/admin_panel')
+@login_required
+def admin_panel():
+    if not current_user.is_admin: # Verifica se o usuário logado é admin
+        flash('Você não tem permissão para acessar esta página.', 'danger')
+        return redirect(url_for('home'))
+    return render_template('admin_panel.html') # Crie este template se for usar
+            </pre>
+        </div>
+        <p>O objeto `current_user` é um proxy fornecido pelo Flask-Login que representa o usuário atualmente logado. Se ninguém estiver logado, `current_user.is_authenticated` será `False`.</p>
+
+        <hr>
+
+        <h2>8. Personalizando o Menu de Navegação para Usuários Autenticados</h2>
+        <p>Para melhorar a experiência do usuário, você pode exibir links diferentes no seu menu de navegação dependendo se o usuário está logado ou não. Use `current_user.is_authenticated` diretamente nos seus templates Jinja2.</p>
+        <p>O exemplo abaixo mostra como você pode modificar o menu no seu `index.html` ou em um template base (se você estiver usando herança de templates).</p>
+
+        <div class="code-block">
+            <h3>Exemplo: Menu Dinâmico (em <code>index.html</code> ou <code>_base.html</code>)</h3>
+            <button class="copy-button" onclick="copyCode('dynamicMenu')">Copiar</button>
+            <pre id="dynamicMenu">
+&lt;!-- Em seu arquivo flask_auth.html, esta seção já está configurada no menu &gt;
+&lt;!-- mas é um exemplo de como faria nos outros HTMLs --&gt;
+&lt;nav class="main-menu"&gt;
+    &lt;h2&gt;Conteúdos:&lt;/h2&gt;
+    &lt;ul&gt;
+        &lt;li&gt;&lt;a href="index.html"&gt;Página Inicial&lt;/a&gt;&lt;/li&gt;
+        &lt;!-- ... (outros links de conteúdo estático) ... --&gt;
+        &lt;li&gt;&lt;a href="flask_intro.html"&gt;20. Introdução ao Desenvolvimento Web com Flask&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="flask_database.html"&gt;21. Flask e Banco de Dados (SQLite)&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="flask_auth.html"&gt;22. Flask: Autenticação e Autorização&lt;/a&gt;&lt;/li&gt;
+
+        &lt;!-- Links dinâmicos de autenticação/autorização --&gt;
+        {% if current_user.is_authenticated %}
+            &lt;li&gt;&lt;a href="{{ url_for('adicionar_post') }}"&gt;Adicionar Post&lt;/a&gt;&lt;/li&gt;
+            {% if current_user.is_admin %} &lt;!-- Exemplo de autorização --&gt;
+                &lt;li&gt;&lt;a href="{{ url_for('admin_panel') }}"&gt;Painel Admin&lt;/a&gt;&lt;/li&gt;
+            {% endif %}
+            &lt;li&gt;&lt;a href="{{ url_for('logout') }}"&gt;Sair ({{ current_user.username }})&lt;/a&gt;&lt;/li&gt;
+        {% else %}
+            &lt;li&gt;&lt;a href="{{ url_for('register') }}"&gt;Registrar&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="{{ url_for('login') }}"&gt;Login&lt;/a&gt;&lt;/li&gt;
+        {% endif %}
+    &lt;/ul&gt;
+&lt;/nav&gt;
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>9. Mensagens Flash (Reforço)</h2>
+        <p>As <a href="flask_intro.html#flash_messages">mensagens flash</a> são cruciais para dar feedback ao usuário sobre o resultado de suas ações (sucesso, erro, informação). Para que elas apareçam, você precisa adicioná-las aos seus templates HTML.</p>
+
+        <div class="code-block">
+            <h3>Exemplo: Exibindo Mensagens Flash (em <code>templates/base.html</code> ou em cada template)</h3>
+            <button class="copy-button" onclick="copyCode('displayFlashes')">Copiar</button>
+            <pre id="displayFlashes">
+&lt;!-- Adicione este bloco no início do &lt;body&gt; dos seus templates HTML --&gt;
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    &lt;ul class="flashes"&gt;
+      {% for category, message in messages %}
+        &lt;li class="{{ category }}"&gt;{{ message }}&lt;/li&gt;
+      {% endfor %}
+    &lt;/ul&gt;
+  {% endif %}
+{% endwith %}
+            </pre>
+        </div>
+        <p>Você pode adicionar estilos ao seu `static/css/style.css` para formatar essas mensagens:</p>
+        <div class="code-block">
+            <h3>Arquivo: <code>static/css/style.css</code> (Estilos para Mensagens Flash)</h3>
+            <button class="copy-button" onclick="copyCode('flashStyles')">Copiar</button>
+            <pre id="flashStyles">
+/* --- Estilos para Mensagens Flash --- */
+.flashes {
+    list-style-type: none;
+    padding: 10px 20px;
+    margin: 10px 0;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.flashes li {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.flashes li:last-child {
+    border-bottom: none;
+}
+
+.flashes li.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.flashes li.danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.flashes li.info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.flashes li.warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+}
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>Exercícios</h2>
+
+        <div class="exercise">
+            <h3>Exercício 1: Implementar Autenticação Completa</h3>
+            <p>Com base nas instruções, implemente o sistema de autenticação:</p>
+            <ul>
+                <li>Atualize seu `app.py` com a configuração do `Flask-Login` e o modelo `Usuario` modificado (com `password_hash` e `UserMixin`).</li>
+                <li>Adicione as rotas `/register`, `/login`, `/logout` ao seu `app.py`.</li>
+                <li>Crie os templates `templates/register.html` e `templates/login.html`.</li>
+                <li>Atualize o menu de navegação em **todas as suas páginas HTML** para mostrar os links de "Registrar" e "Login" quando o usuário não estiver logado, e "Sair" (com o nome do usuário logado) e "Adicionar Post" (seja relevante) quando estiver logado.</li>
+                <li>Certifique-se de que as mensagens flash estejam sendo exibidas em seus templates.</li>
+                <li><strong>Teste:</strong> Registre um novo usuário, tente fazer login com credenciais corretas e incorretas, e faça logout.</li>
+            </ul>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 2: Proteger Rotas e Associar Dados</h3>
+            <p>Aplique o que aprendeu sobre autorização:</p>
+            <ul>
+                <li>Adicione o decorador `@login_required` às rotas que exigem que o usuário esteja logado (ex: `/adicionar_post`, `/editar_post`, `/deletar_post`, `/editar_usuario` para o próprio usuário).</li>
+                <li>Modifique a rota `/adicionar_post` para que o `user_id` do novo post seja automaticamente o `id` do `current_user` logado, removendo a necessidade de selecionar o autor de um dropdown (a menos que seja para um admin).</li>
+                <li>(Opcional) Na rota `/editar_usuario/<int:user_id>`, adicione uma verificação para garantir que o `current_user.id` seja igual ao `user_id` que está sendo editado, evitando que usuários editem perfis de outras pessoas.</li>
+            </ul>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 3 (Opcional): Autorização Básica com `is_admin`</h3>
+            <p>Para um controle de acesso mais granular:</p>
+            <ul>
+                <li>Adicione uma coluna `is_admin = db.Column(db.Boolean, default=False, nullable=False)` ao seu modelo `Usuario`.</li>
+                <li>Crie uma rota `/admin_panel` e decore-a com `@login_required`. Dentro dela, adicione uma verificação `if not current_user.is_admin: flash('Acesso negado!', 'danger'); return redirect(url_for('home'))`.</li>
+                <li>No seu `app.py`, você pode criar um usuário administrador manualmente uma vez no console Python para testar, por exemplo:
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyCode('createAdminConsole')">Copiar</button>
+                        <pre id="createAdminConsole">
+# No terminal Python, após rodar `python app.py` e ter o banco criado:
+# Abra outro terminal na mesma pasta e ative o ambiente virtual
+# python
+# from app import app, db, Usuario
+# with app.app_context():
+#     admin_user = Usuario(username='admin', email='admin@example.com', is_admin=True)
+#     admin_user.set_password('senhasecretaadmin')
+#     db.session.add(admin_user)
+#     db.session.commit()
+# exit()
+                        </pre>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <hr>
+
+        <h2>Conclusão</h2>
+        <p>Com a autenticação e autorização implementadas, sua aplicação Flask agora pode diferenciar usuários, personalizar experiências e proteger funcionalidades. O Flask-Login simplifica a gestão de sessões e a segurança das senhas, que é uma preocupação primordial em qualquer aplicação web.</p>
+        <p>Você deu um grande salto na construção de aplicações web completas. No próximo conteúdo, podemos explorar como criar formulários mais robustos e seguros com a extensão **Flask-WTF**, que lida com validação de dados, proteção CSRF e renderização de formulários de forma eficiente.</p>
+
+        </div> <a href="#top" class="back-to-top" title="Voltar ao topo da página">↑</a>
+
+      <footer class="footer">
+  <div class="footer-content">
+    <div class="brand-info">
+      <p>&copy; 2025 <strong>Aprendendo Python</strong> — Todos os direitos reservados.</p>
+      <p>Desenvolvido por: <a href="https://jespedsys.com.br" target="_blank">JesPedSYS</a></p>
+    </div>
+
+    <div class="social-links">
+      <a href="https://github.com/jespedsys" target="_blank" title="GitHub">
+        <img src="../github.png" alt="GitHub">
+      </a>
+      <a href="https://www.linkedin.com/in/jesielpedroza" target="_blank" title="LinkedIn">
+        <img src="../linkedin.png" alt="LinkedIn">
+      </a>
+      <a href="https://twitter.com/jespedsys" target="_blank" title="Twitter/X">
+        <img src="../twitter.png" alt="Twitter/X">
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

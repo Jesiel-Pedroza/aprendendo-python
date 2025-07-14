@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprenda Python Passo a Passo - Manipulação de Arquivos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../estilo.css">
+</head>
+<body id="top">
+
+    <div class="main-header">
+        <img src="../logo.png" alt="Logo Aprenda Python" class="logo-header">
+        <h1>Bem-vindo ao Mundo Python!</h1>
+    </div>
+    <div class="container">
+
+        <p>Comece sua jornada na programação com Python, uma linguagem poderosa e fácil de aprender.</p>
+
+        
+    <nav class="main-menu">
+            <h2>Conteúdos:</h2>
+            <ul>
+                <li><a href="index.html">Página Inicial</a></li>
+                <li><a href="classes_objetos.html">→ Próxima Aula: Classes e Objetos</a></li>
+                
+                </ul>
+        </nav>
+        <h1>Manipulação de Arquivos: Lendo e Escrevendo Dados</h1>
+
+        <p>Até agora, os dados que manipulamos em nossos programas existiam apenas enquanto o programa estava em execução. Uma vez que o programa terminava, todos os dados eram perdidos. Para que um programa possa armazenar informações de forma persistente, ele precisa ser capaz de interagir com o sistema de arquivos, ou seja, **ler e escrever em arquivos**.</p>
+        <p>A manipulação de arquivos é uma habilidade fundamental para:</p>
+        <ul>
+            <li>**Persistência de Dados:** Salvar dados (configurações de usuário, resultados de cálculos, etc.) para que possam ser usados em execuções futuras do programa.</li>
+            <li>**Leitura de Dados de Entrada:** Processar informações que vêm de fontes externas, como arquivos de texto, planilhas CSV, JSON, etc.</li>
+            <li>**Geração de Saída:** Criar relatórios, logs de atividades, ou exportar dados em diferentes formatos.</li>
+        </ul>
+
+        <hr>
+
+        <h2>1. Abrindo e Fechando Arquivos (<code>open()</code> e <code>.close()</code>)</h2>
+        <p>A função principal para interagir com arquivos em Python é <code>open()</code>. Ela retorna um "objeto arquivo" que você pode usar para ler ou escrever.</p>
+
+        <h3>Sintaxe Básica:</h3>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('openSyntax')">Copiar</button>
+            <pre id="openSyntax">
+arquivo = open("nome_do_arquivo.txt", "modo")
+            </pre>
+        </div>
+        <ul>
+            <li><code>"nome_do_arquivo.txt"</code>: O caminho (relativo ou absoluto) e nome do arquivo.</li>
+            <li><code>"modo"</code>: Uma string que especifica como o arquivo será aberto.</li>
+        </ul>
+
+        <h3>Modos de Abertura Comuns:</h3>
+        <ul>
+            <li><code>"r"</code> (read - leitura): Abre o arquivo para leitura. O ponteiro é posicionado no início. Se o arquivo não existir, um <code>FileNotFoundError</code> será gerado. Este é o modo padrão se você não especificar um.</li>
+            <li><code>"w"</code> (write - escrita): Abre o arquivo para escrita. Se o arquivo já existir, **seu conteúdo será TRUNCADO (apagado)**. Se não existir, um novo arquivo será criado. O ponteiro é posicionado no início.</li>
+            <li><code>"a"</code> (append - anexar): Abre o arquivo para escrita. Se o arquivo já existir, o novo conteúdo será **adicionado ao final** do arquivo. Se não existir, um novo arquivo será criado. O ponteiro é posicionado no final.</li>
+            <li><code>"x"</code> (exclusive creation - criação exclusiva): Cria um novo arquivo para escrita. Se o arquivo já existir, um <code>FileExistsError</code> será gerado.</li>
+            <li><code>"b"</code> (binary - binário): Usado em combinação com os modos acima (ex: <code>"rb"</code>, <code>"wb"</code>). Indica que o arquivo deve ser tratado como binário (para imagens, áudio, etc.), não como texto.</li>
+            <li><code>"t"</code> (text - texto): Usado em combinação com os modos acima (ex: <code>"rt"</code>, <code>"wt"</code>). Indica que o arquivo deve ser tratado como texto. É o modo padrão, então geralmente é omitido.</li>
+        </ul>
+
+        <h3>A Importância de Fechar o Arquivo (<code>.close()</code>):</h3>
+        <p>Após terminar de ler ou escrever em um arquivo, é **crucial fechá-lo** usando o método <code>.close()</code>. Isso libera os recursos do sistema operacional associados ao arquivo e garante que todas as alterações pendentes sejam salvas.</p>
+        <p>Se você não fechar um arquivo:</p>
+        <ul>
+            <li>Pode haver perda de dados (as alterações podem não ser gravadas).</li>
+            <li>Outros programas podem não conseguir acessar o arquivo (bloqueio).</li>
+            <li>Seu programa pode consumir mais recursos do sistema do que o necessário.</li>
+        </ul>
+
+        <div class="code-block">
+            <h3>Exemplo 1: Escrevendo e Lendo um Arquivo (com <code>.close()</code>)</h3>
+            <button class="copy-button" onclick="copyCode('fileOpenClose')">Copiar</button>
+            <pre id="fileOpenClose">
+# 1. Escrevendo em um arquivo (modo "w" - write)
+# Cuidado: se 'meu_primeiro_arquivo.txt' existir, seu conteúdo será apagado!
+arquivo_escrita = open("meu_primeiro_arquivo.txt", "w")
+arquivo_escrita.write("Olá, este é o meu primeiro arquivo criado com Python!\n")
+arquivo_escrita.write("Esta é a segunda linha.\n")
+arquivo_escrita.write("E esta é a terceira.\n")
+arquivo_escrita.close() # MUITO IMPORTANTE: Fechar o arquivo
+
+print("Conteúdo escrito em 'meu_primeiro_arquivo.txt'")
+
+# 2. Lendo de um arquivo (modo "r" - read)
+arquivo_leitura = open("meu_primeiro_arquivo.txt", "r")
+conteudo = arquivo_leitura.read() # Lê todo o conteúdo como uma única string
+print("\nConteúdo lido do arquivo:")
+print(conteudo)
+arquivo_leitura.close() # MUITO IMPORTANTE: Fechar o arquivo
+            </pre>
+        </div>
+
+        <hr>
+
+        <h2>2. O Bloco <code>with open() as ...:</code> (Melhor Prática)</h2>
+        <p>A forma mais recomendada e "pythonica" de lidar com arquivos é usando a instrução <code>with</code>. Ela garante que o arquivo seja **automaticamente fechado** assim que o bloco <code>with</code> for concluído, mesmo que ocorram erros.</p>
+
+        <h3>Sintaxe:</h3>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('withOpenSyntax')">Copiar</button>
+            <pre id="withOpenSyntax">
+with open("nome_do_arquivo.txt", "modo") as nome_da_variavel:
+    # Faça operações de leitura/escrita aqui
+    # O arquivo é automaticamente fechado ao sair deste bloco
+            </pre>
+        </div>
+
+        <div class="code-block">
+            <h3>Exemplo 2: Usando <code>with open() as ...:</code></h3>
+            <button class="copy-button" onclick="copyCode('withOpenExample')">Copiar</button>
+            <pre id="withOpenExample">
+# Escrevendo com 'with'
+with open("exemplo_com_with.txt", "w") as f:
+    f.write("Esta linha foi escrita usando o bloco 'with'.\n")
+    f.write("É a forma mais segura e recomendada!\n")
+
+print("Conteúdo escrito em 'exemplo_com_with.txt' (arquivo automaticamente fechado).")
+
+# Lendo com 'with'
+with open("exemplo_com_with.txt", "r") as f:
+    conteudo_lido = f.read()
+    print("\nConteúdo lido de 'exemplo_com_with.txt':")
+    print(conteudo_lido)
+
+# Não precisamos chamar f.close() aqui, pois o 'with' cuida disso.
+            </pre>
+        </div>
+        <p>A partir de agora, usaremos `with open() as ...:` em todos os exemplos, pois é a melhor prática.</p>
+
+        <hr>
+
+        <h2>3. Escrevendo em Arquivos</h2>
+
+        <h3>3.1. Método <code>.write()</code></h3>
+        <p>Escreve uma string no arquivo. Você deve adicionar quebras de linha (<code>\n</code>) manualmente se quiser que o conteúdo apareça em linhas separadas.</p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('writeFile')">Copiar</button>
+            <pre id="writeFile">
+with open("minhas_cores.txt", "w") as cores_file:
+    cores_file.write("Vermelho\n")
+    cores_file.write("Azul\n")
+    cores_file.write("Verde\n")
+print("Cores salvas em 'minhas_cores.txt'")
+            </pre>
+        </div>
+
+        <h3>3.2. Método <code>.writelines()</code></h3>
+        <p>Escreve uma lista de strings no arquivo. Assim como <code>write()</code>, ele não adiciona quebras de linha automaticamente, então você deve incluí-las nas strings da lista.</p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('writeLines')">Copiar</button>
+            <pre id="writeLines">
+frutas = ["Maçã\n", "Banana\n", "Morango\n", "Uva\n"]
+with open("minhas_frutas.txt", "w") as frutas_file:
+    frutas_file.writelines(frutas)
+print("Frutas salvas em 'minhas_frutas.txt'")
+            </pre>
+        </div>
+
+        <h3>3.3. Adicionando Conteúdo (Modo <code>"a"</code> - Append)</h3>
+        <p>Use o modo <code>"a"</code> quando quiser adicionar conteúdo ao final de um arquivo existente, sem apagar o que já está lá. Se o arquivo não existir, ele será criado.</p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('appendFile')">Copiar</button>
+            <pre id="appendFile">
+# Primeiro, crie um arquivo inicial (se ele não existir)
+with open("log_aplicacao.txt", "w") as log_file:
+    log_file.write("Log de início da aplicação.\n")
+
+# Agora, adicione conteúdo
+with open("log_aplicacao.txt", "a") as log_file:
+    log_file.write("Usuário 'admin' logado em 2025-07-11 10:00:00.\n")
+    log_file.write("Operação de salvar dados concluída.\n")
+
+print("Conteúdo adicionado a 'log_aplicacao.txt'")
+
+# Verifique o conteúdo completo
+with open("log_aplicacao.txt", "r") as log_file:
+    print("\nConteúdo atual de 'log_aplicacao.txt':")
+    print(log_file.read())
+            </pre>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 3.1: Escrever Lista de Nomes</h3>
+            <p>Crie uma lista de pelo menos 5 nomes (ex: <code>["Alice", "Bob", "Carlos"]</code>). Escreva cada nome em uma linha separada em um arquivo chamado <code>meus_nomes.txt</code>. Use o modo <code>"w"</code>.</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerWrite1')">Copiar</button>
+                <pre id="exerWrite1">
+# Exercício 3.1
+nomes = ["João", "Maria", "Pedro", "Ana", "Lucas"]
+
+with open("meus_nomes.txt", "w") as arquivo_nomes:
+    for nome in nomes:
+        arquivo_nomes.write(nome + "\n") # Adiciona a quebra de linha
+
+print("Nomes salvos em 'meus_nomes.txt'.")
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 3.2: Adicionar Entrada ao Log</h3>
+            <p>Use o módulo <code>datetime</code> para obter a data e hora atuais. Adicione uma linha ao arquivo <code>registro.log</code> (crie-o se não existir) com o formato: <code>[YYYY-MM-DD HH:MM:SS] Evento: Programa iniciado.</code></p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerWrite2')">Copiar</button>
+                <pre id="exerWrite2">
+# Exercício 3.2
+import datetime
+
+data_hora_atual = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+mensagem_log = f"[{data_hora_atual}] Evento: Programa iniciado.\n"
+
+with open("registro.log", "a") as arquivo_log:
+    arquivo_log.write(mensagem_log)
+
+print("Entrada de log adicionada a 'registro.log'.")
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>4. Lendo Arquivos</h2>
+
+        <h3>4.1. Método <code>.read()</code></h3>
+        <p>Lê todo o conteúdo do arquivo como uma única string. Útil para arquivos pequenos.</p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('readFull')">Copiar</button>
+            <pre id="readFull">
+# Certifique-se de que 'meu_primeiro_arquivo.txt' existe do exemplo anterior
+try:
+    with open("meu_primeiro_arquivo.txt", "r") as f:
+        conteudo_completo = f.read()
+        print("Conteúdo completo do arquivo:")
+        print(conteudo_completo)
+except FileNotFoundError:
+    print("Arquivo 'meu_primeiro_arquivo.txt' não encontrado. Por favor, execute o primeiro exemplo para criá-lo.")
+            </pre>
+        </div>
+
+        <h3>4.2. Método <code>.readline()</code></h3>
+        <p>Lê uma única linha por vez, incluindo o caractere de quebra de linha (<code>\n</code>). Retorna uma string vazia quando atinge o final do arquivo.</p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('readLine')">Copiar</button>
+            <pre id="readLine">
+try:
+    with open("minhas_cores.txt", "r") as f:
+        print("\nLendo cores linha por linha:")
+        linha1 = f.readline()
+        linha2 = f.readline()
+        linha3 = f.readline()
+        linha4 = f.readline() # Linha vazia
+        
+        print(f"Linha 1: '{linha1.strip()}'") # .strip() remove espaços e quebras de linha
+        print(f"Linha 2: '{linha2.strip()}'")
+        print(f"Linha 3: '{linha3.strip()}'")
+        print(f"Linha 4 (vazia): '{linha4}'")
+except FileNotFoundError:
+    print("Arquivo 'minhas_cores.txt' não encontrado.")
+            </pre>
+        </div>
+
+        <h3>4.3. Método <code>.readlines()</code></h3>
+        <p>Lê todas as linhas do arquivo e as retorna como uma **lista de strings**, onde cada string é uma linha (incluindo o <code>\n</code> no final).</p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('readLinesList')">Copiar</button>
+            <pre id="readLinesList">
+try:
+    with open("minhas_frutas.txt", "r") as f:
+        lista_de_linhas = f.readlines()
+        print("\nConteúdo lido como lista de linhas:")
+        print(lista_de_linhas) # Note os '\n'
+        
+        print("\nIterando sobre a lista e removendo quebras de linha:")
+        for linha in lista_de_linhas:
+            print(linha.strip()) # .strip() remove o '\n' e outros espaços em branco
+except FileNotFoundError:
+    print("Arquivo 'minhas_frutas.txt' não encontrado.")
+            </pre>
+        </div>
+
+        <h3>4.4. Iterando sobre o Objeto Arquivo (Melhor para Arquivos Grandes)</h3>
+        <p>A forma mais eficiente de ler um arquivo linha por linha, especialmente para arquivos grandes, é iterar diretamente sobre o objeto arquivo. Isso lê o arquivo em pedaços pequenos, economizando memória.</p>
+        <div class="code-block">
+            <button class="copy-button" onclick="copyCode('iterateFile')">Copiar</button>
+            <pre id="iterateFile">
+try:
+    with open("meu_primeiro_arquivo.txt", "r") as f:
+        print("\nIterando sobre o arquivo linha por linha:")
+        for numero_linha, linha in enumerate(f, 1): # enumerate para contar linhas
+            print(f"Linha {numero_linha}: {linha.strip()}")
+except FileNotFoundError:
+    print("Arquivo 'meu_primeiro_arquivo.txt' não encontrado.")
+            </pre>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 4.1: Ler Poema e Imprimir</h3>
+            <ol>
+                <li>Crie um arquivo chamado <code>poema.txt</code> e adicione algumas linhas de um poema ou texto de sua escolha.</li>
+                <li>Escreva um programa Python que leia todo o conteúdo de <code>poema.txt</code> e o imprima no console.</li>
+            </ol>
+            <div class="code-block">
+                <p><strong>Conteúdo de <code>poema.txt</code> (exemplo):</strong></p>
+                <pre>
+No meio do caminho tinha uma pedra
+tinha uma pedra no meio do caminho
+tinha uma pedra.
+                </pre>
+                <p><strong>Código Python para o exercício:</strong></p>
+                <button class="copy-button" onclick="copyCode('exerRead1')">Copiar</button>
+                <pre id="exerRead1">
+# Exercício 4.1
+try:
+    with open("poema.txt", "r") as arquivo_poema:
+        conteudo_poema = arquivo_poema.read()
+        print("\n--- Conteúdo do Poema ---")
+        print(conteudo_poema)
+except FileNotFoundError:
+    print("Erro: Arquivo 'poema.txt' não encontrado. Crie-o antes de executar.")
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 4.2: Contar Linhas em um Arquivo</h3>
+            <p>Usando o arquivo <code>meus_nomes.txt</code> criado no Exercício 3.1, escreva um programa que conte quantas linhas (nomes) existem no arquivo e imprima o total.</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerRead2')">Copiar</button>
+                <pre id="exerRead2">
+# Exercício 4.2
+try:
+    contador_linhas = 0
+    with open("meus_nomes.txt", "r") as arquivo_nomes:
+        for linha in arquivo_nomes:
+            contador_linhas += 1
+    print(f"\nO arquivo 'meus_nomes.txt' possui {contador_linhas} nomes.")
+except FileNotFoundError:
+    print("Erro: Arquivo 'meus_nomes.txt' não encontrado. Execute o Exercício 3.1 primeiro.")
+                </pre>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <h3>Exercício 4.3: Processar Nomes em Maiúsculas</h3>
+            <p>Leia o arquivo <code>meus_nomes.txt</code> novamente. Para cada nome, imprima-o em letras maiúsculas. Certifique-se de remover quaisquer espaços em branco extras ou quebras de linha.</p>
+            <div class="code-block">
+                <button class="copy-button" onclick="copyCode('exerRead3')">Copiar</button>
+                <pre id="exerRead3">
+# Exercício 4.3
+try:
+    print("\n--- Nomes em Maiúsculas ---")
+    with open("meus_nomes.txt", "r") as arquivo_nomes:
+        for nome_original in arquivo_nomes:
+            nome_maiusculo = nome_original.strip().upper()
+            print(nome_maiusculo)
+except FileNotFoundError:
+    print("Erro: Arquivo 'meus_nomes.txt' não encontrado. Execute o Exercício 3.1 primeiro.")
+                </pre>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2>5. Lidar com <code>FileNotFoundError</code> (Relembrando)</h2>
+        <p>Como vimos na seção de Tratamento de Erros, tentar abrir um arquivo que não existe resultará em um <code>FileNotFoundError</code>. É uma boa prática sempre envolver suas operações de abertura de arquivo em um bloco <code>try-except</code> para lidar com essa situação graciosamente.</p>
+        <div class="code-block">
+            <h3>Exemplo de Tratamento de <code>FileNotFoundError</code>:</h3>
+            <button class="copy-button" onclick="copyCode('fileNotFoundHandle')">Copiar</button>
+            <pre id="fileNotFoundHandle">
+nome_arquivo = "configuracoes.txt" # Um arquivo que pode ou não existir
+
+try:
+    with open(nome_arquivo, "r") as f:
+        configuracoes = f.read()
+        print(f"\nConteúdo de '{nome_arquivo}':")
+        print(configuracoes)
+except FileNotFoundError:
+    print(f"\nErro: O arquivo de configurações '{nome_arquivo}' não foi encontrado.")
+    print("Criando um arquivo de configurações padrão...")
+    with open(nome_arquivo, "w") as f_novo:
+        f_novo.write("usuario=admin\n")
+        f_novo.write("senha=12345\n")
+    print(f"'{nome_arquivo}' criado com configurações padrão.")
+except Exception as e:
+    print(f"\nOcorreu um erro inesperado ao tentar acessar '{nome_arquivo}': {e}")
+            </pre>
+        </div>
+        <div class="note">
+            <p><strong>Teste este exemplo:</strong></p>
+            <p>1. Execute-o sem o arquivo <code>configuracoes.txt</code> (ele será criado).</p>
+            <p>2. Execute-o novamente com o arquivo já criado (ele será lido).</p>
+        </div>
+
+        <hr>
+
+        <h2>Conclusão</h2>
+        <p>A manipulação de arquivos é uma funcionalidade indispensável para a maioria das aplicações do mundo real. Entender como ler e escrever dados em diferentes modos, e especialmente a utilização do bloco <code>with open() as ...:</code>, é crucial para a construção de programas persistentes e robustos.</p>
+        <p>Pratique bastante os diferentes modos e métodos de leitura/escrita para se sentir confortável com essa ferramenta poderosa.</p>
+        <p>No próximo e emocionante passo, mergulharemos no mundo da **Programação Orientada a Objetos (POO)** em Python, aprendendo sobre Classes e Objetos.</p>
+
+        </div> <a href="#top" class="back-to-top" title="Voltar ao topo da página">↑</a>
+
+  
+    <footer class="footer">
+  <div class="footer-content">
+    <div class="brand-info">
+      <p>&copy; 2025 <strong>Aprendendo Python</strong> — Todos os direitos reservados.</p>
+      <p>Desenvolvido por: <a href="https://jespedsys.com.br" target="_blank">JesPedSYS</a></p>
+    </div>
+
+    <div class="social-links">
+      <a href="https://github.com/jespedsys" target="_blank" title="GitHub">
+        <img src="../github.png" alt="GitHub">
+      </a>
+      <a href="https://www.linkedin.com/in/jesielpedroza" target="_blank" title="LinkedIn">
+        <img src="../linkedin.png" alt="LinkedIn">
+      </a>
+      <a href="https://twitter.com/jespedsys" target="_blank" title="Twitter/X">
+        <img src="../twitter.png" alt="Twitter/X">
+      </a>
+    </div>
+  </div>
+</footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>
